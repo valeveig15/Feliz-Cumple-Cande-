@@ -1063,49 +1063,71 @@
   // Patitos de goma brillantes, como los juguetes de bañera.
   // Los detalles cambian en solo un pato por subnivel.
   let duckRenderSeq = 0;
+  // Patito de goma de baño, estilo juguete 3D: cabeza redondita,
+  // pico con volumen, plástico brillante, ala moldeada y ojos de vidrio.
+  // El objeto es vectorial (nítido también en las cuadrículas pequeñas).
   function duckSvg(level, odd) {
-    const uid = "rubber-duck-" + (++duckRenderSeq);
-    const bodyId = uid + "-body";
-    const headId = uid + "-head";
-    const wingId = uid + "-wing";
-    const beakColor = odd && level === 1 ? "#ff647c" : "#ff8535";
+    const id = "ducky-v5-" + (++duckRenderSeq);
+    const body = id + "-body";
+    const head = id + "-head";
+    const beak = id + "-beak";
+    const wing = id + "-wing";
+    const blush = id + "-blush";
+    const beakColor = odd && level === 1 ? "#fc6a92" : "#ff963b";
     const tail = odd && level === 2
-      ? '<path d="M21 64 Q11 61 13 54 Q19 51 24 56" fill="#ffc937"/>'
-      : '<path d="M24 65 C12 61 6 48 11 39 C16 38 26 46 32 56Z" fill="#ffc93e" stroke="#f5b830" stroke-width="1.2"/>';
+      ? '<path d="M30 81 C24 73 25 68 31 66 L43 78Z" fill="#ffd342" stroke="#efb52b" stroke-width="1.2"/>'
+      : '<path d="M31 86 C17 81 8 66 14 50 C23 52 35 61 43 73Z" fill="url(#' + body + ')" stroke="#e9ac22" stroke-width="1.4"/>' +
+        '<path d="M17 57 Q21 68 29 74" fill="none" stroke="#fffab4" stroke-width="3" opacity=".65" stroke-linecap="round"/>';
     const eye = odd && level === 3
-      ? '<path d="M87 34 Q93 39 99 34" fill="none" stroke="#29212a" stroke-width="3.7" stroke-linecap="round"/>'
-      : '<ellipse cx="93" cy="33" rx="4" ry="5" fill="#251f29"/><circle cx="94.4" cy="31.7" r="1.3" fill="#fff"/>';
-    const wingColor = odd && level === 4 ? "#eea8f9" : ("url(#" + wingId + ")");
-    const extra = odd && level === 5
-      ? '<path d="M74 18 L79 23 L74 28 L69 23Z" fill="#ff70ae" stroke="#ff3d83" stroke-width=".8"/>'
+      ? '<path d="M93 37 Q101 43 108 37" fill="none" stroke="#382c2c" stroke-width="3.4" stroke-linecap="round"/>'
+      : '<ellipse cx="101" cy="38" rx="5.15" ry="5.85" fill="#2b2530"/>' +
+        '<circle cx="102.1" cy="35.6" r="1.8" fill="#fffef9"/><circle cx="99.1" cy="40.5" r=".8" fill="#fcf6f4"/>';
+    const wingPaint = odd && level === 4 ? "#f7a9ed" : "url(#" + wing + ")";
+    const bow = odd && level === 5
+      ? '<g transform="translate(75 21)"><path d="M0 0 C-13 -12 -18 -7 -14 4 C-12 10 -4 5 0 2 C10 9 17 6 17 -3 C14 -10 6 -7 0 0Z" fill="#f761ae" stroke="#bc3881" stroke-width="1.5"/><circle cx="1" cy="1" r="4" fill="#ffcced"/><path d="M-5 4 -10 14 M6 4 12 14" stroke="#f761ae" stroke-width="4" stroke-linecap="round"/></g>'
       : '';
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 112" role="img" aria-label="Patito de goma amarillo">' +
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154 126" role="img" aria-label="Patito de goma amarillo">' +
       '<defs>' +
-      '<radialGradient id="' + bodyId + '" cx="38%" cy="24%" r="85%">' +
-      '<stop offset="0" stop-color="#fff9b5"/><stop offset=".38" stop-color="#ffe65a"/><stop offset=".78" stop-color="#ffce2a"/><stop offset="1" stop-color="#eaa20e"/>' +
+      '<radialGradient id="' + body + '" cx="34%" cy="17%" r="87%">' +
+        '<stop offset="0" stop-color="#fffcd5"/><stop offset=".23" stop-color="#fff182"/>' +
+        '<stop offset=".50" stop-color="#ffe44e"/><stop offset=".75" stop-color="#ffd02a"/>' +
+        '<stop offset=".91" stop-color="#efb11f"/><stop offset="1" stop-color="#d99013"/>' +
       '</radialGradient>' +
-      '<radialGradient id="' + headId + '" cx="35%" cy="21%" r="82%">' +
-      '<stop offset="0" stop-color="#fffbd2"/><stop offset=".32" stop-color="#ffeb68"/><stop offset=".82" stop-color="#ffd034"/><stop offset="1" stop-color="#e6a313"/>' +
+      '<radialGradient id="' + head + '" cx="31%" cy="20%" r="83%">' +
+        '<stop offset="0" stop-color="#fffce3"/><stop offset=".30" stop-color="#fff280"/>' +
+        '<stop offset=".65" stop-color="#ffdb39"/><stop offset=".89" stop-color="#f7c227"/>' +
+        '<stop offset="1" stop-color="#d99912"/>' +
       '</radialGradient>' +
-      '<linearGradient id="' + wingId + '" x1="0%" y1="0%" x2="90%" y2="100%">' +
-      '<stop stop-color="#fff7a3"/><stop offset=".58" stop-color="#fbd136"/><stop offset="1" stop-color="#f6ba20"/>' +
+      '<linearGradient id="' + beak + '" x1="0" y1="0" x2=".2" y2="1">' +
+        '<stop stop-color="#ffe2a0"/><stop offset=".27" stop-color="' + beakColor + '"/>' +
+        '<stop offset=".78" stop-color="#f47a26"/><stop offset="1" stop-color="#cc591d"/>' +
       '</linearGradient>' +
+      '<linearGradient id="' + wing + '" x1=".1" y1="0" x2=".85" y2="1">' +
+        '<stop stop-color="#fff9be"/><stop offset=".34" stop-color="#ffe976"/>' +
+        '<stop offset=".73" stop-color="#f9d02e"/><stop offset="1" stop-color="#e7a921"/>' +
+      '</linearGradient>' +
+      '<radialGradient id="' + blush + '"><stop stop-color="#ff9580" stop-opacity=".55"/>' +
+        '<stop offset="1" stop-color="#ff9580" stop-opacity="0"/></radialGradient>' +
       '</defs>' +
-      '<ellipse cx="64" cy="100" rx="43" ry="5" fill="#70b9ca" opacity=".13"/>' +
+      '<ellipse cx="76" cy="114" rx="54" ry="6" fill="#3989a3" opacity=".13"/>' +
       tail +
-      '<path d="M21 64 C21 51 31 46 48 47 C60 47 69 55 74 60 C86 59 100 62 104 76 C109 91 90 99 65 99 C36 99 19 90 20 75 C20 70 20 67 21 64Z" fill="url(#' + bodyId + ')" stroke="#e9b226" stroke-width="1.3"/>' +
-      '<path d="M62 61 C58 52 59 43 60 35 C61 21 72 10 86 10 C102 10 112 23 110 37 C109 53 97 62 81 62Z" fill="url(#' + headId + ')" stroke="#f1b929" stroke-width="1.1"/>' +
-      '<path d="M61 40 C62 23 74 15 88 16" fill="none" stroke="#fffde6" stroke-width="4.2" opacity=".76" stroke-linecap="round"/>' +
-      '<path d="M29 65 Q26 77 34 85" fill="none" stroke="#fff6a3" stroke-width="5" opacity=".65" stroke-linecap="round"/>' +
-      '<path d="M105 39 C116 34 124 38 125 44 C124 50 115 53 103 49 L99 45Z" fill="' + beakColor + '" stroke="#e56e2a" stroke-width="1.2"/>' +
-      '<path d="M106 40 Q117 37 121 42" fill="none" stroke="#ffd0a4" stroke-width="2" stroke-linecap="round" opacity=".85"/>' +
-      '<path d="M102 49 Q111 53 121 49" fill="none" stroke="#de6722" stroke-width="1.5" opacity=".65"/>' +
+      '<path d="M23 78 C22 60 35 53 55 52 C64 51 73 55 81 59 C91 60 107 58 116 69 C130 87 117 105 99 111 C75 117 46 112 32 103 C23 97 21 89 23 78Z" fill="url(#' + body + ')" stroke="#e8aa20" stroke-width="1.2"/>' +
+      '<path d="M56 68 C58 52 60 46 62 37 C66 21 76 13 93 12 C111 11 121 23 122 39 C123 57 111 72 95 75 C76 77 61 72 56 68Z" fill="url(#' + head + ')" stroke="#eab22b" stroke-width="1.1"/>' +
+      '<path d="M71 29 C78 17 93 15 103 21" fill="none" stroke="#fffef4" stroke-width="6.5" stroke-linecap="round" opacity=".73"/>' +
+      '<path d="M33 72 Q31 88 45 97" fill="none" stroke="#fffad8" stroke-width="5" opacity=".43" stroke-linecap="round"/>' +
+      '<path d="M117 45 C125 40 144 42 149 48 C152 54 140 62 120 59 L115 54Z" fill="url(#' + beak + ')" stroke="#d86c22" stroke-width="1.2"/>' +
+      '<path d="M119 47 Q135 44 143 49" fill="none" stroke="#ffe1b6" stroke-width="2.6" opacity=".87" stroke-linecap="round"/>' +
+      '<path d="M122 59 Q137 62 145 54" fill="none" stroke="#d16428" stroke-width="1.25" opacity=".68"/>' +
+      '<path d="M86 54 C88 49 90 48 92 51" stroke="#e4a633" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".4"/>' +
       eye +
-      '<circle cx="86" cy="48" r="5" fill="#ffae78" opacity=".28"/>' +
-      '<path d="M41 71 C46 60 67 60 78 69 C74 80 62 86 51 85 C45 83 42 78 41 71Z" fill="' + wingColor + '" stroke="#e7b12c" stroke-width="1.2"/>' +
-      '<path d="M48 68 Q59 62 69 69" fill="none" stroke="#fffbd2" stroke-width="3" stroke-linecap="round" opacity=".7"/>' +
-      '<path d="M39 89 Q65 100 91 88" fill="none" stroke="#f5b720" stroke-width="1.7" opacity=".45"/>' +
-      extra + '</svg>';
+      '<ellipse cx="96" cy="57" rx="13" ry="9" fill="url(#' + blush + ')" opacity=".75"/>' +
+      '<path d="M43 86 C44 71 56 65 67 68 C78 69 88 75 89 84 C81 100 64 102 51 98 C44 95 42 91 43 86Z" fill="' + wingPaint + '" stroke="#e8b229" stroke-width="1.4"/>' +
+      '<path d="M49 78 C60 68 77 73 81 79" fill="none" stroke="#fffce7" stroke-width="3.6" opacity=".78" stroke-linecap="round"/>' +
+      '<path d="M52 95 Q69 101 84 87" fill="none" stroke="#dba92e" opacity=".4" stroke-width="1.4"/>' +
+      '<path d="M43 103 Q75 115 103 103" fill="none" stroke="#fff8a4" stroke-width="2.2" opacity=".32"/>' +
+      '<ellipse cx="65" cy="61" rx="10" ry="17" fill="#fffef0" opacity=".07" transform="rotate(-20 65 61)"/>' +
+      bow +
+      '</svg>';
   }
 
   function startDuckLevel(level) {
@@ -1162,7 +1184,8 @@
   function renderCakeDucks() {
     const tray = document.getElementById("cake-ducks");
     if (!tray) return;
-    tray.innerHTML = Array.from({ length: 5 }, () => '<span class="cake-duck">' + duckSvg(0, false) + '</span>').join("");
+    tray.innerHTML = Array.from({ length: 3 }, () =>
+      '<span class="cake-duck">' + duckSvg(0, false) + '</span>').join("");
   }
 
   // =========================================================
