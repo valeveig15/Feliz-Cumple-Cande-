@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261008-cande4">
+  <link rel="stylesheet" href="styles.css?v=20261008-help-v1">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -43,6 +43,19 @@
           <div class="rubik-tip"><span class="rubik-tip-icon">⤾</span><div><strong>Sobre el fondo</strong><small>Arrastrá en el espacio vacío para observar otros lados.</small></div></div>
         </div>
         <div class="rubik-meter"><span>MEZCLA INICIAL: 7 GIROS</span><span>GIROS TUYOS: <strong id="rubik-moves-count">0</strong></span></div>
+        <details id="rubik-practice" class="practice-panel" open>
+          <summary><span>🧩 Guía de práctica</span><span class="practice-label">TEMPORAL</span></summary>
+          <div class="practice-body">
+            <p class="practice-explain">Este cubo se mezcló con 7 giros. Vamos a deshacerlos, uno por uno y en orden inverso.</p>
+            <div class="rubik-step-card">
+              <span id="rubik-hint-step" class="guide-count">PASO 1 DE 7</span>
+              <strong id="rubik-hint-instruction">Preparando las indicaciones…</strong>
+              <span id="rubik-hint-detail" class="guide-detail">La capa se señalará en el cubo.</span>
+            </div>
+            <button type="button" id="rubik-demo-move" class="guide-button">▶ Ver cómo se hace este giro</button>
+            <p class="practice-foot">La capa indicada se ilumina. También podés girarla arrastrando con el mouse. El botón realiza solo el siguiente giro como demostración.</p>
+          </div>
+        </details>
       </div>
 
       <div class="game-card rubik-card">
@@ -67,6 +80,24 @@
         </div>
         <div class="score-track"><div id="score-fill"></div></div>
         <p class="key-help">Teclado: ← → mover · ↑ rotar · ↓ bajar · espacio caída rápida.</p>
+        <details id="tetris-practice" class="practice-panel" open>
+          <summary><span>⚡ Consejos para colocar las piezas</span><span class="practice-label">TEMPORAL</span></summary>
+          <div class="practice-body">
+            <p class="practice-explain"><strong>Regla número uno:</strong> no encierres espacios vacíos debajo de otras piezas. Esos agujeros después son muy difíciles de llenar.</p>
+            <div class="tetris-advice-card">
+              <strong>📍 Ubicación recomendada para esta pieza</strong>
+              <p id="tetris-advice-text" aria-live="polite">La sugerencia aparecerá cuando empiece Tetris.</p>
+            </div>
+            <p class="practice-foot">Los bloques marcados en turquesa muestran una posición posible. Podés elegir otra si preferís.</p>
+            <ul class="practice-advice-list">
+              <li>Dejá el piso bajo y lo más parejo posible.</li>
+              <li>Reservá un espacio vertical para la pieza recta de cuatro bloques.</li>
+              <li>La pieza cuadrada sirve para rellenar huecos de 2 × 2.</li>
+              <li>Con la caída rápida, completá líneas simples antes de que se acumule la torre.</li>
+              <li>Mirá la pieza siguiente antes de elegir dónde poner la actual.</li>
+            </ul>
+          </div>
+        </details>
       </div>
 
       <div class="game-card tetris-card">
@@ -174,6 +205,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261008-cande4"></script>
+  <script src="game.js?v=20261008-help-v1"></script>
 </body>
 </html>
