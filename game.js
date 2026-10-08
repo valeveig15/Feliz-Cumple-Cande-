@@ -1017,7 +1017,7 @@
 
   function tetrisLoop(now) {
     if (tetrisRunning && currentLevel === 2) {
-      const interval = 150; // Velocidad fija: 150 ms desde la primera pieza.
+      const interval = 95; // Velocidad fija: 95 ms desde la primera pieza, sin aceleración progresiva.
       if (now - lastDrop > interval) {
         dropOne();
         lastDrop = now;
