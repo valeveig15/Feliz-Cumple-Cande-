@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fb">
+  <title>Desafío de Cumpleaños 🎂</title>
+  <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🎮</span>
+      <div>
+        <strong>Desafío de Cumpleaños</strong>
+        <small>Superá los 3 niveles para desbloquear la torta</small>
+      </div>
+    </div>
+    <div class="progress-wrap" aria-label="Progreso">
+      <div class="progress-steps">
+        <span class="step active" data-step="1">1</span>
+        <span class="line"></span>
+        <span class="step" data-step="2">2</span>
+        <span class="line"></span>
+        <span class="step" data-step="3">3</span>
+        <span class="line"></span>
+        <span class="step cake-step" data-step="4">🎂</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="level-rubik" class="level active" aria-labelledby="rubik-title">
+      <div class="level-copy">
+        <span class="eyebrow">NIVEL 1 · PRECISIÓN</span>
+        <h1 id="rubik-title">Armá el cubo Rubik <span>3D</span></h1>
+        <p>Arrastrá para mirar el cubo desde cualquier ángulo y usá los giros para dejar cada cara de un solo color.</p>
+        <div class="mini-card">
+          <span>💡</span>
+          <p><strong>Ayuda:</strong> la mezcla tiene solo 7 movimientos. Podés ver la secuencia y resolverla en sentido inverso.</p>
+        </div>
+        <div class="scramble-box">
+          <span>Mezcla usada</span>
+          <code id="scramble-sequence">—</code>
+        </div>
+      </div>
+
+      <div class="game-card rubik-card">
+        <div id="rubik-stage" class="rubik-stage" aria-label="Cubo Rubik 3D interactivo"></div>
+        <div class="rubik-toolbar">
+          <button id="new-scramble" class="soft-btn">↻ Mezclar de nuevo</button>
+          <button id="rubik-undo" class="soft-btn">↶ Deshacer</button>
+        </div>
+        <div class="move-pad" aria-label="Controles del cubo">
+          <button data-move="U">U</button><button data-move="U'">U′</button>
+          <button data-move="D">D</button><button data-move="D'">D′</button>
+          <button data-move="L">L</button><button data-move="L'">L′</button>
+          <button data-move="R">R</button><button data-move="R'">R′</button>
+          <button data-move="F">F</button><button data-move="F'">F′</button>
+          <button data-move="B">B</button><button data-move="B'">B′</button>
+        </div>
+        <p id="rubik-status" class="status-text">Cada botón gira una cara 90°.</p>
+      </div>
+    </section>
+
+    <section id="level-tetris" class="level" aria-labelledby="tetris-title">
+      <div class="level-copy">
+        <span class="eyebrow">NIVEL 2 · VELOCIDAD</span>
+        <h1 id="tetris-title">Tetris <span>rápido</span></h1>
+        <p>Ahora no hay tiempo para relajarse. Completá líneas y llegá a <strong>500 puntos</strong>.</p>
+        <div class="score-panel">
+          <div><small>PUNTOS</small><strong id="tetris-score">0</strong></div>
+          <div><small>META</small><strong>500</strong></div>
+          <div><small>LÍNEAS</small><strong id="tetris-lines">0</strong></div>
+        </div>
+        <div class="score-track"><div id="score-fill"></div></div>
+        <p class="key-help">Teclado: ← → mover · ↑ rotar · ↓ bajar · espacio caída rápida.</p>
+      </div>
+
+      <div class="game-card tetris-card">
+        <div class="tetris-layout">
+          <canvas id="tetris" width="300" height="600" aria-label="Juego Tetris"></canvas>
+          <aside>
+            <span>SIGUIENTE</span>
+            <canvas id="next-piece" width="120" height="120"></canvas>
+            <button id="tetris-restart" class="soft-btn">↻ Reiniciar</button>
+          </aside>
+        </div>
+        <div class="mobile-controls">
+          <button data-tetris="left">←</button>
+          <button data-tetris="rotate">↻</button>
+          <button data-tetris="right">→</button>
+          <button data-tetris="down">↓</button>
+          <button data-tetris="drop" class="wide">CAER</button>
+        </div>
+        <p id="tetris-status" class="status-text">¡A toda velocidad!</p>
+      </div>
+    </section>
+
+    <section id="level-ducks" class="level" aria-labelledby="duck-title">
+      <div class="level-copy">
+        <span class="eyebrow">NIVEL 3 · OJO DE HALCÓN</span>
+        <h1 id="duck-title">Encontrá el pato <span>diferente</span></h1>
+        <p>Hay cinco rondas. En cada una aparecen más patos y se hacen más pequeños. Uno tiene un detalle distinto.</p>
+        <div class="duck-progress">
+          <span>SUBNIVEL</span>
+          <strong><b id="duck-level">1</b> / 5</strong>
+        </div>
+        <div class="duck-dots" id="duck-dots" aria-label="Subniveles">
+          <i class="active"></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+
+      <div class="game-card duck-card">
+        <div id="duck-grid" class="duck-grid" aria-label="Grupo de patos"></div>
+        <p id="duck-status" class="status-text">👀 Mirá con atención…</p>
+      </div>
+    </section>
+
+    <section id="win-screen" class="level win-level" aria-labelledby="win-title">
+      <div class="win-copy">
+        <span class="eyebrow">DESAFÍO COMPLETADO</span>
+        <h1 id="win-title">¡GANASTE! 🎉</h1>
+        <p>Superaste el cubo, llegaste a 500 puntos y encontraste los cinco patos distintos.</p>
+        <h2>¡Feliz cumpleaños! 💗</h2>
+        <button id="play-again" class="primary-btn">Jugar de nuevo</button>
+      </div>
+
+      <div class="cake-scene" aria-label="Torta de cumpleaños de tres pisos inspirada en los tres juegos">
+        <div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="cake-tier tier-rubik">
+          <div class="rubik-tiles">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+        <div class="cake-tier tier-tetris">
+          <div class="tetris-sprinkles">
+            <i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i>
+            <i class="b6"></i><i class="b7"></i><i class="b8"></i><i class="b9"></i>
+          </div>
+        </div>
+        <div class="cake-tier tier-ducks">
+          <div class="duck-parade"><span>🦆</span><span>🦆</span><span>🦆</span><span>🦆</span><span>🦆</span></div>
+        </div>
+        <div class="cake-plate"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="level-flash" class="level-flash" role="status" aria-live="polite">
+    <div><span id="flash-icon">✓</span><strong id="flash-title">¡Nivel superado!</strong><small id="flash-subtitle">Preparando el siguiente…</small></div>
+  </div>
+
+  <div id="confetti" aria-hidden="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script src="game.js?v=1"></script>
+</body>
+</html>
