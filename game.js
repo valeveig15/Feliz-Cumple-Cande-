@@ -28,6 +28,7 @@
     levels[level].classList.add("active");
     setProgress(level);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
     if (level === 2) startTetris();
     if (level === 1) updateRubikPractice();
     if (level === 3) startDuckLevel(1);
@@ -614,6 +615,7 @@
   }
 
   function startTetris() {
+    clearHorizontalHold();
     board = freshBoard();
     tScore = 0; tLines = 0; tetrisWon = false;
     nextPiece = randomPiece();
@@ -1017,6 +1019,7 @@
 
   function tetrisLoop(now) {
     if (tetrisRunning && currentLevel === 2) {
+      repeatHorizontalWhileHeld(now);
       const interval = 95; // Velocidad fija: 95 ms desde la primera pieza, sin aceleración progresiva.
       if (now - lastDrop > interval) {
         dropOne();
@@ -1037,16 +1040,100 @@
     drawTetris();
   }
 
+  // Movimiento horizontal continuo, independiente de la repetición
+  // que configure el sistema operativo. Un toque mueve un casillero.
+  // Mantener presionado: espera inicial breve, luego avanza de a uno
+  // cada 42 ms, hasta que se suelta o se pierde el foco.
+  const HORIZONTAL_HOLD_DELAY = 135; // ms
+  const HORIZONTAL_HOLD_REPEAT = 42; // ms
+  const horizontalPressed = { left: false, right: false };
+  let horizontalActive = null;
+  let horizontalNextStep = Infinity;
+
+  function clearHorizontalHold() {
+    horizontalPressed.left = false;
+    horizontalPressed.right = false;
+    horizontalActive = null;
+    horizontalNextStep = Infinity;
+  }
+
+  function beginHorizontalHold(direction, now = performance.now()) {
+    if (currentLevel !== 2 || !tetrisRunning) return;
+    if (!Object.prototype.hasOwnProperty.call(horizontalPressed, direction)
+      || horizontalPressed[direction]) return;
+    horizontalPressed[direction] = true;
+    horizontalActive = direction;
+    horizontalNextStep = now + HORIZONTAL_HOLD_DELAY;
+    tetrisAction(direction); // Movimiento inmediato al pulsar.
+  }
+
+  function endHorizontalHold(direction, now = performance.now()) {
+    if (!Object.prototype.hasOwnProperty.call(horizontalPressed, direction)) return;
+    horizontalPressed[direction] = false;
+    if (horizontalActive !== direction) return;
+    const opposite = direction === "left" ? "right" : "left";
+    horizontalActive = horizontalPressed[opposite] ? opposite : null;
+    horizontalNextStep = horizontalActive ? now + HORIZONTAL_HOLD_DELAY : Infinity;
+    // Si mantenía la otra flecha también, retomarla sin esperar otro keydown.
+    if (horizontalActive && currentLevel === 2 && tetrisRunning) tetrisAction(horizontalActive);
+  }
+
+  function repeatHorizontalWhileHeld(now) {
+    if (!horizontalActive || !horizontalPressed[horizontalActive]) return;
+    if (now < horizontalNextStep) return;
+    // Evitar saltos demasiado bruscos si el navegador estuvo ralentizado.
+    const amount = Math.min(3, 1 + Math.floor((now - horizontalNextStep) / HORIZONTAL_HOLD_REPEAT));
+    for (let n = 0; n < amount; n++) {
+      if (!horizontalActive || !tetrisRunning) break;
+      movePiece(horizontalActive === "left" ? -1 : 1);
+    }
+    horizontalNextStep += amount * HORIZONTAL_HOLD_REPEAT;
+    if (horizontalNextStep < now - HORIZONTAL_HOLD_REPEAT) {
+      horizontalNextStep = now + HORIZONTAL_HOLD_REPEAT;
+    }
+  }
+
   document.addEventListener("keydown", e => {
     if (currentLevel !== 2 || !tetrisRunning) return;
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key)) e.preventDefault();
-    if (e.key === "ArrowLeft") tetrisAction("left");
-    if (e.key === "ArrowRight") tetrisAction("right");
+    if (e.key === "ArrowLeft") return beginHorizontalHold("left");
+    if (e.key === "ArrowRight") return beginHorizontalHold("right");
+    if (e.repeat) return; // Una pulsación = un giro o caída, no muchos.
     if (e.key === "ArrowUp") tetrisAction("rotate");
     if (e.key === "ArrowDown") tetrisAction("down");
     if (e.key === " ") tetrisAction("drop");
   });
-  document.querySelectorAll("[data-tetris]").forEach(btn => btn.addEventListener("click", () => tetrisAction(btn.dataset.tetris)));
+
+  // Soltar debe funcionar aun si otra interfaz recibió el foco.
+  document.addEventListener("keyup", e => {
+    if (e.key === "ArrowLeft") endHorizontalHold("left");
+    if (e.key === "ArrowRight") endHorizontalHold("right");
+  });
+  window.addEventListener("blur", clearHorizontalHold);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) clearHorizontalHold();
+  });
+
+  // En celulares y pantallas táctiles, mantener el botón da el mismo
+  // movimiento continuo. Usamos pointer events para poder detenerlo al soltar.
+  document.querySelectorAll("[data-tetris]").forEach(btn => {
+    const direction = btn.dataset.tetris;
+    if (direction !== "left" && direction !== "right") {
+      btn.addEventListener("click", () => tetrisAction(direction));
+      return;
+    }
+    btn.addEventListener("pointerdown", e => {
+      if (currentLevel !== 2 || !tetrisRunning) return;
+      e.preventDefault();
+      btn.setPointerCapture?.(e.pointerId);
+      beginHorizontalHold(direction);
+    });
+    const release = () => endHorizontalHold(direction);
+    btn.addEventListener("pointerup", release);
+    btn.addEventListener("pointercancel", release);
+    btn.addEventListener("lostpointercapture", release);
+  });
+
   document.getElementById("tetris-restart").addEventListener("click", startTetris);
 
   // =========================================================
