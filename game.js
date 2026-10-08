@@ -567,6 +567,7 @@
   let tetrisRecommended = null;
 
   const COLS = 10, ROWS = 20, BLOCK = 30;
+  const TETRIS_TARGET = 2000;
   const TCOLORS = ["#0000", "#4fd6ff", "#ffd44d", "#b77bff", "#65d686", "#ff6579", "#5688ff", "#ff9a45"];
   const SHAPES = [
     [],
@@ -622,7 +623,7 @@
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 1.000 puntos.";
+    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 2.000 puntos.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -667,13 +668,13 @@
       tLines += cleared;
       scoreEl.textContent = tScore;
       linesEl.textContent = tLines;
-      scoreFill.style.width = Math.min(100, tScore / 10) + "%";
+      scoreFill.style.width = Math.min(100, (tScore / TETRIS_TARGET) * 100) + "%";
       tetrisStatus.textContent = cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".";
-      if (tScore >= 1000 && !tetrisWon) {
+      if (tScore >= TETRIS_TARGET && !tetrisWon) {
         tetrisWon = true;
         tetrisRunning = false;
         scoreEl.textContent = tScore;
-        levelComplete(3, "¡1.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
+        levelComplete(3, "¡2.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
       }
     }
   }
@@ -901,7 +902,7 @@
         const result = afterPlacement(grid, m.matrix, m.x, m.y, next.type);
         const cost = boardCost(result.board) - result.points * 0.16;
         if (!best || cost < best.cost) best = { cost, points: result.points };
-        if (scoreSoFar + result.points >= 1000) {
+        if (scoreSoFar + result.points >= TETRIS_TARGET) {
           return { cost: cost - 300, points: result.points };
         }
       }
@@ -915,7 +916,7 @@
       let winner = null;
       for (const m of options) {
         const result = afterPlacement(grid, m.matrix, m.x, m.y, current.type);
-        const immediateWin = scoreSoFar + result.points >= 1000;
+        const immediateWin = scoreSoFar + result.points >= TETRIS_TARGET;
         const currentCost = boardCost(result.board) - result.points * 0.16;
         const future = immediateWin
           ? { cost: 0, points: 0 }
