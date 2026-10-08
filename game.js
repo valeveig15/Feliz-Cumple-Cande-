@@ -30,7 +30,7 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (level === 2) startTetris();
     if (level === 3) startDuckLevel(1);
-    if (level === 4) launchConfetti();
+    if (level === 4) { renderCakeDucks(); launchConfetti(); }
   }
 
   function levelComplete(nextLevel, title, subtitle, icon = "✓") {
@@ -384,7 +384,7 @@
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "¡A toda velocidad!";
+    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 5.000 puntos.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -429,13 +429,13 @@
       tLines += cleared;
       scoreEl.textContent = tScore;
       linesEl.textContent = tLines;
-      scoreFill.style.width = Math.min(100, tScore / 5) + "%";
+      scoreFill.style.width = Math.min(100, tScore / 50) + "%";
       tetrisStatus.textContent = cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".";
-      if (tScore >= 500 && !tetrisWon) {
+      if (tScore >= 5000 && !tetrisWon) {
         tetrisWon = true;
         tetrisRunning = false;
         scoreEl.textContent = tScore;
-        levelComplete(3, "¡500 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
+        levelComplete(3, "¡5.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
       }
     }
   }
@@ -537,7 +537,7 @@
 
   function tetrisLoop(now) {
     if (tetrisRunning && currentLevel === 2) {
-      const interval = Math.max(135, 390 - tLines * 18);
+      const interval = Math.max(72, 205 - tLines * 9);
       if (now - lastDrop > interval) {
         dropOne();
         lastDrop = now;
@@ -580,28 +580,52 @@
   let oddDuck = -1;
   let duckLocked = false;
 
+  // Patitos de goma brillantes, como los juguetes de bañera.
+  // Los detalles cambian en solo un pato por subnivel.
+  let duckRenderSeq = 0;
   function duckSvg(level, odd) {
-    const beak = odd && level === 1 ? "#ffb82e" : "#ff8a3d";
-    const tail = odd && level === 2 ? "" : '<path d="M27 62 Q15 57 18 48 Q27 51 32 55Z" fill="#f2bd32"/>';
+    const uid = "rubber-duck-" + (++duckRenderSeq);
+    const bodyId = uid + "-body";
+    const headId = uid + "-head";
+    const wingId = uid + "-wing";
+    const beakColor = odd && level === 1 ? "#ff647c" : "#ff8535";
+    const tail = odd && level === 2
+      ? '<path d="M21 64 Q11 61 13 54 Q19 51 24 56" fill="#ffc937"/>'
+      : '<path d="M24 65 C12 61 6 48 11 39 C16 38 26 46 32 56Z" fill="#ffc93e" stroke="#f5b830" stroke-width="1.2"/>';
     const eye = odd && level === 3
-      ? '<path d="M61 36 q4 4 8 0" fill="none" stroke="#332b36" stroke-width="2.8" stroke-linecap="round"/>'
-      : '<circle cx="65" cy="35" r="2.8" fill="#332b36"/>';
-    const foot2 = odd && level === 4 ? "" : '<path d="M61 76 q8 2 11 0" stroke="#e87738" stroke-width="3.4" stroke-linecap="round"/>';
-    const feather = odd && level === 5
-      ? '<path d="M49 21 q-8-9-13-2" fill="none" stroke="#e9ad2f" stroke-width="3" stroke-linecap="round"/>'
-      : '<path d="M49 21 q8-9 13-2" fill="none" stroke="#e9ad2f" stroke-width="3" stroke-linecap="round"/>';
-
-    return '<svg viewBox="0 0 100 90" aria-hidden="true">' +
-      '<ellipse cx="50" cy="60" rx="30" ry="20" fill="#f7c943"/>' +
+      ? '<path d="M87 34 Q93 39 99 34" fill="none" stroke="#29212a" stroke-width="3.7" stroke-linecap="round"/>'
+      : '<ellipse cx="93" cy="33" rx="4" ry="5" fill="#251f29"/><circle cx="94.4" cy="31.7" r="1.3" fill="#fff"/>';
+    const wingColor = odd && level === 4 ? "#eea8f9" : ("url(#" + wingId + ")");
+    const extra = odd && level === 5
+      ? '<path d="M74 18 L79 23 L74 28 L69 23Z" fill="#ff70ae" stroke="#ff3d83" stroke-width=".8"/>'
+      : '';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 112" role="img" aria-label="Patito de goma amarillo">' +
+      '<defs>' +
+      '<radialGradient id="' + bodyId + '" cx="38%" cy="24%" r="85%">' +
+      '<stop offset="0" stop-color="#fff9b5"/><stop offset=".38" stop-color="#ffe65a"/><stop offset=".78" stop-color="#ffce2a"/><stop offset="1" stop-color="#eaa20e"/>' +
+      '</radialGradient>' +
+      '<radialGradient id="' + headId + '" cx="35%" cy="21%" r="82%">' +
+      '<stop offset="0" stop-color="#fffbd2"/><stop offset=".32" stop-color="#ffeb68"/><stop offset=".82" stop-color="#ffd034"/><stop offset="1" stop-color="#e6a313"/>' +
+      '</radialGradient>' +
+      '<linearGradient id="' + wingId + '" x1="0%" y1="0%" x2="90%" y2="100%">' +
+      '<stop stop-color="#fff7a3"/><stop offset=".58" stop-color="#fbd136"/><stop offset="1" stop-color="#f6ba20"/>' +
+      '</linearGradient>' +
+      '</defs>' +
+      '<ellipse cx="64" cy="100" rx="43" ry="5" fill="#70b9ca" opacity=".13"/>' +
       tail +
-      '<circle cx="58" cy="37" r="20" fill="#ffd85a"/>' +
-      feather +
-      '<ellipse cx="77" cy="43" rx="13" ry="7" fill="' + beak + '"/>' +
+      '<path d="M21 64 C21 51 31 46 48 47 C60 47 69 55 74 60 C86 59 100 62 104 76 C109 91 90 99 65 99 C36 99 19 90 20 75 C20 70 20 67 21 64Z" fill="url(#' + bodyId + ')" stroke="#e9b226" stroke-width="1.3"/>' +
+      '<path d="M62 61 C58 52 59 43 60 35 C61 21 72 10 86 10 C102 10 112 23 110 37 C109 53 97 62 81 62Z" fill="url(#' + headId + ')" stroke="#f1b929" stroke-width="1.1"/>' +
+      '<path d="M61 40 C62 23 74 15 88 16" fill="none" stroke="#fffde6" stroke-width="4.2" opacity=".76" stroke-linecap="round"/>' +
+      '<path d="M29 65 Q26 77 34 85" fill="none" stroke="#fff6a3" stroke-width="5" opacity=".65" stroke-linecap="round"/>' +
+      '<path d="M105 39 C116 34 124 38 125 44 C124 50 115 53 103 49 L99 45Z" fill="' + beakColor + '" stroke="#e56e2a" stroke-width="1.2"/>' +
+      '<path d="M106 40 Q117 37 121 42" fill="none" stroke="#ffd0a4" stroke-width="2" stroke-linecap="round" opacity=".85"/>' +
+      '<path d="M102 49 Q111 53 121 49" fill="none" stroke="#de6722" stroke-width="1.5" opacity=".65"/>' +
       eye +
-      '<path d="M43 56 q14-10 24 2 q-9 13-24 7Z" fill="#eeb832"/>' +
-      '<path d="M40 76 q-8 2-11 0" stroke="#e87738" stroke-width="3.4" stroke-linecap="round"/>' +
-      foot2 +
-      '</svg>';
+      '<circle cx="86" cy="48" r="5" fill="#ffae78" opacity=".28"/>' +
+      '<path d="M41 71 C46 60 67 60 78 69 C74 80 62 86 51 85 C45 83 42 78 41 71Z" fill="' + wingColor + '" stroke="#e7b12c" stroke-width="1.2"/>' +
+      '<path d="M48 68 Q59 62 69 69" fill="none" stroke="#fffbd2" stroke-width="3" stroke-linecap="round" opacity=".7"/>' +
+      '<path d="M39 89 Q65 100 91 88" fill="none" stroke="#f5b720" stroke-width="1.7" opacity=".45"/>' +
+      extra + '</svg>';
   }
 
   function startDuckLevel(level) {
@@ -653,6 +677,12 @@
       duckDots.forEach(d => { d.classList.add("done"); d.classList.remove("active"); });
       setTimeout(() => levelComplete(4, "¡Los 5 encontrados!", "Desbloqueaste tu premio de cumpleaños.", "🦆"), 420);
     }
+  }
+
+  function renderCakeDucks() {
+    const tray = document.getElementById("cake-ducks");
+    if (!tray) return;
+    tray.innerHTML = Array.from({ length: 5 }, () => '<span class="cake-duck">' + duckSvg(0, false) + '</span>').join("");
   }
 
   // =========================================================
