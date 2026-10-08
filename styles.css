@@ -194,3 +194,19 @@ main{position:relative;z-index:2}
   .cake-duck,.cake-flame,.cake-spark,.rubik-charm,.cake-halo,.tetris-sprinkles i{animation:none!important}
 }
 
+
+
+/* Mando Rubik directo: arrastrar las piezas para girarlas; fondo para mirar. */
+.rubik-stage,.rubik-stage canvas {touch-action:none;user-select:none;-webkit-user-select:none}
+.rubik-stage canvas{cursor:grab}
+.rubik-stage canvas:active{cursor:grabbing}
+.rubik-toolbar{justify-content:center;flex-wrap:wrap}
+.rubik-tips{display:flex;flex-direction:column;gap:10px;margin:24px 0 14px}
+.rubik-tip{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid rgba(93,64,123,.11);border-radius:16px;background:#fff;box-shadow:0 6px 18px #6e51800f}
+.rubik-tip-icon{flex-shrink:0;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#ffe5f1,#e7dfff);color:#8a55bd;font-size:25px;display:grid;place-items:center;font-weight:900}
+.rubik-tip strong{display:block;color:#3d3248;font-size:13px;margin-bottom:3px}
+.rubik-tip small{display:block;font-size:12px;color:#8a8093;line-height:1.45}
+.rubik-meter{display:flex;justify-content:space-between;flex-wrap:wrap;gap:9px;color:#766583;font-size:10px;font-weight:850;letter-spacing:.09em;background:#f6f0fb;border:1px solid #e9e0f2;border-radius:13px;padding:11px 14px}
+.rubik-meter strong{color:#f25999;font-size:14px}
+@media(max-width:560px){.rubik-tips{margin-top:16px}.rubik-tip{padding:9px 11px}.rubik-meter{font-size:9px}}
+
