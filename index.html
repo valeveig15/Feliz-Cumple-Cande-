@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261008-cande3">
+  <link rel="stylesheet" href="styles.css?v=20261008-cande4">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -37,15 +37,12 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 1 · PRECISIÓN</span>
         <h1 id="rubik-title">Armá el cubo Rubik <span>3D</span></h1>
-        <p>Arrastrá para mirar el cubo desde cualquier ángulo y usá los giros para dejar cada cara de un solo color.</p>
-        <div class="mini-card">
-          <span>💡</span>
-          <p><strong>Ayuda:</strong> la mezcla tiene solo 7 movimientos. Podés ver la secuencia y resolverla en sentido inverso.</p>
+        <p>Como un cubo de verdad: <strong>arrastrá sobre sus piezas para girar cada capa</strong>. Si arrastrás en el fondo vacío, podés mirarlo desde otro ángulo.</p>
+        <div class="rubik-tips">
+          <div class="rubik-tip"><span class="rubik-tip-icon">↔</span><div><strong>Sobre las piezas</strong><small>Deslizá el mouse o el dedo para girar una franja del cubo.</small></div></div>
+          <div class="rubik-tip"><span class="rubik-tip-icon">⤾</span><div><strong>Sobre el fondo</strong><small>Arrastrá en el espacio vacío para observar otros lados.</small></div></div>
         </div>
-        <div class="scramble-box">
-          <span>Mezcla usada</span>
-          <code id="scramble-sequence">—</code>
-        </div>
+        <div class="rubik-meter"><span>MEZCLA INICIAL: 7 GIROS</span><span>GIROS TUYOS: <strong id="rubik-moves-count">0</strong></span></div>
       </div>
 
       <div class="game-card rubik-card">
@@ -54,15 +51,7 @@
           <button id="new-scramble" class="soft-btn">↻ Mezclar de nuevo</button>
           <button id="rubik-undo" class="soft-btn">↶ Deshacer</button>
         </div>
-        <div class="move-pad" aria-label="Controles del cubo">
-          <button data-move="U">U</button><button data-move="U'">U′</button>
-          <button data-move="D">D</button><button data-move="D'">D′</button>
-          <button data-move="L">L</button><button data-move="L'">L′</button>
-          <button data-move="R">R</button><button data-move="R'">R′</button>
-          <button data-move="F">F</button><button data-move="F'">F′</button>
-          <button data-move="B">B</button><button data-move="B'">B′</button>
-        </div>
-        <p id="rubik-status" class="status-text">Cada botón gira una cara 90°.</p>
+        <p id="rubik-status" class="status-text" aria-live="polite">Arrastrá una de las piezas de colores para girar su capa.</p>
       </div>
     </section>
 
@@ -70,10 +59,10 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 2 · VELOCIDAD</span>
         <h1 id="tetris-title">Tetris <span>rápido</span></h1>
-        <p>¡Más rápido que nunca! Completá líneas a toda velocidad y alcanzá <strong>5.000 puntos</strong>.</p>
+        <p>Las piezas caen <strong>muy rápido desde el principio</strong>, sin acelerarse después. Completá líneas hasta alcanzar <strong>1.000 puntos</strong>.</p>
         <div class="score-panel">
           <div><small>PUNTOS</small><strong id="tetris-score">0</strong></div>
-          <div><small>META</small><strong>5.000</strong></div>
+          <div><small>META</small><strong>1.000</strong></div>
           <div><small>LÍNEAS</small><strong id="tetris-lines">0</strong></div>
         </div>
         <div class="score-track"><div id="score-fill"></div></div>
@@ -124,7 +113,7 @@
       <div class="win-copy">
         <span class="eyebrow">DESAFÍO COMPLETADO</span>
         <h1 id="win-title">¡GANASTE! 🎉</h1>
-        <p>Superaste el cubo, llegaste a 5.000 puntos y encontraste los cinco patos distintos.</p>
+        <p>Superaste el cubo, llegaste a 1.000 puntos y encontraste los cinco patos distintos.</p>
         <h2>¡Feliz cumpleaños! 💗</h2>
         <button id="play-again" class="primary-btn">Jugar de nuevo</button>
       </div>
@@ -185,6 +174,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261008-cande3"></script>
+  <script src="game.js?v=20261008-cande4"></script>
 </body>
 </html>
