@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css?v=20261008-cande3">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -70,10 +70,10 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 2 · VELOCIDAD</span>
         <h1 id="tetris-title">Tetris <span>rápido</span></h1>
-        <p>Ahora no hay tiempo para relajarse. Completá líneas y llegá a <strong>500 puntos</strong>.</p>
+        <p>¡Más rápido que nunca! Completá líneas a toda velocidad y alcanzá <strong>5.000 puntos</strong>.</p>
         <div class="score-panel">
           <div><small>PUNTOS</small><strong id="tetris-score">0</strong></div>
-          <div><small>META</small><strong>500</strong></div>
+          <div><small>META</small><strong>5.000</strong></div>
           <div><small>LÍNEAS</small><strong id="tetris-lines">0</strong></div>
         </div>
         <div class="score-track"><div id="score-fill"></div></div>
@@ -124,29 +124,56 @@
       <div class="win-copy">
         <span class="eyebrow">DESAFÍO COMPLETADO</span>
         <h1 id="win-title">¡GANASTE! 🎉</h1>
-        <p>Superaste el cubo, llegaste a 500 puntos y encontraste los cinco patos distintos.</p>
+        <p>Superaste el cubo, llegaste a 5.000 puntos y encontraste los cinco patos distintos.</p>
         <h2>¡Feliz cumpleaños! 💗</h2>
         <button id="play-again" class="primary-btn">Jugar de nuevo</button>
       </div>
 
-      <div class="cake-scene" aria-label="Torta de cumpleaños de tres pisos inspirada en los tres juegos">
-        <div class="sparkle s1">✦</div><div class="sparkle s2">✦</div><div class="sparkle s3">✦</div>
-        <div class="candle"><div class="flame"></div></div>
-        <div class="cake-tier tier-rubik">
-          <div class="rubik-tiles">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          </div>
+      <div class="cake-scene" aria-label="Torta de cumpleaños de tres pisos: cubo Rubik, piezas de Tetris y patitos de goma">
+        <div class="cake-halo" aria-hidden="true"></div>
+        <div class="cake-spark cs1">✦</div>
+        <div class="cake-spark cs2">✧</div>
+        <div class="cake-spark cs3">✦</div>
+        <div class="cake-spark cs4">✧</div>
+        <div class="cake-spark cs5">♥</div>
+
+        <div class="cake-topper"><span>FELIZ CUMPLE</span><strong>CANDE</strong><span class="topper-heart">♥</span></div>
+        <div class="cake-candle">
+          <div class="candle-shine"></div>
+          <div class="cake-flame"><i></i></div>
         </div>
+
+        <div class="cake-tier tier-rubik">
+          <div class="cake-icing icing-rubik"></div>
+          <span class="tier-medallion">01</span>
+          <div class="rubik-charm" aria-hidden="true">
+            <div class="rubik-charm-top"></div>
+            <div class="rubik-charm-front">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="rubik-charm-side"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <span class="cake-tiny-heart">♥</span>
+        </div>
+
         <div class="cake-tier tier-tetris">
-          <div class="tetris-sprinkles">
+          <div class="cake-icing icing-tetris"></div>
+          <span class="tier-medallion">02</span>
+          <div class="tetris-sprinkles" aria-hidden="true">
             <i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i>
             <i class="b6"></i><i class="b7"></i><i class="b8"></i><i class="b9"></i>
           </div>
+          <div class="cake-sugar-stars">✦ &nbsp;✦&nbsp; ✦</div>
         </div>
+
         <div class="cake-tier tier-ducks">
-          <div class="duck-parade"><span>🦆</span><span>🦆</span><span>🦆</span><span>🦆</span><span>🦆</span></div>
+          <div class="cake-icing icing-ducks"></div>
+          <span class="tier-medallion">03</span>
+          <div id="cake-ducks" class="cake-ducks" aria-hidden="true"></div>
+          <span class="cake-plaque">dulces sueños ✨</span>
         </div>
         <div class="cake-plate"></div>
+        <div class="cake-shadow"></div>
       </div>
     </section>
   </main>
@@ -158,6 +185,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=1"></script>
+  <script src="game.js?v=20261008-cande3"></script>
 </body>
 </html>
