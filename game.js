@@ -623,7 +623,7 @@
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 2.000 puntos.";
+    tetrisStatus.textContent = "⚡ Comenzás a 95 ms/fila y se acelera con cada línea. Meta: 2.000 puntos. R = reiniciar.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -669,7 +669,7 @@
       scoreEl.textContent = tScore;
       linesEl.textContent = tLines;
       scoreFill.style.width = Math.min(100, (tScore / TETRIS_TARGET) * 100) + "%";
-      tetrisStatus.textContent = cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".";
+      tetrisStatus.textContent = (cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".") + " Velocidad: " + tetrisGravityInterval() + " ms/fila.";
       if (tScore >= TETRIS_TARGET && !tetrisWon) {
         tetrisWon = true;
         tetrisRunning = false;
@@ -1018,10 +1018,16 @@
     }));
   }
 
+  // Caída inicialmente rápida; cada línea completada la acelera 4 ms
+  // hasta el mínimo de 45 ms por fila. "Reiniciar" recupera los 95 ms.
+  function tetrisGravityInterval() {
+    return Math.max(45, 95 - tLines * 4);
+  }
+
   function tetrisLoop(now) {
     if (tetrisRunning && currentLevel === 2) {
       repeatHorizontalWhileHeld(now);
-      const interval = 95; // Velocidad fija: 95 ms desde la primera pieza, sin aceleración progresiva.
+      const interval = tetrisGravityInterval();
       if (now - lastDrop > interval) {
         dropOne();
         lastDrop = now;
@@ -1095,7 +1101,15 @@
   }
 
   document.addEventListener("keydown", e => {
-    if (currentLevel !== 2 || !tetrisRunning) return;
+    if (currentLevel !== 2) return;
+    // Igual que pulsar el botón Reiniciar. No interferir con Ctrl+R del navegador.
+    if ((e.key === "r" || e.key === "R") && !e.repeat &&
+        !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      startTetris();
+      return;
+    }
+    if (!tetrisRunning) return;
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key)) e.preventDefault();
     if (e.key === "ArrowLeft") return beginHorizontalHold("left");
     if (e.key === "ArrowRight") return beginHorizontalHold("right");
