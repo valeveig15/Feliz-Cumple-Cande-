@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261008-help-v1">
+  <link rel="stylesheet" href="styles.css?v=20261008-hintfix2">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -85,10 +85,10 @@
           <div class="practice-body">
             <p class="practice-explain"><strong>Regla número uno:</strong> no encierres espacios vacíos debajo de otras piezas. Esos agujeros después son muy difíciles de llenar.</p>
             <div class="tetris-advice-card">
-              <strong>📍 Ubicación recomendada para esta pieza</strong>
-              <p id="tetris-advice-text" aria-live="polite">La sugerencia aparecerá cuando empiece Tetris.</p>
+              <strong>📍 Mejor ubicación estimada para esta pieza</strong>
+              <p id="tetris-advice-text" aria-live="polite">Se calculará una posición segura al aparecer la primera pieza.</p>
             </div>
-            <p class="practice-foot">Los bloques marcados en turquesa muestran una posición posible. Podés elegir otra si preferís.</p>
+            <p class="practice-foot">Los bloques turquesa muestran una recomendación calculada con la pieza actual, la siguiente y la altura del tablero. Es una ayuda, no una garantía: el tiempo para mover la pieza también importa.</p>
             <ul class="practice-advice-list">
               <li>Dejá el piso bajo y lo más parejo posible.</li>
               <li>Reservá un espacio vertical para la pieza recta de cuatro bloques.</li>
@@ -205,6 +205,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261008-help-v1"></script>
+  <script src="game.js?v=20261008-hintfix2"></script>
 </body>
 </html>
