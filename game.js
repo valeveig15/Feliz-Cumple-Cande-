@@ -1154,68 +1154,134 @@
   // Patito de goma de baño, estilo juguete 3D: cabeza redondita,
   // pico con volumen, plástico brillante, ala moldeada y ojos de vidrio.
   // El objeto es vectorial (nítido también en las cuadrículas pequeñas).
+  // Patito clásico de hule: silhouette esculpida, material satinado,
+  // sombras redondeadas, pico bicapa y brillo especular de plástico real.
+  // SVG autocontenido y nítido incluso al reducirse en las rondas 4 y 5.
   function duckSvg(level, odd) {
-    const id = "ducky-v5-" + (++duckRenderSeq);
-    const body = id + "-body";
-    const head = id + "-head";
-    const beak = id + "-beak";
-    const wing = id + "-wing";
-    const blush = id + "-blush";
-    const beakColor = odd && level === 1 ? "#fc6a92" : "#ff963b";
+    const uid = "rubberbath-v6-" + (++duckRenderSeq);
+    const bodyGrad = uid + "-body";
+    const headGrad = uid + "-head";
+    const beakGrad = uid + "-beak";
+    const wingGrad = uid + "-wing";
+    const blushGrad = uid + "-blush";
+    const lightGrad = uid + "-light";
+    const pinkBeak = odd && level === 1;
+    const beakBase = pinkBeak ? "#ff79a2" : "#ff963a";
+    const beakShade = pinkBeak ? "#d84478" : "#ce5d1c";
     const tail = odd && level === 2
-      ? '<path d="M30 81 C24 73 25 68 31 66 L43 78Z" fill="#ffd342" stroke="#efb52b" stroke-width="1.2"/>'
-      : '<path d="M31 86 C17 81 8 66 14 50 C23 52 35 61 43 73Z" fill="url(#' + body + ')" stroke="#e9ac22" stroke-width="1.4"/>' +
-        '<path d="M17 57 Q21 68 29 74" fill="none" stroke="#fffab4" stroke-width="3" opacity=".65" stroke-linecap="round"/>';
+      ? '<path d="M30 87 C20 82 19 72 25 66 C32 68 38 75 43 81Z" fill="url(#' + bodyGrad + ')" stroke="#e6b12d" stroke-width="1.4"/>'
+      : '<path d="M34 91 C17 83 8 64 13 47 C23 51 36 58 46 78Z" fill="url(#' + bodyGrad + ')" stroke="#e6ab22" stroke-width="1.5"/>' +
+        '<path d="M16 56 Q22 69 30 77" fill="none" stroke="#fff6b1" stroke-width="4" opacity=".58" stroke-linecap="round"/>' +
+        '<path d="M14 47 Q20 51 23 56" fill="none" stroke="#fff9cf" stroke-width="2.6" opacity=".7" stroke-linecap="round"/>';
     const eye = odd && level === 3
-      ? '<path d="M93 37 Q101 43 108 37" fill="none" stroke="#382c2c" stroke-width="3.4" stroke-linecap="round"/>'
-      : '<ellipse cx="101" cy="38" rx="5.15" ry="5.85" fill="#2b2530"/>' +
-        '<circle cx="102.1" cy="35.6" r="1.8" fill="#fffef9"/><circle cx="99.1" cy="40.5" r=".8" fill="#fcf6f4"/>';
-    const wingPaint = odd && level === 4 ? "#f7a9ed" : "url(#" + wing + ")";
+      ? '<path d="M105 48 Q112 54 121 47" stroke="#312529" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+        '<path d="M108 44 Q112 42 116 44" stroke="#c78c35" stroke-width="1.6" fill="none" opacity=".5"/>'
+      : '<ellipse cx="114" cy="46" rx="6.1" ry="6.5" fill="#d5a02c" opacity=".42"/>' +
+        '<ellipse cx="114" cy="45.7" rx="5.45" ry="5.9" fill="#242024"/>' +
+        '<ellipse cx="112.4" cy="43.5" rx="2.35" ry="2.55" fill="#fffefa"/>' +
+        '<circle cx="116.7" cy="48.2" r="1.1" fill="#ded8d7" opacity=".75"/>';
+    const wingFill = odd && level === 4 ? "#f6a6d9" : "url(#" + wingGrad + ")";
     const bow = odd && level === 5
-      ? '<g transform="translate(75 21)"><path d="M0 0 C-13 -12 -18 -7 -14 4 C-12 10 -4 5 0 2 C10 9 17 6 17 -3 C14 -10 6 -7 0 0Z" fill="#f761ae" stroke="#bc3881" stroke-width="1.5"/><circle cx="1" cy="1" r="4" fill="#ffcced"/><path d="M-5 4 -10 14 M6 4 12 14" stroke="#f761ae" stroke-width="4" stroke-linecap="round"/></g>'
-      : '';
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154 126" role="img" aria-label="Patito de goma amarillo">' +
+      ? '<g transform="translate(89 20) rotate(-15)">' +
+        '<path d="M0 0 Q-17 -14 -19 -2 Q-18 12 0 2 Q17 14 20 1 Q19 -13 0 0Z" fill="#f369ac" stroke="#c44a8c" stroke-width="1.3"/>' +
+        '<circle cx="0" cy="1" r="5" fill="#ffd6ed" stroke="#e874b5" stroke-width="1"/>' +
+        '<path d="M-3 6 -9 14 M4 6 10 14" stroke="#ec69a5" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M-13 -3 L-6 0 M9 0 L15 -2" stroke="#ffe8f4" stroke-width="1.8" opacity=".7"/>' +
+        '</g>' : '';
+
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 140" role="img" aria-label="Patito de goma amarillo brillante">' +
       '<defs>' +
-      '<radialGradient id="' + body + '" cx="34%" cy="17%" r="87%">' +
-        '<stop offset="0" stop-color="#fffcd5"/><stop offset=".23" stop-color="#fff182"/>' +
-        '<stop offset=".50" stop-color="#ffe44e"/><stop offset=".75" stop-color="#ffd02a"/>' +
-        '<stop offset=".91" stop-color="#efb11f"/><stop offset="1" stop-color="#d99013"/>' +
-      '</radialGradient>' +
-      '<radialGradient id="' + head + '" cx="31%" cy="20%" r="83%">' +
-        '<stop offset="0" stop-color="#fffce3"/><stop offset=".30" stop-color="#fff280"/>' +
-        '<stop offset=".65" stop-color="#ffdb39"/><stop offset=".89" stop-color="#f7c227"/>' +
-        '<stop offset="1" stop-color="#d99912"/>' +
-      '</radialGradient>' +
-      '<linearGradient id="' + beak + '" x1="0" y1="0" x2=".2" y2="1">' +
-        '<stop stop-color="#ffe2a0"/><stop offset=".27" stop-color="' + beakColor + '"/>' +
-        '<stop offset=".78" stop-color="#f47a26"/><stop offset="1" stop-color="#cc591d"/>' +
-      '</linearGradient>' +
-      '<linearGradient id="' + wing + '" x1=".1" y1="0" x2=".85" y2="1">' +
-        '<stop stop-color="#fff9be"/><stop offset=".34" stop-color="#ffe976"/>' +
-        '<stop offset=".73" stop-color="#f9d02e"/><stop offset="1" stop-color="#e7a921"/>' +
-      '</linearGradient>' +
-      '<radialGradient id="' + blush + '"><stop stop-color="#ff9580" stop-opacity=".55"/>' +
-        '<stop offset="1" stop-color="#ff9580" stop-opacity="0"/></radialGradient>' +
+        '<radialGradient id="' + bodyGrad + '" cx="37%" cy="23%" r="83%">' +
+          '<stop offset="0" stop-color="#ffffdb"/>' +
+          '<stop offset=".17" stop-color="#fff9a2"/>' +
+          '<stop offset=".42" stop-color="#ffe658"/>' +
+          '<stop offset=".69" stop-color="#ffd336"/>' +
+          '<stop offset=".86" stop-color="#eeb11f"/>' +
+          '<stop offset="1" stop-color="#c88713"/>' +
+        '</radialGradient>' +
+        '<radialGradient id="' + headGrad + '" cx="30%" cy="21%" r="87%">' +
+          '<stop offset="0" stop-color="#fffce7"/>' +
+          '<stop offset=".14" stop-color="#fff8b5"/>' +
+          '<stop offset=".38" stop-color="#ffec6c"/>' +
+          '<stop offset=".67" stop-color="#ffdb42"/>' +
+          '<stop offset=".9" stop-color="#eeb51f"/>' +
+          '<stop offset="1" stop-color="#cc8b14"/>' +
+        '</radialGradient>' +
+        '<linearGradient id="' + beakGrad + '" x1="0" y1="0" x2=".18" y2="1">' +
+          '<stop offset="0" stop-color="#fff0bf"/>' +
+          '<stop offset=".19" stop-color="' + beakBase + '"/>' +
+          '<stop offset=".59" stop-color="' + beakBase + '"/>' +
+          '<stop offset="1" stop-color="' + beakShade + '"/>' +
+        '</linearGradient>' +
+        '<linearGradient id="' + wingGrad + '" x1=".1" y1="0" x2=".93" y2="1">' +
+          '<stop offset="0" stop-color="#fffac1"/>' +
+          '<stop offset=".28" stop-color="#ffe979"/>' +
+          '<stop offset=".66" stop-color="#ffcf38"/>' +
+          '<stop offset="1" stop-color="#dc9f19"/>' +
+        '</linearGradient>' +
+        '<radialGradient id="' + blushGrad + '">' +
+          '<stop offset="0" stop-color="#f58f85" stop-opacity=".38"/>' +
+          '<stop offset="1" stop-color="#f9a184" stop-opacity="0"/>' +
+        '</radialGradient>' +
+        '<linearGradient id="' + lightGrad + '" x1="0" y1="0" x2=".6" y2="1">' +
+          '<stop offset="0" stop-color="#ffffff" stop-opacity=".62"/>' +
+          '<stop offset=".55" stop-color="#ffffff" stop-opacity=".12"/>' +
+          '<stop offset="1" stop-color="#ffffff" stop-opacity="0"/>' +
+        '</linearGradient>' +
       '</defs>' +
-      '<ellipse cx="76" cy="114" rx="54" ry="6" fill="#3989a3" opacity=".13"/>' +
+
+      // Water ring and contact shadow beneath the bath toy.
+      '<ellipse cx="84" cy="127" rx="64" ry="7" fill="#65b6cc" opacity=".18"/>' +
+      '<path d="M36 126 Q84 133 137 124" fill="none" stroke="#c6f8ff" stroke-width="2.2" opacity=".8" stroke-linecap="round"/>' +
+      '<path d="M21 120 Q31 116 40 121 M136 120 Q146 116 154 119" fill="none" stroke="#9edce9" stroke-width="1.4" opacity=".5" stroke-linecap="round"/>' +
       tail +
-      '<path d="M23 78 C22 60 35 53 55 52 C64 51 73 55 81 59 C91 60 107 58 116 69 C130 87 117 105 99 111 C75 117 46 112 32 103 C23 97 21 89 23 78Z" fill="url(#' + body + ')" stroke="#e8aa20" stroke-width="1.2"/>' +
-      '<path d="M56 68 C58 52 60 46 62 37 C66 21 76 13 93 12 C111 11 121 23 122 39 C123 57 111 72 95 75 C76 77 61 72 56 68Z" fill="url(#' + head + ')" stroke="#eab22b" stroke-width="1.1"/>' +
-      '<path d="M71 29 C78 17 93 15 103 21" fill="none" stroke="#fffef4" stroke-width="6.5" stroke-linecap="round" opacity=".73"/>' +
-      '<path d="M33 72 Q31 88 45 97" fill="none" stroke="#fffad8" stroke-width="5" opacity=".43" stroke-linecap="round"/>' +
-      '<path d="M117 45 C125 40 144 42 149 48 C152 54 140 62 120 59 L115 54Z" fill="url(#' + beak + ')" stroke="#d86c22" stroke-width="1.2"/>' +
-      '<path d="M119 47 Q135 44 143 49" fill="none" stroke="#ffe1b6" stroke-width="2.6" opacity=".87" stroke-linecap="round"/>' +
-      '<path d="M122 59 Q137 62 145 54" fill="none" stroke="#d16428" stroke-width="1.25" opacity=".68"/>' +
-      '<path d="M86 54 C88 49 90 48 92 51" stroke="#e4a633" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".4"/>' +
+
+      // Chubby one-piece duck hull with a subtly darker rubber underside.
+      '<path d="M24 85 C19 68 29 56 49 54 C65 51 76 57 88 60 ' +
+        'C101 57 120 62 131 74 C143 89 129 112 107 119 ' +
+        'C78 127 46 119 31 107 C25 102 23 94 24 85Z" ' +
+        'fill="url(#' + bodyGrad + ')" stroke="#dea225" stroke-width="1.45"/>' +
+      '<path d="M34 106 Q61 124 99 117 Q118 114 128 102" fill="none" ' +
+        'stroke="#bd8111" opacity=".22" stroke-width="3" stroke-linecap="round"/>' +
+      '<path d="M28 76 Q30 63 51 62 Q69 60 77 64" fill="none" ' +
+        'stroke="#fffcdc" opacity=".48" stroke-width="4.4" stroke-linecap="round"/>' +
+
+      // Round expressive head and neck, integrated into the plastic mold.
+      '<path d="M59 75 C57 65 58 43 67 30 C78 14 93 11 108 14 ' +
+        'C128 17 139 34 136 52 C134 72 116 85 96 85 C78 85 64 81 59 75Z" ' +
+        'fill="url(#' + headGrad + ')" stroke="#e6af27" stroke-width="1.3"/>' +
+      '<path d="M66 43 C70 26 84 20 99 20" fill="none" ' +
+        'stroke="#fffff6" stroke-width="7.2" stroke-linecap="round" opacity=".76"/>' +
+      '<path d="M63 54 Q60 68 71 76" fill="none" ' +
+        'stroke="#fff4a3" stroke-width="3.5" stroke-linecap="round" opacity=".35"/>' +
+      '<ellipse cx="89" cy="33" rx="18" ry="12" fill="url(#' + lightGrad + ')" opacity=".28" transform="rotate(-23 89 33)"/>' +
+
+      // Gently smiling two-part beak, slightly lifted at its corners.
+      '<path d="M133 49 C141 45 157 46 163 52 C169 58 153 65 134 64 L130 57Z" ' +
+        'fill="url(#' + beakGrad + ')" stroke="' + beakShade + '" stroke-width="1.3"/>' +
+      '<path d="M136 63 Q150 69 160 60 Q153 73 140 70 Q136 68 136 63Z" ' +
+        'fill="' + beakShade + '" opacity=".68"/>' +
+      '<path d="M140 50 Q152 49 158 53" fill="none" ' +
+        'stroke="#fff3d5" stroke-width="3" opacity=".78" stroke-linecap="round"/>' +
+      '<path d="M136 63 Q149 67 159 61" fill="none" ' +
+        'stroke="#a95623" stroke-width=".85" opacity=".33"/>' +
+
+      // Beady gloss eye, cheek blush, slightly raised molded wing.
       eye +
-      '<ellipse cx="96" cy="57" rx="13" ry="9" fill="url(#' + blush + ')" opacity=".75"/>' +
-      '<path d="M43 86 C44 71 56 65 67 68 C78 69 88 75 89 84 C81 100 64 102 51 98 C44 95 42 91 43 86Z" fill="' + wingPaint + '" stroke="#e8b229" stroke-width="1.4"/>' +
-      '<path d="M49 78 C60 68 77 73 81 79" fill="none" stroke="#fffce7" stroke-width="3.6" opacity=".78" stroke-linecap="round"/>' +
-      '<path d="M52 95 Q69 101 84 87" fill="none" stroke="#dba92e" opacity=".4" stroke-width="1.4"/>' +
-      '<path d="M43 103 Q75 115 103 103" fill="none" stroke="#fff8a4" stroke-width="2.2" opacity=".32"/>' +
-      '<ellipse cx="65" cy="61" rx="10" ry="17" fill="#fffef0" opacity=".07" transform="rotate(-20 65 61)"/>' +
-      bow +
-      '</svg>';
+      '<ellipse cx="105" cy="66" rx="16" ry="10" fill="url(#' + blushGrad + ')" opacity=".66"/>' +
+      '<path d="M47 85 C48 73 62 68 77 71 C89 74 96 82 96 88 ' +
+        'C90 104 74 110 57 106 C49 103 46 96 47 85Z" ' +
+        'fill="' + wingFill + '" stroke="#dfa625" stroke-width="1.5"/>' +
+      '<path d="M54 82 C63 73 81 77 88 84" fill="none" ' +
+        'stroke="#ffffec" opacity=".82" stroke-width="4.4" stroke-linecap="round"/>' +
+      '<path d="M57 99 Q76 109 90 94" fill="none" ' +
+        'stroke="#c08e17" opacity=".31" stroke-width="1.4" stroke-linecap="round"/>' +
+      '<path d="M34 88 Q32 98 40 104" fill="none" ' +
+        'stroke="#fffbe4" opacity=".61" stroke-width="4.6" stroke-linecap="round"/>' +
+      '<ellipse cx="55" cy="65" rx="7" ry="15" transform="rotate(-25 55 65)" fill="#fff" opacity=".055"/>' +
+
+      // Sublevel 5 has an intentionally distinct little fondant-pink bow.
+      bow + '</svg>';
   }
 
   function startDuckLevel(level) {
