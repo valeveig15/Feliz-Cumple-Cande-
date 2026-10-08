@@ -210,3 +210,29 @@ main{position:relative;z-index:2}
 .rubik-meter strong{color:#f25999;font-size:14px}
 @media(max-width:560px){.rubik-tips{margin-top:16px}.rubik-tip{padding:9px 11px}.rubik-meter{font-size:9px}}
 
+
+
+/* Ayudas temporales para pruebas (se quitan en la versión final). */
+.practice-panel{margin:18px 0 0;background:#fff;border:1px solid rgba(138,98,190,.2);
+  border-radius:21px;overflow:hidden;box-shadow:0 12px 25px #8268a016}
+.practice-panel summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;
+  padding:15px 18px;font-size:14px;font-weight:900;color:#514064}
+.practice-panel summary::-webkit-details-marker{display:none}
+.practice-panel summary:hover{background:#faf6ff}
+.practice-label{background:#fff0ca;color:#9e6c13;border-radius:25px;font-size:9px;letter-spacing:.06em;padding:5px 8px;font-weight:900}
+.practice-body{border-top:1px solid #eee8f4;padding:15px 17px 17px}
+.practice-explain{margin:0 0 14px;font-size:13px;line-height:1.55;color:#6d6178}
+.rubik-step-card{display:flex;flex-direction:column;gap:8px;padding:16px;background:linear-gradient(130deg,#f4eaff,#fff2f7);border-radius:15px}
+.guide-count{font-size:10px;font-weight:900;letter-spacing:.1em;color:#7956ae}
+.rubik-step-card strong{font-size:15px;line-height:1.4;color:#463756}
+.guide-detail{font-size:13px;font-weight:800;color:#bd5084}
+.guide-button{margin-top:13px;background:linear-gradient(120deg,#ff71a8,#9363e3);border:0;border-radius:13px;
+  padding:12px 16px;color:white;width:100%;font-weight:850;cursor:pointer;
+  box-shadow:0 8px 18px #b57ac43b}
+.guide-button:disabled{cursor:not-allowed;filter:grayscale(1);opacity:.6}
+.practice-foot{font-size:11px;line-height:1.55;color:#82758c;margin:12px 0 0}
+.tetris-advice-card{background:#e8fffa;border:1px solid #9defdd;border-radius:14px;padding:12px 14px;color:#276d65}
+.tetris-advice-card strong{display:block;font-size:12px}
+.tetris-advice-card p{font-size:13px;line-height:1.5;margin:8px 0 0}
+.practice-advice-list{padding-left:18px;margin:12px 0 0;color:#74687f;font-size:12px;line-height:1.65}
+.practice-advice-list li{margin:5px 0}
