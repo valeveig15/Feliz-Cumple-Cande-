@@ -29,6 +29,7 @@
     setProgress(level);
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (level === 2) startTetris();
+    if (level === 1) updateRubikPractice();
     if (level === 3) startDuckLevel(1);
     if (level === 4) { renderCakeDucks(); launchConfetti(); }
   }
@@ -57,6 +58,16 @@
   let moveHistory = [];
   let scrambleMoves = [];
   let rubikSolvedLock = false;
+  // GUÍA TEMPORAL DE PRÁCTICA. Quitar esta sección y su interfaz
+  // cuando se prepare la versión final de cumpleaños.
+  const rubikPractice = document.getElementById("rubik-practice");
+  const rubikHintStep = document.getElementById("rubik-hint-step");
+  const rubikHintInstruction = document.getElementById("rubik-hint-instruction");
+  const rubikHintDetail = document.getElementById("rubik-hint-detail");
+  const rubikDemoButton = document.getElementById("rubik-demo-move");
+  let rubikGuideMoves = [];
+  let rubikHintOverlay = null;
+
 
   const DARK = 0x17141d;
   const FACE_COLORS = {
@@ -91,7 +102,94 @@
     });
   }
 
+
+  function removeRubikHintOverlay() {
+    if (!rubikHintOverlay || !cubeGroup) return;
+    cubeGroup.remove(rubikHintOverlay);
+    rubikHintOverlay.traverse(object => {
+      if (object.geometry) object.geometry.dispose();
+      if (object.material) object.material.dispose();
+    });
+    rubikHintOverlay = null;
+  }
+
+  function markRubikLayer(move) {
+    removeRubikHintOverlay();
+    if (!move || !rubikPractice.open || !cubeGroup || currentLevel !== 1 || rotating) return;
+    const { axis, layer } = move;
+    const dims = axis === "x" ? [1.08, 3.08, 3.08]
+      : axis === "y" ? [3.08, 1.08, 3.08] : [3.08, 3.08, 1.08];
+    const geometry = new THREE.BoxGeometry(...dims);
+    rubikHintOverlay = new THREE.Group();
+    rubikHintOverlay.position[axis] = layer;
+    rubikHintOverlay.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+      color: 0xbab5ff, transparent: true, opacity: 0.13,
+      depthWrite: false, side: THREE.DoubleSide
+    })));
+    rubikHintOverlay.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry),
+      new THREE.LineBasicMaterial({ color: 0x8152e9, transparent: true, opacity: 0.94 })));
+    cubeGroup.add(rubikHintOverlay);
+  }
+
+  function sameRubikMove(a, b) {
+    return a.axis === b.axis && a.layer === b.layer && a.turn === b.turn;
+  }
+
+  function updateRubikPractice() {
+    if (!rubikGuideMoves.length || !rubikHintStep) return;
+    let matching = 0;
+    while (matching < moveHistory.length && matching < rubikGuideMoves.length
+      && sameRubikMove(moveHistory[matching], rubikGuideMoves[matching])) matching++;
+
+    if (matching !== moveHistory.length) {
+      rubikHintStep.textContent = "REVISAR ÚLTIMO GIRO";
+      rubikHintInstruction.textContent = "Tu último giro no es el que indicaba la guía.";
+      rubikHintDetail.textContent = "Tocá «Deshacer» hasta retomar los pasos, o «Mezclar de nuevo» para empezar.";
+      rubikDemoButton.disabled = true;
+      removeRubikHintOverlay();
+      return;
+    }
+
+    if (matching >= rubikGuideMoves.length) {
+      rubikHintStep.textContent = "7 DE 7 PASOS";
+      rubikHintInstruction.textContent = "¡Completaste los 7 giros!";
+      rubikHintDetail.textContent = "Todas las caras deben tener un solo color.";
+      rubikDemoButton.disabled = true;
+      removeRubikHintOverlay();
+      return;
+    }
+
+    const move = rubikGuideMoves[matching];
+    const faceNames = {
+      x: move.layer > 0 ? "derecha" : "izquierda",
+      y: move.layer > 0 ? "superior" : "inferior",
+      z: move.layer > 0 ? "delantera" : "trasera"
+    };
+    const clockwise = move.turn * move.layer < 0;
+    rubikHintStep.textContent = "PASO " + (matching + 1) + " DE " + rubikGuideMoves.length;
+    rubikHintInstruction.textContent = "Girá la capa " + faceNames[move.axis] + " un cuarto de vuelta.";
+    rubikHintDetail.textContent = (clockwise ? "↻ Horario" : "↺ Antihorario")
+      + " · Mirá esa cara de frente para interpretar el sentido de giro.";
+    rubikDemoButton.disabled = rotating;
+    markRubikLayer(move);
+  }
+
+  rubikPractice.addEventListener("toggle", () => {
+    if (rubikPractice.open) updateRubikPractice();
+    else removeRubikHintOverlay();
+  });
+  rubikDemoButton.addEventListener("click", () => {
+    if (rotating || rubikSolvedLock || !rubikPractice.open) return;
+    const step = moveHistory.length;
+    if (step >= rubikGuideMoves.length
+      || !moveHistory.every((move, index) => sameRubikMove(move, rubikGuideMoves[index]))) return;
+    const move = rubikGuideMoves[step];
+    removeRubikHintOverlay();
+    rotateSlice(move.axis, move.layer, move.turn);
+  });
+
   function buildCube() {
+    removeRubikHintOverlay();
     while (cubeGroup.children.length) cubeGroup.remove(cubeGroup.children[0]);
     cubies = [];
     const geometry = new THREE.BoxGeometry(0.92, 0.92, 0.92, 1, 1, 1);
@@ -255,6 +353,7 @@
         if (!choice) return;
         gesture.choice = choice;
         gesture.selected = layerCubies(choice.axis, choice.layer);
+        removeRubikHintOverlay();
         gesture.pivot = new THREE.Group();
         cubeGroup.add(gesture.pivot);
         gesture.selected.forEach(cubie => gesture.pivot.attach(cubie));
@@ -365,6 +464,7 @@
       if (record && turn) moveHistory.push({ axis, layer, turn });
       rubikMovesEl.textContent = String(moveHistory.length);
       rotating = false;
+      updateRubikPractice();
       if (check && turn && isCubeSolved()) {
         rubikSolvedLock = true;
         rubikStatus.textContent = "✨ ¡Perfecto! Cubo armado.";
@@ -381,6 +481,7 @@
     const selected = layerCubies(axis, layer);
     if (!selected.length) return;
     rotating = true;
+    removeRubikHintOverlay();
     const pivot = new THREE.Group();
     cubeGroup.add(pivot);
     selected.forEach(cubie => pivot.attach(cubie));
@@ -432,7 +533,13 @@
     buildCube();
     scrambleMoves = makeScramble();
     scrambleMoves.forEach(applyMoveInstant);
+    rubikGuideMoves = [...scrambleMoves].reverse().map(move => {
+      const parsed = parseMove(move);
+      return { axis: parsed.axis, layer: parsed.layer,
+        turn: -Math.sign(parsed.angle) };
+    });
     rubikMovesEl.textContent = "0";
+    updateRubikPractice();
     rubikStatus.textContent = "Arrastrá sobre una pieza para girar la capa. Fuera del cubo cambiás la vista.";
   }
 
@@ -454,6 +561,9 @@
   const linesEl = document.getElementById("tetris-lines");
   const scoreFill = document.getElementById("score-fill");
   const tetrisStatus = document.getElementById("tetris-status");
+  const tetrisPractice = document.getElementById("tetris-practice");
+  const tetrisAdviceText = document.getElementById("tetris-advice-text");
+  let tetrisRecommended = null;
 
   const COLS = 10, ROWS = 20, BLOCK = 30;
   const TCOLORS = ["#0000", "#4fd6ff", "#ffd44d", "#b77bff", "#65d686", "#ff6579", "#5688ff", "#ff9a45"];
@@ -495,6 +605,7 @@
     piece.x = Math.floor(COLS / 2 - piece.matrix[0].length / 2);
     piece.y = 0;
     drawNext();
+    calculateTetrisRecommendation();
     if (collides(piece.matrix, piece.x, piece.y)) {
       tetrisRunning = false;
       tetrisStatus.textContent = "💥 Se llenó. Reiniciando…";
@@ -622,6 +733,98 @@
     ctx.globalAlpha = 1;
   }
 
+  // Analiza ubicaciones de la pieza actual: penaliza huecos tapados,
+  // altura y desniveles; premia completar líneas.
+  function calculateTetrisRecommendation() {
+    tetrisRecommended = null;
+    if (!piece) return;
+    let rotatedMatrix = cloneShape(piece.type);
+    const visited = new Set();
+
+    for (let rotation = 0; rotation < 4; rotation++) {
+      const signature = JSON.stringify(rotatedMatrix);
+      if (visited.has(signature)) {
+        rotatedMatrix = rotated(rotatedMatrix);
+        continue;
+      }
+      visited.add(signature);
+
+      for (let x = 0; x <= COLS - rotatedMatrix[0].length; x++) {
+        if (collides(rotatedMatrix, x, 0)) continue;
+        let y = 0;
+        while (!collides(rotatedMatrix, x, y + 1)) y++;
+
+        const simulation = board.map(row => row.slice());
+        rotatedMatrix.forEach((row, iy) => row.forEach(value => {
+          if (value) simulation[y + iy][x] = piece.type;
+        }));
+        let cleared = 0;
+        for (let iy = ROWS - 1; iy >= 0; iy--) {
+          if (simulation[iy].every(Boolean)) {
+            simulation.splice(iy, 1);
+            simulation.unshift(Array(COLS).fill(0));
+            cleared++;
+            iy++;
+          }
+        }
+        const heights = [];
+        let holes = 0, sumHeights = 0;
+        for (let col = 0; col < COLS; col++) {
+          let first = -1;
+          for (let row = 0; row < ROWS; row++) {
+            if (simulation[row][col] && first < 0) first = row;
+            if (!simulation[row][col] && first >= 0) holes++;
+          }
+          const height = first < 0 ? 0 : ROWS - first;
+          heights.push(height);
+          sumHeights += height;
+        }
+        let uneven = 0;
+        for (let col = 1; col < COLS; col++) uneven += Math.abs(heights[col] - heights[col-1]);
+
+        const cost = holes * 16 + sumHeights * 0.62 + uneven * 0.88 +
+          Math.max(...heights) * 1.3 - cleared * 22;
+        if (!tetrisRecommended || cost < tetrisRecommended.cost) {
+          tetrisRecommended = {
+            x, y, rotation, matrix: rotatedMatrix.map(row => row.slice()),
+            cost, cleared
+          };
+        }
+      }
+      rotatedMatrix = rotated(rotatedMatrix);
+    }
+    if (!tetrisRecommended) {
+      tetrisAdviceText.textContent = "La torre está demasiado alta. Tratá de despejar filas inmediatamente.";
+      return;
+    }
+    const r = tetrisRecommended;
+    const note = r.cleared
+      ? " Esta ubicación completa " + r.cleared + " línea" + (r.cleared > 1 ? "s." : ".")
+      : " Evita dejar tantos huecos tapados como otras opciones.";
+    tetrisAdviceText.textContent = "Empezá desde la columna " + (r.x+1)
+      + " (contando desde la izquierda), " + (r.rotation ? "girando la pieza " + r.rotation + " cuarto" + (r.rotation > 1 ? "s" : "") + " de vuelta" : "sin girarla")
+      + "." + note;
+  }
+
+  function drawRecommendedTetrisOutline() {
+    if (!tetrisRecommended || !tetrisPractice.open) return;
+    const recommendation = tetrisRecommended;
+    tCtx.save();
+    tCtx.fillStyle = "rgba(85, 239, 210, 0.19)";
+    tCtx.strokeStyle = "#52f6d9";
+    tCtx.lineWidth = 2.5;
+    recommendation.matrix.forEach((row, dy) => row.forEach((cell, dx) => {
+      if (!cell) return;
+      const px = (recommendation.x + dx) * BLOCK;
+      const py = (recommendation.y + dy) * BLOCK;
+      tCtx.fillRect(px + 2, py + 2, BLOCK - 4, BLOCK - 4);
+      tCtx.strokeRect(px + 2, py + 2, BLOCK - 4, BLOCK - 4);
+    }));
+    tCtx.restore();
+  }
+
+  tetrisPractice.addEventListener("toggle", () => drawTetris());
+
   function drawTetris() {
     tCtx.clearRect(0, 0, tCanvas.width, tCanvas.height);
     tCtx.fillStyle = "#17131e";
@@ -633,6 +836,7 @@
 
     board.forEach((row, y) => row.forEach((v, x) => v && drawBlock(tCtx, x, y, TCOLORS[v], BLOCK)));
 
+    drawRecommendedTetrisOutline();
     if (piece) {
       const gy = ghostY();
       piece.matrix.forEach((row, y) => row.forEach((v, x) => {
