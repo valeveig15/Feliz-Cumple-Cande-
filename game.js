@@ -623,7 +623,7 @@
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "⚡ Comenzás a 95 ms/fila y se acelera con cada línea. Meta: 2.000 puntos. R = reiniciar.";
+    tetrisStatus.textContent = "⚡ Comenzás a 120 ms/fila y se acelera con cada línea. Meta: 2.000 puntos. R = reiniciar.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -1018,10 +1018,10 @@
     }));
   }
 
-  // Caída inicialmente rápida; cada línea completada la acelera 4 ms
-  // hasta el mínimo de 45 ms por fila. "Reiniciar" recupera los 95 ms.
+  // La caída comienza algo más lenta: 120 ms por fila; cada línea
+  // la acelera 5 ms hasta un mínimo de 45 ms. Reiniciar restaura 120 ms.
   function tetrisGravityInterval() {
-    return Math.max(45, 95 - tLines * 4);
+    return Math.max(45, 120 - tLines * 5);
   }
 
   function tetrisLoop(now) {
