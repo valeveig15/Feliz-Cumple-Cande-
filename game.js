@@ -733,77 +733,228 @@
     ctx.globalAlpha = 1;
   }
 
-  // Analiza ubicaciones de la pieza actual: penaliza huecos tapados,
-  // altura y desniveles; premia completar líneas.
-  function calculateTetrisRecommendation() {
-    tetrisRecommended = null;
-    if (!piece) return;
-    let rotatedMatrix = cloneShape(piece.type);
-    const visited = new Set();
+  // Recomendador temporal: simula TODAS las celdas de cada pieza,
+  // busca posiciones alcanzables con los controles del juego y evalúa
+  // puntos, huecos, altura y la pieza que ya aparece en "Siguiente".
+  // El resultado es heurístico: no promete jugar de forma óptima.
+  const TetrisAdvisor = (() => {
+    const LINE_POINTS = [0, 100, 250, 400, 600];
 
-    for (let rotation = 0; rotation < 4; rotation++) {
-      const signature = JSON.stringify(rotatedMatrix);
-      if (visited.has(signature)) {
-        rotatedMatrix = rotated(rotatedMatrix);
-        continue;
+    function boardCollision(grid, shape, px, py) {
+      for (let dy = 0; dy < shape.length; dy++) {
+        for (let dx = 0; dx < shape[dy].length; dx++) {
+          if (!shape[dy][dx]) continue;
+          const xx = px + dx, yy = py + dy;
+          if (xx < 0 || xx >= COLS || yy >= ROWS) return true;
+          if (yy >= 0 && grid[yy][xx]) return true;
+        }
       }
-      visited.add(signature);
+      return false;
+    }
 
-      for (let x = 0; x <= COLS - rotatedMatrix[0].length; x++) {
-        if (collides(rotatedMatrix, x, 0)) continue;
-        let y = 0;
-        while (!collides(rotatedMatrix, x, y + 1)) y++;
+    function afterPlacement(grid, shape, px, py, type) {
+      const result = grid.map(row => row.slice());
+      for (let dy = 0; dy < shape.length; dy++) {
+        for (let dx = 0; dx < shape[dy].length; dx++) {
+          // dx is important: every tile occupies its own column.
+          if (shape[dy][dx]) result[py + dy][px + dx] = type;
+        }
+      }
+      let lines = 0;
+      for (let row = ROWS - 1; row >= 0; row--) {
+        if (result[row].every(Boolean)) {
+          result.splice(row, 1);
+          result.unshift(Array(COLS).fill(0));
+          lines++;
+          row++;
+        }
+      }
+      return { board: result, lines, points: LINE_POINTS[lines] };
+    }
 
-        const simulation = board.map(row => row.slice());
-        rotatedMatrix.forEach((row, iy) => row.forEach(value => {
-          if (value) simulation[y + iy][x] = piece.type;
-        }));
-        let cleared = 0;
-        for (let iy = ROWS - 1; iy >= 0; iy--) {
-          if (simulation[iy].every(Boolean)) {
-            simulation.splice(iy, 1);
-            simulation.unshift(Array(COLS).fill(0));
-            cleared++;
-            iy++;
+    function boardCost(grid) {
+      const heights = [];
+      let holes = 0, aggregateHeight = 0;
+      for (let x = 0; x < COLS; x++) {
+        let top = -1;
+        for (let y = 0; y < ROWS; y++) {
+          if (grid[y][x] && top < 0) top = y;
+          if (top >= 0 && !grid[y][x]) holes++;
+        }
+        const height = top < 0 ? 0 : ROWS - top;
+        aggregateHeight += height;
+        heights.push(height);
+      }
+      const highest = Math.max(...heights);
+      let bumpiness = 0;
+      for (let x = 1; x < COLS; x++) bumpiness += Math.abs(heights[x] - heights[x - 1]);
+      // Severely penalize hidden holes and a stack near the ceiling.
+      const danger = highest > 13 ? Math.pow(highest - 13, 2) * 3 : 0;
+      return holes * 19 + aggregateHeight * 0.6 +
+        bumpiness * 0.9 + highest * highest * 0.11 + danger;
+    }
+
+    function orientations(shape) {
+      const out = [];
+      let m = shape.map(row => row.slice());
+      const keys = new Set();
+      for (let r = 0; r < 4; r++) {
+        const key = JSON.stringify(m);
+        if (!keys.has(key)) {
+          out.push({ rotation: r, matrix: m });
+          keys.add(key);
+        }
+        m = rotated(m);
+      }
+      return out;
+    }
+
+    function spawnX(matrix) {
+      return Math.floor(COLS / 2 - matrix[0].length / 2);
+    }
+
+    function dropPlacements(grid, type, restrictToReachable = false) {
+      const shape = cloneShape(type);
+      if (restrictToReachable) {
+        return reachablePlacements(grid, shape, type);
+      }
+      const placements = [];
+      for (const o of orientations(shape)) {
+        for (let x = 0; x <= COLS - o.matrix[0].length; x++) {
+          if (boardCollision(grid, o.matrix, x, 0)) continue;
+          let y = 0;
+          while (!boardCollision(grid, o.matrix, x, y + 1)) y++;
+          placements.push({
+            x, y, rotation: o.rotation, matrix: o.matrix,
+            actions: Math.abs(x - spawnX(shape)) + o.rotation
+          });
+        }
+      }
+      return placements;
+    }
+
+    function reachablePlacements(grid, baseShape, type) {
+      const matrices = [
+        baseShape,
+        rotated(baseShape),
+        rotated(rotated(baseShape)),
+        rotated(rotated(rotated(baseShape)))
+      ];
+      const startX = spawnX(baseShape);
+      if (boardCollision(grid, baseShape, startX, 0)) return [];
+
+      const queue = [{ x: startX, y: 0, rotation: 0, actions: 0 }];
+      const seen = new Set([startX + ",0,0"]);
+      const finalMoves = new Map();
+
+      function push(candidate) {
+        const key = candidate.x + "," + candidate.y + "," + candidate.rotation;
+        if (seen.has(key)) return;
+        seen.add(key);
+        queue.push(candidate);
+      }
+
+      for (let i = 0; i < queue.length; i++) {
+        const state = queue[i];
+        const matrix = matrices[state.rotation];
+        if (boardCollision(grid, matrix, state.x, state.y + 1)) {
+          const landingKey = state.x + "," + state.y + "," + state.rotation;
+          if (!finalMoves.has(landingKey)) {
+            finalMoves.set(landingKey, { ...state, matrix });
+          }
+        } else {
+          push({ ...state, y: state.y + 1 });
+        }
+        for (const offset of [-1, 1]) {
+          if (!boardCollision(grid, matrix, state.x + offset, state.y)) {
+            push({ ...state, x: state.x + offset, actions: state.actions + 1 });
           }
         }
-        const heights = [];
-        let holes = 0, sumHeights = 0;
-        for (let col = 0; col < COLS; col++) {
-          let first = -1;
-          for (let row = 0; row < ROWS; row++) {
-            if (simulation[row][col] && first < 0) first = row;
-            if (!simulation[row][col] && first >= 0) holes++;
+        const nextRotation = (state.rotation + 1) % 4;
+        const nextMatrix = matrices[nextRotation];
+        // Same simple "wall kick" order as the player's ↑ control.
+        for (const kick of [0, -1, 1, -2, 2]) {
+          if (!boardCollision(grid, nextMatrix, state.x + kick, state.y)) {
+            push({
+              x: state.x + kick, y: state.y, rotation: nextRotation,
+              actions: state.actions + 1
+            });
+            break;
           }
-          const height = first < 0 ? 0 : ROWS - first;
-          heights.push(height);
-          sumHeights += height;
         }
-        let uneven = 0;
-        for (let col = 1; col < COLS; col++) uneven += Math.abs(heights[col] - heights[col-1]);
+      }
+      return [...finalMoves.values()];
+    }
 
-        const cost = holes * 16 + sumHeights * 0.62 + uneven * 0.88 +
-          Math.max(...heights) * 1.3 - cleared * 22;
-        if (!tetrisRecommended || cost < tetrisRecommended.cost) {
-          tetrisRecommended = {
-            x, y, rotation, matrix: rotatedMatrix.map(row => row.slice()),
-            cost, cleared
+    function nextPieceCost(grid, next, scoreSoFar) {
+      if (!next) return { cost: boardCost(grid), points: 0 };
+      const shape = cloneShape(next.type);
+      if (boardCollision(grid, shape, spawnX(shape), 0)) {
+        return { cost: 10000 + boardCost(grid), points: 0 };
+      }
+      const moves = dropPlacements(grid, next.type);
+      if (!moves.length) return { cost: 10000, points: 0 };
+      let best = null;
+      for (const m of moves) {
+        const result = afterPlacement(grid, m.matrix, m.x, m.y, next.type);
+        const cost = boardCost(result.board) - result.points * 0.16;
+        if (!best || cost < best.cost) best = { cost, points: result.points };
+        if (scoreSoFar + result.points >= 1000) {
+          return { cost: cost - 300, points: result.points };
+        }
+      }
+      return best;
+    }
+
+    function recommend(grid, current, next, scoreSoFar) {
+      if (!current) return null;
+      const options = reachablePlacements(grid, current.matrix, current.type);
+      if (!options.length) return null;
+      let winner = null;
+      for (const m of options) {
+        const result = afterPlacement(grid, m.matrix, m.x, m.y, current.type);
+        const immediateWin = scoreSoFar + result.points >= 1000;
+        const currentCost = boardCost(result.board) - result.points * 0.16;
+        const future = immediateWin
+          ? { cost: 0, points: 0 }
+          : nextPieceCost(result.board, next, scoreSoFar + result.points);
+
+        const score = immediateWin
+          ? -100000 + m.actions * 0.25
+          : currentCost * 0.6 + future.cost * 0.4 + m.actions * 0.55;
+
+        if (!winner || score < winner.cost) {
+          winner = {
+            x: m.x, y: m.y, rotation: m.rotation,
+            matrix: m.matrix.map(row => row.slice()),
+            cost: score,
+            cleared: result.lines,
+            points: result.points,
+            nextPoints: future.points,
+            actions: m.actions
           };
         }
       }
-      rotatedMatrix = rotated(rotatedMatrix);
+      return winner;
     }
+
+    return { recommend, afterPlacement, boardCost, reachablePlacements };
+  })();
+
+  function calculateTetrisRecommendation() {
+    tetrisRecommended = TetrisAdvisor.recommend(board, piece, nextPiece, tScore);
     if (!tetrisRecommended) {
-      tetrisAdviceText.textContent = "La torre está demasiado alta. Tratá de despejar filas inmediatamente.";
+      tetrisAdviceText.textContent = "La torre está demasiado alta para calcular un lugar seguro. Intentá despejar una fila.";
       return;
     }
     const r = tetrisRecommended;
-    const note = r.cleared
-      ? " Esta ubicación completa " + r.cleared + " línea" + (r.cleared > 1 ? "s." : ".")
-      : " Evita dejar tantos huecos tapados como otras opciones.";
-    tetrisAdviceText.textContent = "Empezá desde la columna " + (r.x+1)
-      + " (contando desde la izquierda), " + (r.rotation ? "girando la pieza " + r.rotation + " cuarto" + (r.rotation > 1 ? "s" : "") + " de vuelta" : "sin girarla")
-      + "." + note;
+    const points = r.points > 0
+      ? "Completa " + r.cleared + " línea" + (r.cleared === 1 ? "" : "s") + " y suma " + r.points + " puntos."
+      : "Busca evitar huecos y mantener baja la torre.";
+    const next = r.nextPoints > 0 ? " También prepara una posible línea para la próxima pieza." : "";
+    tetrisAdviceText.textContent = "Columna " + (r.x + 1) + " desde la izquierda, " +
+      (r.rotation ? "rotá " + r.rotation + " vez" + (r.rotation === 1 ? "" : "ces") : "sin rotar") +
+      ". " + points + next + " La marca turquesa muestra dónde podría quedar.";
   }
 
   function drawRecommendedTetrisOutline() {
