@@ -49,7 +49,7 @@
   // =========================================================
   const rubikStage = document.getElementById("rubik-stage");
   const rubikStatus = document.getElementById("rubik-status");
-  const scrambleLabel = document.getElementById("scramble-sequence");
+  const rubikMovesEl = document.getElementById("rubik-moves-count");
 
   let scene, camera, renderer, viewGroup, cubeGroup;
   let cubies = [];
@@ -151,27 +151,146 @@
     resizeRubik();
     newScramble();
 
-    let dragging = false;
-    let lastX = 0, lastY = 0;
-
-    renderer.domElement.addEventListener("pointerdown", (e) => {
-      dragging = true; lastX = e.clientX; lastY = e.clientY;
-      renderer.domElement.setPointerCapture?.(e.pointerId);
-    });
-    renderer.domElement.addEventListener("pointermove", (e) => {
-      if (!dragging || rotating) return;
-      const dx = e.clientX - lastX, dy = e.clientY - lastY;
-      viewGroup.rotation.y += dx * 0.008;
-      viewGroup.rotation.x += dy * 0.008;
-      viewGroup.rotation.x = Math.max(-1.45, Math.min(1.45, viewGroup.rotation.x));
-      lastX = e.clientX; lastY = e.clientY;
-    });
-    const stopDrag = () => dragging = false;
-    renderer.domElement.addEventListener("pointerup", stopDrag);
-    renderer.domElement.addEventListener("pointercancel", stopDrag);
+    installRubikDragging();
 
     window.addEventListener("resize", resizeRubik);
     requestAnimationFrame(renderRubik);
+  }
+
+  // El gesto se inicia sobre una pieza concreta. Raycasting determina la
+  // pegatina tocada y, según el deslizamiento, el eje de la capa que se gira.
+  // Un arrastre comenzado FUERA del cubo rota únicamente la perspectiva.
+  let rubikGesture = null;
+  const rubikRaycaster = new THREE.Raycaster();
+
+  function getRubikIntersection(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    const point = new THREE.Vector2(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld(true);
+    rubikRaycaster.setFromCamera(point, camera);
+    return rubikRaycaster.intersectObjects(cubies, false)[0] || null;
+  }
+
+  function findRubikTurn(hit, dx, dy) {
+    // Una cara visible tiene una normal que identifica su plano.
+    // Hay dos ejes posibles de giro perpendiculares a esa normal.
+    const normal = hit.face.normal.clone().applyQuaternion(hit.object.quaternion);
+    const cell = hit.object.position;
+    const viewQuaternion = viewGroup.getWorldQuaternion(new THREE.Quaternion());
+    const rect = renderer.domElement.getBoundingClientRect();
+    const origin = hit.point.clone().project(camera);
+    let best = null;
+
+    for (const axis of ["x", "y", "z"]) {
+      if (Math.abs(normal[axis]) > 0.8) continue;
+      // Producto vectorial: desplazamiento de una pegatina por un giro positivo.
+      const tangent = new THREE.Vector3().crossVectors(axisVector(axis), normal);
+      tangent.applyQuaternion(viewQuaternion).normalize();
+      const screenPoint = hit.point.clone().addScaledVector(tangent, 0.7).project(camera);
+      let screenX = (screenPoint.x - origin.x) * rect.width / 2;
+      let screenY = (origin.y - screenPoint.y) * rect.height / 2;
+      const screenLength = Math.hypot(screenX, screenY);
+      if (screenLength < 0.001) continue;
+      screenX /= screenLength;
+      screenY /= screenLength;
+      const alignment = Math.abs(dx * screenX + dy * screenY);
+      if (!best || alignment > best.alignment) {
+        best = {
+          axis, layer: Math.round(cell[axis]),
+          screenX, screenY, alignment
+        };
+      }
+    }
+    return best;
+  }
+
+  function installRubikDragging() {
+    const canvas = renderer.domElement;
+    canvas.style.touchAction = "none";
+    canvas.addEventListener("contextmenu", event => event.preventDefault());
+
+    canvas.addEventListener("pointerdown", event => {
+      if (currentLevel !== 1 || rubikSolvedLock || rotating || rubikGesture) return;
+      if (event.button !== 0 && event.button !== 2) return;
+      const hit = event.button === 0 && !event.altKey && !event.shiftKey
+        ? getRubikIntersection(event) : null;
+      rubikGesture = {
+        id: event.pointerId,
+        type: hit ? "slice" : "orbit",
+        hit,
+        startX: event.clientX,
+        startY: event.clientY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        pivot: null,
+        selected: null,
+        choice: null
+      };
+      canvas.setPointerCapture?.(event.pointerId);
+      event.preventDefault();
+    });
+
+    canvas.addEventListener("pointermove", event => {
+      const gesture = rubikGesture;
+      if (!gesture || gesture.id !== event.pointerId || currentLevel !== 1) return;
+      const dx = event.clientX - gesture.startX;
+      const dy = event.clientY - gesture.startY;
+
+      if (gesture.type === "orbit") {
+        viewGroup.rotation.y += (event.clientX - gesture.lastX) * 0.008;
+        viewGroup.rotation.x += (event.clientY - gesture.lastY) * 0.008;
+        viewGroup.rotation.x = Math.max(-1.45, Math.min(1.45, viewGroup.rotation.x));
+        gesture.lastX = event.clientX;
+        gesture.lastY = event.clientY;
+        return;
+      }
+
+      if (!gesture.pivot) {
+        if (Math.hypot(dx, dy) < 12) return;
+        const choice = findRubikTurn(gesture.hit, dx, dy);
+        if (!choice) return;
+        gesture.choice = choice;
+        gesture.selected = layerCubies(choice.axis, choice.layer);
+        gesture.pivot = new THREE.Group();
+        cubeGroup.add(gesture.pivot);
+        gesture.selected.forEach(cubie => gesture.pivot.attach(cubie));
+        rotating = true;
+      }
+
+      // Mientras el usuario arrastra, ve cómo se gira la capa de verdad.
+      const { axis, screenX, screenY } = gesture.choice;
+      const projectedPixels = dx * screenX + dy * screenY;
+      gesture.pivot.rotation[axis] = Math.max(
+        -Math.PI / 2, Math.min(Math.PI / 2, projectedPixels / 94 * (Math.PI / 2))
+      );
+      rubikStatus.textContent = "Soltá para completar el giro.";
+    });
+
+    function endGesture(event, cancelled = false) {
+      const gesture = rubikGesture;
+      if (!gesture || gesture.id !== event.pointerId) return;
+      rubikGesture = null;
+      if (!gesture.pivot) {
+        rubikStatus.textContent = "Arrastrá una pieza para girar su capa. Fuera del cubo cambiás la vista.";
+        return;
+      }
+      const axis = gesture.choice.axis;
+      const fromAngle = gesture.pivot.rotation[axis];
+      const turn = !cancelled && Math.abs(fromAngle) >= 0.26 ? Math.sign(fromAngle) : 0;
+      finishRubikTurn(
+        gesture.pivot, gesture.selected,
+        axis, gesture.choice.layer,
+        fromAngle, turn * (Math.PI / 2),
+        { record: turn !== 0, check: turn !== 0, turn }
+      );
+    }
+
+    canvas.addEventListener("pointerup", event => endGesture(event));
+    canvas.addEventListener("pointercancel", event => endGesture(event, true));
   }
 
   function resizeRubik() {
@@ -224,41 +343,50 @@
     });
   }
 
-  function rotateMove(move, { record = true, check = true } = {}) {
+  function finishRubikTurn(pivot, selected, axis, layer, fromAngle, toAngle, {
+    record = true, check = true, turn = Math.sign(toAngle)
+  } = {}) {
+    const started = performance.now();
+    const distance = Math.abs(toAngle - fromAngle);
+    const duration = 85 + 120 * distance / (Math.PI / 2);
+    function animate(now) {
+      const t = Math.min(1, (now - started) / duration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      pivot.rotation[axis] = fromAngle + (toAngle - fromAngle) * ease;
+      if (t < 1) return requestAnimationFrame(animate);
+
+      pivot.rotation[axis] = toAngle;
+      pivot.updateMatrixWorld(true);
+      selected.forEach(cubie => {
+        cubeGroup.attach(cubie);
+        snapCubie(cubie);
+      });
+      cubeGroup.remove(pivot);
+      if (record && turn) moveHistory.push({ axis, layer, turn });
+      rubikMovesEl.textContent = String(moveHistory.length);
+      rotating = false;
+      if (check && turn && isCubeSolved()) {
+        rubikSolvedLock = true;
+        rubikStatus.textContent = "✨ ¡Perfecto! Cubo armado.";
+        levelComplete(2, "¡Cubo armado!", "Ahora viene Tetris a toda velocidad.", "🧩");
+      } else {
+        rubikStatus.textContent = "Arrastrá otra pieza para girar su capa.";
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  function rotateSlice(axis, layer, turn, { record = true, check = true } = {}) {
     if (rotating || rubikSolvedLock || currentLevel !== 1) return;
-    rotating = true;
-    const { axis, layer, angle } = parseMove(move);
     const selected = layerCubies(axis, layer);
+    if (!selected.length) return;
+    rotating = true;
     const pivot = new THREE.Group();
     cubeGroup.add(pivot);
-    selected.forEach(c => pivot.attach(c));
-
-    const duration = 190;
-    const started = performance.now();
-    const tick = (now) => {
-      const t = Math.min(1, (now - started) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      pivot.rotation[axis] = angle * eased;
-      if (t < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        pivot.rotation[axis] = angle;
-        pivot.updateMatrixWorld(true);
-        selected.forEach(c => {
-          cubeGroup.attach(c);
-          snapCubie(c);
-        });
-        cubeGroup.remove(pivot);
-        if (record) moveHistory.push(move);
-        rotating = false;
-        if (check && isCubeSolved()) {
-          rubikSolvedLock = true;
-          rubikStatus.textContent = "✨ ¡Perfecto! Cubo armado.";
-          levelComplete(2, "¡Cubo armado!", "Ahora viene Tetris a toda velocidad.", "🧩");
-        }
-      }
-    };
-    requestAnimationFrame(tick);
+    selected.forEach(cubie => pivot.attach(cubie));
+    finishRubikTurn(pivot, selected, axis, layer, 0, turn * (Math.PI / 2), {
+      record, check, turn
+    });
   }
 
   function worldFaceKey(v) {
@@ -304,18 +432,15 @@
     buildCube();
     scrambleMoves = makeScramble();
     scrambleMoves.forEach(applyMoveInstant);
-    scrambleLabel.textContent = scrambleMoves.map(m => m.replace("'", "′")).join("  ");
-    rubikStatus.textContent = "Arrastrá el cubo para mirarlo. Después empezá a girar caras.";
+    rubikMovesEl.textContent = "0";
+    rubikStatus.textContent = "Arrastrá sobre una pieza para girar la capa. Fuera del cubo cambiás la vista.";
   }
 
-  document.querySelectorAll("[data-move]").forEach(btn => {
-    btn.addEventListener("click", () => rotateMove(btn.dataset.move));
-  });
   document.getElementById("new-scramble").addEventListener("click", newScramble);
   document.getElementById("rubik-undo").addEventListener("click", () => {
     if (rotating || !moveHistory.length) return;
     const last = moveHistory.pop();
-    rotateMove(inverseMove(last), { record: false, check: true });
+    rotateSlice(last.axis, last.layer, -last.turn, { record: false, check: true });
   });
 
   // =========================================================
@@ -384,7 +509,7 @@
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 5.000 puntos.";
+    tetrisStatus.textContent = "⚡ ¡A toda velocidad! Meta: 1.000 puntos.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -429,13 +554,13 @@
       tLines += cleared;
       scoreEl.textContent = tScore;
       linesEl.textContent = tLines;
-      scoreFill.style.width = Math.min(100, tScore / 50) + "%";
+      scoreFill.style.width = Math.min(100, tScore / 10) + "%";
       tetrisStatus.textContent = cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".";
-      if (tScore >= 5000 && !tetrisWon) {
+      if (tScore >= 1000 && !tetrisWon) {
         tetrisWon = true;
         tetrisRunning = false;
         scoreEl.textContent = tScore;
-        levelComplete(3, "¡5.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
+        levelComplete(3, "¡1.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
       }
     }
   }
@@ -537,7 +662,7 @@
 
   function tetrisLoop(now) {
     if (tetrisRunning && currentLevel === 2) {
-      const interval = Math.max(72, 205 - tLines * 9);
+      const interval = 150; // Velocidad fija: 150 ms desde la primera pieza.
       if (now - lastDrop > interval) {
         dropOne();
         lastDrop = now;
