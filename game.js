@@ -701,7 +701,7 @@
     tetrisRunning = false;
     tetrisGameOver = true;
     clearHorizontalHold();
-    updateTetrisRecords();
+    const stored = updateTetrisRecords();
     const eligible = tetrisGoalUnlocked || tScore >= TETRIS_TARGET;
     const panel = document.getElementById("tetris-end");
     document.getElementById("tetris-end-score").textContent = tScore.toLocaleString("es-UY");
@@ -710,8 +710,9 @@
       : "Esta vez no llegaste a los 3.000. Podés intentarlo otra vez y mejorar tu récord.";
     document.getElementById("tetris-continue").hidden = !eligible;
     document.getElementById("record-nickname").value = readNickname() || "Jugador";
-    document.getElementById("record-save-status").textContent =
-      "Puntaje guardado automáticamente. Personalizá tu apodo si querés.";
+    document.getElementById("record-save-status").textContent = stored
+      ? "Puntaje guardado automáticamente. Personalizá tu apodo si querés."
+      : "El navegador no permitió guardar permanentemente. Probá habilitar sus datos locales.";
     panel.hidden = false;
     document.getElementById("record-nickname").focus();
     tetrisStatus.textContent = "🏁 Fin de partida. Tu puntuación quedó registrada.";
@@ -1244,7 +1245,8 @@
     if (currentLevel !== 2) return;
     // Igual que pulsar el botón Reiniciar. No interferir con Ctrl+R del navegador.
     if ((e.key === "r" || e.key === "R") && !e.repeat &&
-        !e.ctrlKey && !e.metaKey && !e.altKey) {
+        !e.ctrlKey && !e.metaKey && !e.altKey &&
+        !(e.target && e.target.closest && e.target.closest('input, textarea, [contenteditable="true"]'))) {
       e.preventDefault();
       startTetris();
       return;
@@ -1429,6 +1431,7 @@
     duckGrid.innerHTML = "";
     duckGrid.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
     duckGrid.dataset.columns = String(n);
+    document.getElementById("duck-scroll").scrollLeft = 0;
     duckStatus.textContent = level === 1 ? "👀 Encontrá el pico de otro color." :
       level === 2 ? "🔎 Encontrá una alita de color diferente." :
       level === 3 ? "🍀 Prestá atención a la cabecita." :
