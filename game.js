@@ -684,7 +684,7 @@
       : (previous?.nickname || readNickname() || "Jugador");
     const record = {
       id:currentTetrisRunId, nickname:nick, points:tScore,
-      timestamp:new Date().toISOString()
+      timestamp:previous && previous.points === tScore ? previous.timestamp : new Date().toISOString()
     };
     // A cada partida le corresponde UNA fila; se actualiza al subir los puntos.
     const candidates = tetrisRecords.filter(row => row.id !== currentTetrisRunId);
@@ -710,8 +710,9 @@
       : "Esta vez no llegaste a los 3.000. Podés intentarlo otra vez y mejorar tu récord.";
     document.getElementById("tetris-continue").hidden = !eligible;
     document.getElementById("record-nickname").value = readNickname() || "Jugador";
-    document.getElementById("record-save-status").textContent = stored
-      ? "Puntaje guardado automáticamente. Personalizá tu apodo si querés."
+    document.getElementById("record-save-status").textContent = tScore <= 0
+      ? "Completá alguna línea para conseguir un puntaje registrable."
+      : stored ? "Puntaje guardado automáticamente. Personalizá tu apodo si querés."
       : "El navegador no permitió guardar permanentemente. Probá habilitar sus datos locales.";
     panel.hidden = false;
     document.getElementById("record-nickname").focus();
@@ -1043,7 +1044,7 @@
         const result = afterPlacement(grid, m.matrix, m.x, m.y, next.type);
         const cost = boardCost(result.board) - result.points * 0.16;
         if (!best || cost < best.cost) best = { cost, points: result.points };
-        if (scoreSoFar + result.points >= TETRIS_TARGET) {
+        if (scoreSoFar < TETRIS_TARGET && scoreSoFar + result.points >= TETRIS_TARGET) {
           return { cost: cost - 300, points: result.points };
         }
       }
@@ -1057,7 +1058,7 @@
       let winner = null;
       for (const m of options) {
         const result = afterPlacement(grid, m.matrix, m.x, m.y, current.type);
-        const immediateWin = scoreSoFar + result.points >= TETRIS_TARGET;
+        const immediateWin = scoreSoFar < TETRIS_TARGET && scoreSoFar + result.points >= TETRIS_TARGET;
         const currentCost = boardCost(result.board) - result.points * 0.16;
         const future = immediateWin
           ? { cost: 0, points: 0 }
