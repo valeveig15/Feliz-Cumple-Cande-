@@ -29,6 +29,7 @@
     setProgress(level);
     window.scrollTo({ top: 0, behavior: "smooth" });
     clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
+    clearTetrisTouchGesture();
     if (level === 2) startTetris();
     if (level === 1) updateRubikPractice();
     if (level === 3) startDuckLevel(1);
@@ -651,6 +652,8 @@
     const best = tetrisRecords[0];
     document.getElementById("best-record-score").textContent =
       best ? best.points.toLocaleString("es-UY") : "0";
+    document.getElementById("mobile-tetris-best").textContent =
+      best ? best.points.toLocaleString("es-UY") : "0";
     document.getElementById("best-record-name").textContent =
       best ? "de " + best.nickname : "Todavía sin récords";
     const host = document.getElementById("tetris-records-body");
@@ -756,6 +759,7 @@
 
   function startTetris() {
     clearHorizontalHold();
+    clearTetrisTouchGesture();
     document.getElementById("tetris-end").hidden = true;
     board = freshBoard();
     tScore = 0; tLines = 0; tetrisGoalUnlocked = false; tetrisGameOver = false;
@@ -763,6 +767,7 @@
     redrawTetrisRecords();
     nextPiece = randomPiece();
     scoreEl.textContent = "0";
+    document.getElementById("mobile-tetris-score").textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
     tetrisStatus.textContent = "⚡ Sumá 3.000 para desbloquear el siguiente nivel. ¡Después podés seguir batiendo récords! R = reiniciar.";
@@ -809,6 +814,7 @@
       tScore += scores[cleared];
       tLines += cleared;
       scoreEl.textContent = tScore;
+      document.getElementById("mobile-tetris-score").textContent = tScore.toLocaleString("es-UY");
       linesEl.textContent = tLines;
       scoreFill.style.width = Math.min(100, (tScore / TETRIS_TARGET) * 100) + "%";
       tetrisStatus.textContent = (cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".") + " Velocidad: " + tetrisGravityInterval() + " ms/fila.";
@@ -1295,6 +1301,91 @@
     btn.addEventListener("pointerup", release);
     btn.addEventListener("pointercancel", release);
     btn.addEventListener("lostpointercapture", release);
+  });
+
+  // CONTROLES TÁCTILES SIN BOTONES EXTRA:
+  // - Toque breve en el tablero: rota la pieza.
+  // - Deslizar horizontalmente: la mueve tantos cuadros como se desplace.
+  // - Deslizar vertical hacia abajo: caída instantánea.
+  // - Tres botones grandes (◀, caer, ▶) como alternativa con una mano.
+  // Sólo procesamos puntero táctil o lápiz: en ordenador siguen las flechas.
+  let tetrisTouchGesture = null;
+
+  function clearTetrisTouchGesture() {
+    tetrisTouchGesture = null;
+  }
+
+  function handleTetrisTouchStart(e) {
+    if (currentLevel !== 2 || !tetrisRunning || tetrisGameOver) return;
+    if (e.pointerType !== "touch" && e.pointerType !== "pen") return;
+    if (tetrisTouchGesture !== null || e.isPrimary === false) return;
+    e.preventDefault();
+    const id = e.pointerId;
+    tetrisTouchGesture = {
+      id, x:e.clientX, y:e.clientY, lastX:e.clientX,
+      start:performance.now(), horizontal:false, down:false
+    };
+    try { tCanvas.setPointerCapture(id); } catch (error) {}
+  }
+
+  function handleTetrisTouchMove(e) {
+    const state = tetrisTouchGesture;
+    if (!state || e.pointerId !== state.id) return;
+    e.preventDefault();
+    if (currentLevel !== 2 || !tetrisRunning || tetrisGameOver) {
+      clearTetrisTouchGesture();
+      return;
+    }
+    const deltaX = e.clientX - state.x;
+    const deltaY = e.clientY - state.y;
+    const cellPixels = Math.max(15, tCanvas.getBoundingClientRect().width / COLS);
+    if (!state.horizontal && deltaY > Math.max(30, cellPixels * 1.25)
+        && deltaY > Math.abs(deltaX) * 1.25) {
+      state.down = true;
+    }
+    if (state.down) return;
+    if (Math.abs(deltaY) > Math.max(40, cellPixels * 1.5)
+        && Math.abs(deltaY) > Math.abs(deltaX) * 1.5) return;
+    // 75 % de una celda de pantalla = un cuadro, con límites para no
+    // saltar accidentalmente hasta el borde en dispositivos pequeños.
+    const stepPixels = Math.max(14, cellPixels * 0.75);
+    const steps = Math.trunc((e.clientX - state.lastX) / stepPixels);
+    if (!steps) return;
+    state.horizontal = true;
+    const direction = Math.sign(steps);
+    for (let i = 0; i < Math.min(Math.abs(steps), COLS); i++) {
+      movePiece(direction);
+    }
+    state.lastX += steps * stepPixels;
+    drawTetris();
+  }
+
+  function handleTetrisTouchEnd(e, cancelled = false) {
+    const state = tetrisTouchGesture;
+    if (!state || state.id !== e.pointerId) return;
+    clearTetrisTouchGesture();
+    if (cancelled || currentLevel !== 2 || !tetrisRunning || tetrisGameOver) return;
+    e.preventDefault();
+    const dx = e.clientX - state.x;
+    const dy = e.clientY - state.y;
+    const size = Math.max(15, tCanvas.getBoundingClientRect().width / COLS);
+    if (!state.horizontal && dy >= Math.max(42, size * 1.6)
+        && dy > Math.abs(dx) * 1.3) {
+      tetrisAction("drop");
+    } else if (!state.horizontal && Math.hypot(dx, dy) <= 16
+        && performance.now() - state.start < 500) {
+      tetrisAction("rotate");
+    }
+  }
+
+  tCanvas.addEventListener("pointerdown", handleTetrisTouchStart, { passive:false });
+  tCanvas.addEventListener("pointermove", handleTetrisTouchMove, { passive:false });
+  tCanvas.addEventListener("pointerup", e => handleTetrisTouchEnd(e));
+  tCanvas.addEventListener("pointercancel", e => handleTetrisTouchEnd(e, true));
+  tCanvas.addEventListener("lostpointercapture", () => clearTetrisTouchGesture());
+  window.addEventListener("blur", clearTetrisTouchGesture);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) clearTetrisTouchGesture();
   });
 
   document.getElementById("tetris-restart").addEventListener("click", startTetris);
