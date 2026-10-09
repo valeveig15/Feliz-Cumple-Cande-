@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261008-ducks6">
+  <link rel="stylesheet" href="styles.css?v=20261009-record-green3k">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -72,13 +72,24 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 2 · VELOCIDAD</span>
         <h1 id="tetris-title">Tetris <span>rápido</span></h1>
-        <p>Las piezas empiezan a una velocidad desafiante y <strong>se aceleran suavemente</strong> con las líneas completadas. Completá líneas hasta alcanzar <strong>2.000 puntos</strong>.</p>
+        <p>Las piezas empiezan a una velocidad desafiante y <strong>se aceleran suavemente</strong> con las líneas completadas. Sumá <strong>3.000 puntos</strong> para desbloquear el siguiente nivel. Después podés seguir jugando para superar tu récord; al terminar, elegís si querés avanzar.</p>
         <div class="score-panel">
           <div><small>PUNTOS</small><strong id="tetris-score">0</strong></div>
-          <div><small>META</small><strong>2.000</strong></div>
+          <div><small>META</small><strong>3.000</strong></div>
           <div><small>LÍNEAS</small><strong id="tetris-lines">0</strong></div>
         </div>
         <div class="score-track"><div id="score-fill"></div></div>
+        <div class="record-strip" aria-live="polite"><span>🏆 RÉCORD DE ESTA CONSOLA</span><strong id="best-record-score">0</strong><small id="best-record-name">Todavía sin récords</small></div>
+        <details class="retro-records" id="tetris-records-panel">
+          <summary>🏅 Ver tabla de récords</summary>
+          <div class="record-table-wrap">
+            <table class="record-table">
+              <thead><tr><th>#</th><th>APODO</th><th>PUNTOS</th><th>FECHA Y HORA</th></tr></thead>
+              <tbody id="tetris-records-body"><tr><td colspan="4">Todavía no hay récords.</td></tr></tbody>
+            </table>
+          </div>
+          <small>Guardados en este navegador, como en las consolas de antes. Se conservan entre visitas, salvo si se borran los datos del sitio.</small>
+        </details>
         <p class="key-help">Teclado: mantené ← o → para mover continuamente · ↑ rotar · ↓ bajar · espacio caída rápida · <strong>R reiniciar</strong>.</p>
         <details id="tetris-practice" class="practice-panel" open>
           <summary><span>⚡ Consejos para colocar las piezas</span><span class="practice-label">TEMPORAL</span></summary>
@@ -116,7 +127,22 @@
           <button data-tetris="down">↓</button>
           <button data-tetris="drop" class="wide">CAER</button>
         </div>
-        <p id="tetris-status" class="status-text">¡A toda velocidad!</p>
+        <p id="tetris-status" class="status-text" aria-live="polite">¡A toda velocidad!</p>
+        <div id="tetris-end" class="retro-gameover" hidden role="dialog" aria-modal="true" aria-labelledby="tetris-end-title">
+          <div class="retro-gameover-inner">
+            <span class="retro-eyebrow">✦ GAME OVER ✦</span>
+            <h2 id="tetris-end-title">¡Terminó la partida!</h2>
+            <p id="tetris-end-summary">Tu puntuación quedará guardada.</p>
+            <div class="retro-score"><span>PUNTUACIÓN</span><strong id="tetris-end-score">0</strong></div>
+            <label for="record-nickname">APODO DE JUGADOR/A</label>
+            <div class="retro-nick-row"><input id="record-nickname" type="text" maxlength="18" placeholder="Tu apodo" autocomplete="nickname" /><button type="button" id="save-tetris-record">💾 Guardar</button></div>
+            <p id="record-save-status" class="retro-saved" aria-live="polite"></p>
+            <div class="retro-actions">
+              <button type="button" id="tetris-play-again">↻ Intentar otra vez</button>
+              <button type="button" id="tetris-continue" hidden>✓ Seguir a los patitos</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -124,10 +150,10 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 3 · OJO DE HALCÓN</span>
         <h1 id="duck-title">Encontrá el pato <span>diferente</span></h1>
-        <p>Hay cinco rondas. En cada una aparecen más patos y se hacen más pequeños. Uno tiene un detalle distinto.</p>
+        <p>Cinco rondas: <strong>3×3, 5×5, 7×7, 8×8 y 10×10</strong>. Hay un solo patito diferente en cada una. Sin cronómetro, con pistas opcionales y diferencias visibles hasta en las rondas grandes.</p>
         <div class="duck-progress">
           <span>SUBNIVEL</span>
-          <strong><b id="duck-level">1</b> / 5</strong>
+          <strong><b id="duck-level">1</b> / 5 <small id="duck-size">· 3×3</small></strong>
         </div>
         <div class="duck-dots" id="duck-dots" aria-label="Subniveles">
           <i class="active"></i><i></i><i></i><i></i><i></i>
@@ -136,7 +162,9 @@
 
       <div class="game-card duck-card">
         <div id="duck-grid" class="duck-grid" aria-label="Grupo de patos"></div>
-        <p id="duck-status" class="status-text">👀 Mirá con atención…</p>
+        <p id="duck-status" class="status-text" aria-live="polite">👀 Mirá con atención…</p>
+        <button type="button" class="duck-hint-button" id="duck-hint">💡 Dame una pista</button>
+        <p id="duck-hint-text" class="duck-hint-text" aria-live="polite">Sin límite de tiempo. Podés equivocarte y seguir intentando.</p>
       </div>
     </section>
 
@@ -144,7 +172,7 @@
       <div class="win-copy">
         <span class="eyebrow">DESAFÍO COMPLETADO</span>
         <h1 id="win-title">¡GANASTE! 🎉</h1>
-        <p>Superaste el cubo, llegaste a 2.000 puntos y encontraste los cinco patos distintos.</p>
+        <p>Superaste el cubo, superaste los 3.000 puntos y encontraste los cinco patos distintos.</p>
         <h2>¡Feliz cumpleaños! 💗</h2>
         <button id="play-again" class="primary-btn">Jugar de nuevo</button>
       </div>
@@ -230,6 +258,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261009-gentle-speed"></script>
+  <script src="game.js?v=20261009-record-green3k"></script>
 </body>
 </html>
