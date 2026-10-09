@@ -1327,8 +1327,8 @@
         '<path d="M24 92 Q26 102 35 112" fill="none" stroke="#fffbd2" stroke-width="3.8" stroke-linecap="round" opacity=".65"/>';
     const eye = odd && level === 3
       ? '<path d="M154 64 Q161 71 168 64" stroke="#292429" stroke-width="3.8" stroke-linecap="round" fill="none"/>'
-      : '<ellipse cx="161" cy="64" rx="5.4" ry="6.2" fill="#292429"/>' +
-        '<circle cx="159.6" cy="62.1" r="1.8" fill="#fff"/>' +
+      : '<ellipse cx="161" cy="64" rx="6" ry="6.5" fill="#292429"/>' +
+        '<circle cx="159.2" cy="61.8" r="2.1" fill="#fff"/>' +
         '<ellipse cx="161.7" cy="67.8" rx=".8" ry=".55" fill="#fff" opacity=".75"/>';
     const wingFill = odd && level === 2 ? "#5ac887" : "url(#" + uid + "-wing)";
     const bow = odd && level === 5
@@ -1361,7 +1361,7 @@
         '<stop offset="1" stop-color="#ebae25"/>' +
       '</linearGradient>' +
       '<radialGradient id="' + uid + '-blush">' +
-        '<stop offset="0" stop-color="#ff8b8b" stop-opacity=".28"/>' +
+        '<stop offset="0" stop-color="#ff9b9b" stop-opacity=".47"/>' +
         '<stop offset="1" stop-color="#ff8b8b" stop-opacity="0"/>' +
       '</radialGradient>' +
       '</defs>' +
@@ -1370,17 +1370,17 @@
       '<path d="M34 123 C31 105 40 95 57 92 C72 89 84 94 96 93 C108 92 122 95 135 104 C153 106 168 119 168 136 C168 155 148 165 116 165 C81 166 51 156 39 143 C35 138 34 132 34 123Z" ' +
         'fill="url(#' + uid + '-body)" stroke="#e6b32b" stroke-width="1.3"/>' +
       '<path d="M43 139 Q66 162 112 161 Q142 160 155 149" fill="none" stroke="#d49a1f" stroke-width="2" opacity=".25" stroke-linecap="round"/>' +
-      '<path d="M108 111 C98 101 95 87 97 70 C101 44 118 32 142 31 C165 30 181 47 183 69 C187 93 172 113 151 117 C131 121 117 116 108 111Z" ' +
+      '<path d="M106 110 C95 99 92 85 96 65 C100 42 117 27 141 28 C165 28 181 44 183 68 C187 93 172 114 151 119 C128 124 113 117 106 110Z" ' +
         'fill="url(#' + uid + '-head)" stroke="#ecb527" stroke-width="1.25"/>' +
       '<path d="M107 70 Q110 48 131 40" stroke="#ffffef" opacity=".79" stroke-width="5" fill="none" stroke-linecap="round"/>' +
       '<ellipse cx="151" cy="92" rx="12" ry="8.5" fill="url(#' + uid + '-blush)"/>' +
       eye +
-      '<path d="M175 80 C181 75 196 75 205 81 C208 84 207 87 200 89 C192 93 180 91 176 88Z" fill="url(#' + uid + '-beak)" stroke="' + beakDark + '" stroke-width="1.2"/>' +
-      '<path d="M177 88 Q188 94 202 90 Q199 97 189 97 Q181 96 177 92Z" fill="' + beakDark + '" opacity=".91"/>' +
-      '<path d="M181 80 Q192 78 200 82" stroke="#ffe1ac" opacity=".75" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-      '<path d="M67 128 C68 114 82 107 97 110 C111 111 122 119 126 130 C116 146 97 152 81 144 C72 141 67 136 67 128Z" ' +
+      '<path d="M176 80 C183 76 195 77 200 82 C203 85 200 88 194 90 C186 92 179 90 175 87Z" fill="url(#' + uid + '-beak)" stroke="' + beakDark + '" stroke-width="1.2"/>' +
+      '<path d="M178 88 Q187 93 197 90 Q195 96 187 96 Q181 94 178 92Z" fill="' + beakDark + '" opacity=".91"/>' +
+      '<path d="M181 80 Q190 79 195 82" stroke="#ffe1ac" opacity=".75" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M66 128 C67 114 83 106 99 110 C113 114 124 122 126 132 C116 149 97 152 80 144 C70 140 66 135 66 128Z" ' +
         'fill="' + wingFill + '" stroke="#e4ac25" stroke-width="1.3"/>' +
-      '<path d="M76 126 Q92 113 109 124" stroke="#fffee7" opacity=".78" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M76 123 Q92 113 109 126" stroke="#fffee7" opacity=".78" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
       '<path d="M81 142 Q99 149 116 136" stroke="#d7a628" opacity=".26" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
       '<path d="M40 121 Q39 134 49 141" stroke="#fffbd0" opacity=".55" stroke-width="4" fill="none" stroke-linecap="round"/>' +
       bow +
