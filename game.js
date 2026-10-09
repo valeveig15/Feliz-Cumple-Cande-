@@ -567,7 +567,7 @@
   let tetrisRecommended = null;
 
   const COLS = 10, ROWS = 20, BLOCK = 30;
-  const TETRIS_TARGET = 2000;
+  const TETRIS_TARGET = 3000;
   const TCOLORS = ["#0000", "#4fd6ff", "#ffd44d", "#b77bff", "#65d686", "#ff6579", "#5688ff", "#ff9a45"];
   const SHAPES = [
     [],
@@ -584,7 +584,7 @@
   let piece = null;
   let nextPiece = null;
   let tScore = 0, tLines = 0;
-  let tetrisRunning = false, tetrisWon = false;
+  let tetrisRunning = false, tetrisGoalUnlocked = false, tetrisGameOver = false;
   let lastDrop = 0;
   let tetrisLoopStarted = false;
 
@@ -601,7 +601,146 @@
     return { type, matrix: cloneShape(type), x: 0, y: 0 };
   }
 
+  // Marcadores permanentes estilo consola: clasificación local top 10.
+  // Sólo localStorage del navegador (sin backend ni sincronización entre dispositivos).
+  const RECORD_STORAGE_KEY = "cande-tetris-records-v1";
+  const NICK_STORAGE_KEY = "cande-tetris-nickname-v1";
+  const RECORD_MAX = 10;
+  let currentTetrisRunId = "";
+  let tetrisRecords = readTetrisRecords();
+
+  function readTetrisRecords() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(RECORD_STORAGE_KEY) || "[]");
+      if (!Array.isArray(raw)) return [];
+      return raw.filter(row => row && typeof row.id === "string" &&
+        Number.isFinite(row.points) && row.points > 0)
+        .sort((a,b) => b.points - a.points || a.timestamp.localeCompare(b.timestamp))
+        .slice(0, RECORD_MAX);
+    } catch (e) { return []; }
+  }
+
+  function readNickname() {
+    try { return localStorage.getItem(NICK_STORAGE_KEY) || ""; }
+    catch (e) { return ""; }
+  }
+
+  function saveNickname(value) {
+    const nick = String(value || "").trim().slice(0, 18) || "Jugador";
+    try { localStorage.setItem(NICK_STORAGE_KEY, nick); } catch (e) {}
+    return nick;
+  }
+
+  function persistTetrisRecords() {
+    try {
+      localStorage.setItem(RECORD_STORAGE_KEY, JSON.stringify(tetrisRecords));
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function prettyRecordDate(timestamp) {
+    try {
+      return new Intl.DateTimeFormat("es-UY", {
+        day:"2-digit", month:"2-digit", year:"numeric",
+        hour:"2-digit", minute:"2-digit", hour12:false
+      }).format(new Date(timestamp));
+    } catch (e) { return "—"; }
+  }
+
+  function redrawTetrisRecords() {
+    const best = tetrisRecords[0];
+    document.getElementById("best-record-score").textContent =
+      best ? best.points.toLocaleString("es-UY") : "0";
+    document.getElementById("best-record-name").textContent =
+      best ? "de " + best.nickname : "Todavía sin récords";
+    const host = document.getElementById("tetris-records-body");
+    host.replaceChildren();
+    if (!tetrisRecords.length) {
+      const tr = document.createElement("tr"), td = document.createElement("td");
+      td.colSpan = 4;
+      td.textContent = "Todavía no hay récords. ¡Podés ser el primero!";
+      tr.appendChild(td);
+      host.appendChild(tr);
+      return;
+    }
+    tetrisRecords.forEach((record, position) => {
+      const tr = document.createElement("tr");
+      if (record.id === currentTetrisRunId) tr.className = "record-current";
+      [position + 1, record.nickname, record.points.toLocaleString("es-UY"),
+        prettyRecordDate(record.timestamp)].forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = String(value); // textContent evita inyección desde apodos.
+        tr.appendChild(td);
+      });
+      host.appendChild(tr);
+    });
+  }
+
+  function updateTetrisRecords(nicknameOverride) {
+    if (tScore <= 0 || !currentTetrisRunId) return false;
+    const previous = tetrisRecords.find(row => row.id === currentTetrisRunId);
+    const nick = nicknameOverride !== undefined
+      ? saveNickname(nicknameOverride)
+      : (previous?.nickname || readNickname() || "Jugador");
+    const record = {
+      id:currentTetrisRunId, nickname:nick, points:tScore,
+      timestamp:new Date().toISOString()
+    };
+    // A cada partida le corresponde UNA fila; se actualiza al subir los puntos.
+    const candidates = tetrisRecords.filter(row => row.id !== currentTetrisRunId);
+    candidates.push(record);
+    candidates.sort((a,b) => b.points-a.points || a.timestamp.localeCompare(b.timestamp));
+    tetrisRecords = candidates.slice(0, RECORD_MAX);
+    const ok = persistTetrisRecords();
+    redrawTetrisRecords();
+    return ok;
+  }
+
+  function endTetrisGame() {
+    if (tetrisGameOver) return;
+    tetrisRunning = false;
+    tetrisGameOver = true;
+    clearHorizontalHold();
+    updateTetrisRecords();
+    const eligible = tetrisGoalUnlocked || tScore >= TETRIS_TARGET;
+    const panel = document.getElementById("tetris-end");
+    document.getElementById("tetris-end-score").textContent = tScore.toLocaleString("es-UY");
+    document.getElementById("tetris-end-summary").textContent = eligible
+      ? "¡Superaste la meta! Podés seguir hacia los patitos o volver a jugar para mejorar el récord."
+      : "Esta vez no llegaste a los 3.000. Podés intentarlo otra vez y mejorar tu récord.";
+    document.getElementById("tetris-continue").hidden = !eligible;
+    document.getElementById("record-nickname").value = readNickname() || "Jugador";
+    document.getElementById("record-save-status").textContent =
+      "Puntaje guardado automáticamente. Personalizá tu apodo si querés.";
+    panel.hidden = false;
+    document.getElementById("record-nickname").focus();
+    tetrisStatus.textContent = "🏁 Fin de partida. Tu puntuación quedó registrada.";
+  }
+
+  function saveRecordFromForm() {
+    const nick = document.getElementById("record-nickname").value;
+    const ok = updateTetrisRecords(nick);
+    document.getElementById("record-save-status").textContent = ok
+      ? "✓ Récord guardado con el apodo " + saveNickname(nick) + "."
+      : "No se pudo guardar en el navegador. Comprobá sus permisos de almacenamiento.";
+  }
+
+  document.getElementById("save-tetris-record").addEventListener("click", saveRecordFromForm);
+  document.getElementById("record-nickname").addEventListener("keydown", event => {
+    if (event.key === "Enter") { event.preventDefault(); saveRecordFromForm(); }
+  });
+  document.getElementById("tetris-play-again").addEventListener("click", () => {
+    saveRecordFromForm();
+    startTetris();
+  });
+  document.getElementById("tetris-continue").addEventListener("click", () => {
+    if (!tetrisGoalUnlocked && tScore < TETRIS_TARGET) return;
+    saveRecordFromForm();
+    levelComplete(3, "¡3.000 puntos superados!", "¡Ahora buscá a los patitos!", "🏆");
+  });
+
   function spawnPiece() {
+    if (tetrisGameOver) return;
     piece = nextPiece || randomPiece();
     nextPiece = randomPiece();
     piece.x = Math.floor(COLS / 2 - piece.matrix[0].length / 2);
@@ -609,21 +748,22 @@
     drawNext();
     calculateTetrisRecommendation();
     if (collides(piece.matrix, piece.x, piece.y)) {
-      tetrisRunning = false;
-      tetrisStatus.textContent = "💥 Se llenó. Reiniciando…";
-      setTimeout(startTetris, 750);
+      endTetrisGame();
     }
   }
 
   function startTetris() {
     clearHorizontalHold();
+    document.getElementById("tetris-end").hidden = true;
     board = freshBoard();
-    tScore = 0; tLines = 0; tetrisWon = false;
+    tScore = 0; tLines = 0; tetrisGoalUnlocked = false; tetrisGameOver = false;
+    currentTetrisRunId = "run-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+    redrawTetrisRecords();
     nextPiece = randomPiece();
     scoreEl.textContent = "0";
     linesEl.textContent = "0";
     scoreFill.style.width = "0%";
-    tetrisStatus.textContent = "⚡ Comenzás a 120 ms/fila y se acelera suavemente con cada línea. Meta: 2.000 puntos. R = reiniciar.";
+    tetrisStatus.textContent = "⚡ Sumá 3.000 para desbloquear el siguiente nivel. ¡Después podés seguir batiendo récords! R = reiniciar.";
     tetrisRunning = true;
     lastDrop = performance.now();
     spawnPiece();
@@ -670,11 +810,11 @@
       linesEl.textContent = tLines;
       scoreFill.style.width = Math.min(100, (tScore / TETRIS_TARGET) * 100) + "%";
       tetrisStatus.textContent = (cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".") + " Velocidad: " + tetrisGravityInterval() + " ms/fila.";
-      if (tScore >= TETRIS_TARGET && !tetrisWon) {
-        tetrisWon = true;
-        tetrisRunning = false;
-        scoreEl.textContent = tScore;
-        levelComplete(3, "¡2.000 puntos!", "Último nivel: encontrá los patos diferentes.", "⚡");
+      updateTetrisRecords();
+      if (tScore >= TETRIS_TARGET && !tetrisGoalUnlocked) {
+        tetrisGoalUnlocked = true;
+        tetrisStatus.textContent = "🏆 ¡Superaste los 3.000! Seguí jugando para mejorar el récord. Al perder podés avanzar.";
+        document.getElementById("tetris-continue").hidden = false;
       }
     }
   }
@@ -682,7 +822,7 @@
   function lockPiece() {
     mergePiece();
     sweepLines();
-    if (!tetrisWon) spawnPiece();
+    if (!tetrisGameOver) spawnPiece();
   }
 
   function dropOne() {
