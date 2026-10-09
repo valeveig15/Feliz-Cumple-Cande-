@@ -363,9 +363,10 @@ main{position:relative;z-index:2}
 .mid-rose-right{right:25px;top:40px;transform:rotate(22deg) scale(.85)}
 .bottom-rose-left{left:25px;top:99px;transform:rotate(-14deg) scale(.88)}
 .bottom-rose-right{right:25px;top:96px;transform:rotate(14deg) scale(.88)}
-.cake-cube-wrap{position:absolute;z-index:9;left:50%;top:20px;width:118px;height:109px;
+.cake-cube-wrap{position:absolute;z-index:9;left:50%;top:8px;width:132px;height:119px;
   transform:translateX(-50%);animation:fondantFloat 4s ease-in-out infinite}
-.fondant-cube{display:block;width:118px;height:104px;overflow:visible;filter:drop-shadow(0 8px 3px rgba(110,68,99,.24))}
+.fondant-cube{display:block;width:132px;height:119px;overflow:visible;
+  filter:drop-shadow(0 7px 2px rgba(60,39,59,.28)) drop-shadow(0 2px 1px rgba(255,255,255,.42))}
 .rubik-sugar-spark{position:absolute;z-index:2;right:0;top:10px;font-size:23px;color:#fff1a7}
 .top-little-heart{position:absolute;right:19px;bottom:33px;z-index:12;color:#fffaf7;text-shadow:0 3px #de739f;font-size:18px}
 @keyframes fondantFloat{50%{transform:translate(-50%,-5px) rotate(3deg)}}
@@ -396,14 +397,14 @@ main{position:relative;z-index:2}
 .spark-a{top:-9px;left:25px}.spark-b{right:7px;top:-8px;color:#ffe9ac}
 .tiny-gold-stars{position:absolute;z-index:10;bottom:24px;right:28px;letter-spacing:1px;color:#f9e9b1;font-size:12px}
 @keyframes candyWiggle{50%{transform:translateY(-6px) rotate(3deg)}}
-.bath-frosting{position:absolute;z-index:8;left:49px;right:49px;top:27px;height:107px;
+.bath-frosting{position:absolute;z-index:8;left:49px;right:49px;top:42px;height:96px;
   background:radial-gradient(ellipse at 39% 25%,#e4ffff,#a8edf5 51%,#78d4e6 80%,#62b8d5 100%);
   border-radius:55% 55% 45% 45%;border:5px solid #fffdf8;
   box-shadow:inset 0 4px 7px #fff8,inset 0 -7px 9px #399ab64b,0 5px 6px #b97b6955}
 .bath-waterline{position:absolute;inset:12px 14px 15px;border:2px solid #e9ffffa8;border-radius:50%}
 .bath-waterline::before{content:"";position:absolute;inset:12px 20px 5px;
   border:2px solid #fff6;border-radius:50%}
-.cake-deluxe .cake-ducks{z-index:8;position:absolute;inset:4px 32px -13px;
+.cake-deluxe .cake-ducks{z-index:8;position:absolute;inset:-5px 32px 2px;
   display:flex;justify-content:space-around;align-items:center;gap:10px;pointer-events:none}
 .cake-deluxe .cake-duck{flex:0 0 84px;width:84px;filter:drop-shadow(0 6px 3px #428aa65a);
   animation:duckLuxuryBob 2.5s ease-in-out infinite}
