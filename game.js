@@ -812,7 +812,12 @@
       linesEl.textContent = tLines;
       scoreFill.style.width = Math.min(100, (tScore / TETRIS_TARGET) * 100) + "%";
       tetrisStatus.textContent = (cleared === 4 ? "🔥 ¡TETRIS!" : "✨ Línea" + (cleared > 1 ? "s" : "") + " completada" + (cleared > 1 ? "s" : "") + ".") + " Velocidad: " + tetrisGravityInterval() + " ms/fila.";
-      updateTetrisRecords();
+      const previousBest = tetrisRecords[0] ? tetrisRecords[0].points : 0;
+      const recordSaved = updateTetrisRecords();
+      if (recordSaved && tScore > previousBest) {
+        tetrisStatus.textContent = "🏆 ¡NUEVO RÉCORD! " + tScore.toLocaleString("es-UY") +
+          " puntos guardados en la tabla.";
+      }
       if (tScore >= TETRIS_TARGET && !tetrisGoalUnlocked) {
         tetrisGoalUnlocked = true;
         tetrisStatus.textContent = "🏆 ¡Superaste los 3.000! Seguí jugando para mejorar el récord. Al perder podés avanzar.";
