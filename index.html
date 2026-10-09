@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff7fb">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261009-cakecube2-pond2">
+  <link rel="stylesheet" href="styles.css?v=20261009-touch-mobile9">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -112,20 +112,25 @@
       </div>
 
       <div class="game-card tetris-card">
+        <div class="mobile-tetris-heading">⚡ TETRIS <span>EDICIÓN TÁCTIL</span></div>
+        <div class="mobile-tetris-hud" aria-label="Marcador de Tetris">
+          <div><small>PUNTOS</small><strong id="mobile-tetris-score">0</strong></div>
+          <div><small>META</small><strong>3.000</strong></div>
+          <div><small>RÉCORD</small><strong id="mobile-tetris-best">0</strong></div>
+        </div>
         <div class="tetris-layout">
-          <canvas id="tetris" width="300" height="600" aria-label="Juego Tetris"></canvas>
+          <canvas id="tetris" width="300" height="600" aria-label="Tetris: tocá para girar, deslizá a los lados para mover y hacia abajo para dejar caer" title="Tocá para girar · Deslizá para mover · Abajo para caer"></canvas>
           <aside>
             <span>SIGUIENTE</span>
             <canvas id="next-piece" width="120" height="120"></canvas>
             <button id="tetris-restart" class="soft-btn">↻ Reiniciar</button>
           </aside>
         </div>
-        <div class="mobile-controls">
-          <button data-tetris="left">←</button>
-          <button data-tetris="rotate">↻</button>
-          <button data-tetris="right">→</button>
-          <button data-tetris="down">↓</button>
-          <button data-tetris="drop" class="wide">CAER</button>
+        <p class="mobile-touch-help">👆 <strong>Tocá el tablero</strong> para girar · <strong>deslizá ↔</strong> para mover · <strong>↓</strong> para caer</p>
+        <div class="mobile-controls" aria-label="Controles táctiles de Tetris">
+          <button type="button" data-tetris="left" aria-label="Mover a la izquierda, mantener para mover continuamente"><span aria-hidden="true">◀</span><small>IZQUIERDA</small></button>
+          <button type="button" data-tetris="drop" class="tetris-drop-button" aria-label="Dejar caer la pieza al fondo"><span aria-hidden="true">⬇</span><small>CAER</small></button>
+          <button type="button" data-tetris="right" aria-label="Mover a la derecha, mantener para mover continuamente"><span aria-hidden="true">▶</span><small>DERECHA</small></button>
         </div>
         <p id="tetris-status" class="status-text" aria-live="polite">¡A toda velocidad!</p>
         <div id="tetris-end" class="retro-gameover" hidden role="dialog" aria-modal="true" aria-labelledby="tetris-end-title">
@@ -299,6 +304,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261009-record-green3k"></script>
+  <script src="game.js?v=20261009-touch-mobile9"></script>
 </body>
 </html>
