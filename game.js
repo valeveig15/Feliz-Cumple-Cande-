@@ -1301,6 +1301,8 @@
   let duckLevel = 1;
   let oddDuck = -1;
   let duckLocked = false;
+  let duckWrongGuesses = 0;
+  let duckHintsUsed = 0;
 
   // Patitos de goma brillantes, como los juguetes de bañera.
   // Los detalles cambian en solo un pato por subnivel.
@@ -1325,7 +1327,7 @@
       : '<ellipse cx="161" cy="64" rx="5.4" ry="6.2" fill="#292429"/>' +
         '<circle cx="159.6" cy="62.1" r="1.8" fill="#fff"/>' +
         '<ellipse cx="161.7" cy="67.8" rx=".8" ry=".55" fill="#fff" opacity=".75"/>';
-    const wingFill = odd && level === 4 ? "#f4a5db" : "url(#" + uid + "-wing)";
+    const wingFill = odd && level === 2 ? "#5ac887" : "url(#" + uid + "-wing)";
     const bow = odd && level === 5
       ? '<g transform="translate(132 30) rotate(-13)">' +
         '<path d="M0 0 C-13 -12 -19 -8 -16 3 C-11 10 -5 5 0 2 C9 10 17 6 17 -2 C14 -11 5 -6 0 0 Z" fill="#f883b6" stroke="#d65c96" stroke-width="1.1"/>' +
@@ -1335,7 +1337,7 @@
     const beakMiddle = pinkBeak ? "#ff77ac" : "#ff923a";
     const beakDark = pinkBeak ? "#d34f8b" : "#e8792d";
 
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 25 202 148" role="img" aria-label="Patito amarillo de goma">' +
+    let svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 25 202 148" role="img" aria-label="Patito amarillo de goma">' +
       '<defs>' +
       '<radialGradient id="' + uid + '-body" gradientUnits="userSpaceOnUse" cx="86" cy="102" r="112" gradientTransform="matrix(1 0 0 .90 0 11)">' +
         '<stop offset="0" stop-color="#fffcc8"/><stop offset=".28" stop-color="#fff37e"/>' +
@@ -1380,24 +1382,57 @@
       '<path d="M40 121 Q39 134 49 141" stroke="#fffbd0" opacity=".55" stroke-width="4" fill="none" stroke-linecap="round"/>' +
       bow +
       '</svg>';
+    // Diferencias muy legibles a medida que la cuadrícula crece.
+    // Nunca más de un patito distinto por ronda.
+    if (odd && level === 3) {
+      svg = svg.replaceAll("#fffedd", "#edffe4")
+        .replaceAll("#fff493", "#cdf9b6")
+        .replaceAll("#ffe154", "#9fec95")
+        .replaceAll("#ffcb2b", "#69d47e")
+        .replaceAll("#e7a31a", "#43ae69");
+    }
+    if (odd && level === 4) {
+      svg = svg.replaceAll("#fffcc8", "#fff0e3")
+        .replaceAll("#fff37e", "#ffd9bc")
+        .replaceAll("#ffdf45", "#ffc499")
+        .replaceAll("#ffc629", "#f7a17e")
+        .replaceAll("#e59e17", "#cf8066");
+    }
+    if (odd && level === 5) {
+      svg = svg.replaceAll("#fffcc8", "#ecffe0")
+        .replaceAll("#fff37e", "#cbf6a7")
+        .replaceAll("#ffdf45", "#a6e78b")
+        .replaceAll("#ffc629", "#76ce7b")
+        .replaceAll("#e59e17", "#419e64");
+    }
+    return svg;
   }
 
   function startDuckLevel(level) {
     duckLevel = level;
     duckLocked = false;
     duckLevelEl.textContent = level;
+    const sizes = [3,5,7,8,10];
+    const n = sizes[level - 1];
+    document.getElementById("duck-size").textContent = "· " + n + "×" + n;
+    document.getElementById("duck-hint-text").textContent =
+      "Sin cronómetro. Podés equivocarte y volver a intentar.";
+    duckWrongGuesses = 0;
+    duckHintsUsed = 0;
     duckDots.forEach((d, i) => {
       d.classList.toggle("done", i < level - 1);
       d.classList.toggle("active", i === level - 1);
     });
 
-    const sizes = [3,4,5,6,7];
-    const n = sizes[level - 1];
     const total = n * n;
     oddDuck = Math.floor(Math.random() * total);
     duckGrid.innerHTML = "";
     duckGrid.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
-    duckStatus.textContent = level === 1 ? "👀 Mirá con atención…" : "🔎 Ahora son más chicos. Encontrá el detalle.";
+    duckGrid.dataset.columns = String(n);
+    duckStatus.textContent = level === 1 ? "👀 Encontrá el pico de otro color." :
+      level === 2 ? "🔎 Encontrá una alita de color diferente." :
+      level === 3 ? "🍀 Prestá atención a la cabecita." :
+      "🍃 Buscá el patito con el color diferente. No hay límite de tiempo.";
 
     for (let i = 0; i < total; i++) {
       const btn = document.createElement("button");
@@ -1409,10 +1444,30 @@
     }
   }
 
+  // Pistas humanas, sin revelar la casilla exacta.
+  document.getElementById("duck-hint").addEventListener("click", () => {
+    if (currentLevel !== 3 || duckLocked || oddDuck < 0) return;
+    duckHintsUsed++;
+    const n = [3,5,7,8,10][duckLevel - 1];
+    const column = oddDuck % n;
+    const row = Math.floor(oddDuck / n);
+    const location = document.getElementById("duck-hint-text");
+    const group = duckHintsUsed === 1 ? 2 : 3;
+    const columnPart = Math.min(group-1, Math.floor(column * group/n));
+    const rowPart = Math.min(group-1, Math.floor(row * group/n));
+    const colLabels = group === 2 ? ["izquierda", "derecha"] : ["izquierda", "centro", "derecha"];
+    const rowLabels = group === 2 ? ["superior", "inferior"] : ["superior", "central", "inferior"];
+    location.textContent = "💡 Pista: buscá en la zona " + rowLabels[rowPart] +
+      " " + colLabels[columnPart] + ".";
+  });
+
   function chooseDuck(index, btn) {
     if (duckLocked || currentLevel !== 3) return;
     if (index !== oddDuck) {
-      duckStatus.textContent = "Ese no era 😅 Seguí mirando.";
+      duckWrongGuesses++;
+      duckStatus.textContent = duckWrongGuesses >= 3
+        ? "Ese no era. Podés usar «Dame una pista» si querés ayuda."
+        : "Ese no era 😅 Seguí mirando.";
       duckGrid.classList.remove("shake");
       void duckGrid.offsetWidth;
       duckGrid.classList.add("shake");
