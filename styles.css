@@ -271,23 +271,23 @@ main{position:relative;z-index:2}
   display:flex;flex-direction:column;align-items:center;z-index:20;white-space:nowrap;pointer-events:none}
 .birthday-topper::before{content:"";position:absolute;z-index:-1;left:50%;top:31px;
   transform:translateX(-50%);width:195px;height:72px;border-radius:56% 56% 44% 44%;
-  background:linear-gradient(130deg,rgba(255,255,255,.99),rgba(255,233,242,.92));
-  border:2px solid #fff;box-shadow:0 6px 20px #d2a8c04d,inset 0 0 0 3px #ffcfdf;
+  background:linear-gradient(130deg,#ffffff,#e2f8e9 64%,#c6edcf);
+  border:2px solid #f5fff6;box-shadow:0 6px 20px #4f957147,inset 0 0 0 3px #b3e4c3;
   filter:drop-shadow(0 1px 1px #fff)}
 .birthday-topper .topper-ornament{font-size:20px;line-height:1.1;color:#e8b865;letter-spacing:12px;margin-left:12px}
-.birthday-topper .topper-ornament i{font-style:normal;color:#f776a3;letter-spacing:0;font-size:19px}
+.birthday-topper .topper-ornament i{font-style:normal;color:#28975e;letter-spacing:0;font-size:19px}
 .birthday-topper span{display:block;font-size:11px;letter-spacing:.21em;text-transform:uppercase;
-  color:#b38a9c;font-weight:900;line-height:1.4;margin-top:5px}
+  color:#397c56;font-weight:900;line-height:1.4;margin-top:5px}
 .birthday-topper strong{font-family:Georgia,"Times New Roman",serif;font-style:italic;
-  font-size:38px;font-weight:900;color:#dd6093;line-height:1;
-  text-shadow:0 2px 1px white,0 5px 12px #fbb6cf;font-variant:normal;
+  font-size:38px;font-weight:900;color:#187748;line-height:1;
+  text-shadow:0 2px 1px white,0 5px 12px rgba(52,145,91,.35);font-variant:normal;
   letter-spacing:.025em}
 .topper-bow{position:absolute;top:106px;left:50%;transform:translateX(-50%);display:flex;align-items:center}
-.topper-bow i{width:26px;height:15px;background:linear-gradient(135deg,#ffd2e5,#f985b2);
-  border:2px solid #fff8;border-radius:65% 10% 60% 20%;box-shadow:0 3px 5px #c97a9942}
+.topper-bow i{width:26px;height:15px;background:linear-gradient(135deg,#c7f8d3,#4bb981);
+  border:2px solid #fff8;border-radius:65% 10% 60% 20%;box-shadow:0 3px 5px #48865e42}
 .topper-bow i:first-child{transform:rotate(19deg)}
 .topper-bow i:last-child{transform:rotate(161deg)}
-.topper-bow b{width:13px;height:13px;border:2px solid #fff6;background:#ed6595;border-radius:50%;z-index:2}
+.topper-bow b{width:13px;height:13px;border:2px solid #fff6;background:#27895b;border-radius:50%;z-index:2}
 .birthday-candles{position:absolute;z-index:17;left:50%;bottom:499px;transform:translateX(-50%);
   width:190px;height:72px;display:flex;align-items:flex-end;justify-content:space-between;
   padding:0 18px;pointer-events:none}
@@ -363,11 +363,21 @@ main{position:relative;z-index:2}
 .mid-rose-right{right:25px;top:40px;transform:rotate(22deg) scale(.85)}
 .bottom-rose-left{left:25px;top:99px;transform:rotate(-14deg) scale(.88)}
 .bottom-rose-right{right:25px;top:96px;transform:rotate(14deg) scale(.88)}
-.cake-cube-wrap{position:absolute;z-index:9;left:50%;top:8px;width:132px;height:119px;
-  transform:translateX(-50%);animation:fondantFloat 4s ease-in-out infinite}
-.fondant-cube{display:block;width:132px;height:119px;overflow:visible;
-  filter:drop-shadow(0 7px 2px rgba(60,39,59,.28)) drop-shadow(0 2px 1px rgba(255,255,255,.42))}
-.rubik-sugar-spark{position:absolute;z-index:2;right:0;top:10px;font-size:23px;color:#fff1a7}
+.cake-cube-wrap{
+  position:absolute;z-index:9;left:50%;top:34px;
+  width:116px;height:86px;transform:translateX(-50%);animation:none;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border-radius:21px 21px 15px 15px;
+  border:2px solid rgba(255,251,239,.86);
+  background:linear-gradient(152deg,#f4bcd4 0%,#f8cde0 38%,#ed9dbe 100%);
+  box-shadow:inset 0 5px 11px rgba(111,49,72,.30),
+    inset 0 -4px 7px rgba(255,250,250,.40),0 1px 1px rgba(255,255,255,.65);
+}
+.fondant-cube{
+  display:block;flex:none;width:91px;height:82px;overflow:hidden;
+  filter:drop-shadow(0 2px 1px rgba(70,34,58,.18));
+}
+.rubik-sugar-spark{display:none}
 .top-little-heart{position:absolute;right:19px;bottom:33px;z-index:12;color:#fffaf7;text-shadow:0 3px #de739f;font-size:18px}
 @keyframes fondantFloat{50%{transform:translate(-50%,-5px) rotate(3deg)}}
 .tetris-candies{position:absolute;z-index:9;top:31px;left:50%;transform:translateX(-50%);
