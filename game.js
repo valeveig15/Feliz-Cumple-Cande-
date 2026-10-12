@@ -1414,99 +1414,65 @@
   // SVG autocontenido y nítido incluso al reducirse en las rondas 4 y 5.
   // Silueta clásica de patito de goma de bañera: formas simples y suaves.
   // Cuerpo y cabeza redondos; las diferencias se conservan sin alterar el estilo.
+  // Patito de goma estilo ilustración de referencia: formas simples,
+  // sin brillos 3D, con contorno grueso naranja suave y ojos negros.
+  // Los colores distintos son deliberadamente visibles en 7×7–10×10.
   function duckSvg(level, odd) {
-    const uid = "duckclassic-" + (++duckRenderSeq);
-    const pinkBeak = odd && level === 1;
-    const tail = odd && level === 2
-      ? '<path d="M38 121 C25 114 24 103 28 97 C36 100 44 104 49 112 Z" fill="url(#' + uid + '-body)" stroke="#e6ad24" stroke-width="1.35"/>'
-      : '<path d="M34 123 C21 114 15 100 23 85 C34 91 45 98 51 110 Z" fill="url(#' + uid + '-body)" stroke="#e7ad24" stroke-width="1.4"/>' +
-        '<path d="M24 92 Q26 102 35 112" fill="none" stroke="#fffbd2" stroke-width="3.8" stroke-linecap="round" opacity=".65"/>';
-    const eye = odd && level === 3
-      ? '<path d="M154 64 Q161 71 168 64" stroke="#292429" stroke-width="3.8" stroke-linecap="round" fill="none"/>'
-      : '<ellipse cx="161" cy="64" rx="6" ry="6.5" fill="#292429"/>' +
-        '<circle cx="159.2" cy="61.8" r="2.1" fill="#fff"/>' +
-        '<ellipse cx="161.7" cy="67.8" rx=".8" ry=".55" fill="#fff" opacity=".75"/>';
-    const wingFill = odd && level === 2 ? "#5ac887" : "url(#" + uid + "-wing)";
-    const bow = odd && level === 5
-      ? '<g transform="translate(132 30) rotate(-13)">' +
-        '<path d="M0 0 C-13 -12 -19 -8 -16 3 C-11 10 -5 5 0 2 C9 10 17 6 17 -2 C14 -11 5 -6 0 0 Z" fill="#f883b6" stroke="#d65c96" stroke-width="1.1"/>' +
-        '<circle cx="0" cy="1" r="4.7" fill="#ffe3f1"/><path d="M-4 6 -9 14 M4 6 10 14" stroke="#ee88b7" stroke-width="2.7" stroke-linecap="round"/>' +
-        '</g>' : '';
-    const beakTop = pinkBeak ? "#ffacd0" : "#ffbd66";
-    const beakMiddle = pinkBeak ? "#ff77ac" : "#ff923a";
-    const beakDark = pinkBeak ? "#d34f8b" : "#e8792d";
-
-    let svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 25 202 148" role="img" aria-label="Patito amarillo de goma">' +
-      '<defs>' +
-      '<radialGradient id="' + uid + '-body" gradientUnits="userSpaceOnUse" cx="86" cy="102" r="112" gradientTransform="matrix(1 0 0 .90 0 11)">' +
-        '<stop offset="0" stop-color="#fffcc8"/><stop offset=".28" stop-color="#fff37e"/>' +
-        '<stop offset=".58" stop-color="#ffdf45"/><stop offset=".82" stop-color="#ffc629"/>' +
-        '<stop offset="1" stop-color="#e59e17"/>' +
-      '</radialGradient>' +
-      '<radialGradient id="' + uid + '-head" gradientUnits="userSpaceOnUse" cx="124" cy="46" r="75">' +
-        '<stop offset="0" stop-color="#fffedd"/><stop offset=".32" stop-color="#fff493"/>' +
-        '<stop offset=".61" stop-color="#ffe154"/><stop offset=".86" stop-color="#ffcb2b"/>' +
-        '<stop offset="1" stop-color="#e7a31a"/>' +
-      '</radialGradient>' +
-      '<linearGradient id="' + uid + '-beak" x1="0" y1="0" x2="0" y2="1">' +
-        '<stop stop-color="' + beakTop + '"/><stop offset=".5" stop-color="' + beakMiddle + '"/>' +
-        '<stop offset="1" stop-color="' + beakDark + '"/>' +
-      '</linearGradient>' +
-      '<linearGradient id="' + uid + '-wing" x1="0" y1="0" x2=".8" y2="1">' +
-        '<stop stop-color="#fff6ae"/><stop offset=".55" stop-color="#ffde4a"/>' +
-        '<stop offset="1" stop-color="#ebae25"/>' +
-      '</linearGradient>' +
-      '<radialGradient id="' + uid + '-blush">' +
-        '<stop offset="0" stop-color="#ff9b9b" stop-opacity=".47"/>' +
-        '<stop offset="1" stop-color="#ff8b8b" stop-opacity="0"/>' +
-      '</radialGradient>' +
-      '</defs>' +
-      '<ellipse cx="111" cy="162" rx="75" ry="8" fill="#598e9e" opacity=".14"/>' +
-      tail +
-      '<path d="M34 123 C31 105 40 95 57 92 C72 89 84 94 96 93 C108 92 122 95 135 104 C153 106 168 119 168 136 C168 155 148 165 116 165 C81 166 51 156 39 143 C35 138 34 132 34 123Z" ' +
-        'fill="url(#' + uid + '-body)" stroke="#e6b32b" stroke-width="1.3"/>' +
-      '<path d="M43 139 Q66 162 112 161 Q142 160 155 149" fill="none" stroke="#d49a1f" stroke-width="2" opacity=".25" stroke-linecap="round"/>' +
-      '<path d="M106 110 C95 99 92 85 96 65 C100 42 117 27 141 28 C165 28 181 44 183 68 C187 93 172 114 151 119 C128 124 113 117 106 110Z" ' +
-        'fill="url(#' + uid + '-head)" stroke="#ecb527" stroke-width="1.25"/>' +
-      '<path d="M107 70 Q110 48 131 40" stroke="#ffffef" opacity=".79" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-      '<ellipse cx="151" cy="92" rx="12" ry="8.5" fill="url(#' + uid + '-blush)"/>' +
-      eye +
-      '<path d="M176 80 C183 76 195 77 200 82 C203 85 200 88 194 90 C186 92 179 90 175 87Z" fill="url(#' + uid + '-beak)" stroke="' + beakDark + '" stroke-width="1.2"/>' +
-      '<path d="M178 88 Q187 93 197 90 Q195 96 187 96 Q181 94 178 92Z" fill="' + beakDark + '" opacity=".91"/>' +
-      '<path d="M181 80 Q190 79 195 82" stroke="#ffe1ac" opacity=".75" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-      '<path d="M66 128 C67 114 83 106 99 110 C113 114 124 122 126 132 C116 149 97 152 80 144 C70 140 66 135 66 128Z" ' +
-        'fill="' + wingFill + '" stroke="#e4ac25" stroke-width="1.3"/>' +
-      '<path d="M76 123 Q92 113 109 126" stroke="#fffee7" opacity=".78" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
-      '<path d="M81 142 Q99 149 116 136" stroke="#d7a628" opacity=".26" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
-      '<path d="M40 121 Q39 134 49 141" stroke="#fffbd0" opacity=".55" stroke-width="4" fill="none" stroke-linecap="round"/>' +
-      bow +
-      '</svg>';
-    // Diferencias muy legibles a medida que la cuadrícula crece.
-    // Nunca más de un patito distinto por ronda.
-    if (odd && level === 3) {
-      svg = svg.replaceAll("#fffedd", "#edffe4")
-        .replaceAll("#fff493", "#cdf9b6")
-        .replaceAll("#ffe154", "#9fec95")
-        .replaceAll("#ffcb2b", "#69d47e")
-        .replaceAll("#e7a31a", "#43ae69");
-    }
-    if (odd && level === 4) {
-      svg = svg.replaceAll("#fffcc8", "#fff0e3")
-        .replaceAll("#fff37e", "#ffd9bc")
-        .replaceAll("#ffdf45", "#ffc499")
-        .replaceAll("#ffc629", "#f7a17e")
-        .replaceAll("#e59e17", "#cf8066");
-    }
-    if (odd && level === 5) {
-      svg = svg.replaceAll("#fffcc8", "#ecffe0")
-        .replaceAll("#fff37e", "#cbf6a7")
-        .replaceAll("#ffdf45", "#a6e78b")
-        .replaceAll("#ffc629", "#76ce7b")
-        .replaceAll("#e59e17", "#419e64");
-    }
-    return svg;
+    const specialPinkBeak = odd && level === 1;
+    const specialMintWing = odd && level === 2;
+    const specialMintHead = odd && level === 3;
+    const specialPeachBody = odd && level === 4;
+    const specialMintDuck = odd && level === 5;
+    const golden = "#F2AF4D";
+    const headColor = specialMintHead ? "#A8E2BA" : specialMintDuck ? "#92DBAD" : "#FFEB85";
+    const bodyColor = specialPeachBody ? "#FFC1B6" : specialMintDuck ? "#96DEB4" : "#FFE98A";
+    const wingColor = specialMintWing ? "#66C991" : specialMintDuck ? "#8FD9A9" : "#FFE78A";
+    const headEdge = specialMintHead || specialMintDuck ? "#58AD79" : golden;
+    const bodyEdge = specialPeachBody ? "#E88E86" : specialMintDuck ? "#4FB075" : golden;
+    const leftWingEdge = specialMintWing || specialMintDuck ? "#4FB075" : golden;
+    const beak = specialPinkBeak ? "#F185AE" : "#EF9653";
+    const beakDark = specialPinkBeak ? "#D86697" : "#E58642";
+    const cheekGlow = specialMintDuck ? "#B6EBC8" : "#FFF0A4";
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
+      role="img" aria-label="Patito de goma de aspecto tierno y redondito">
+      <!-- Aletas laterales redondeadas como en la imagen de referencia. -->
+      <path d="M48 112 C28 107 10 120 7 142 C3 161 13 179 32 182
+        C53 189 69 170 67 144 C65 127 59 116 48 112Z"
+        fill="${wingColor}" stroke="${leftWingEdge}" stroke-width="7"
+        stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M170 111 C190 112 207 126 208 148 C210 166 198 181 180 185
+        C161 188 150 170 153 147 C156 127 161 115 170 111Z"
+        fill="${specialMintDuck ? wingColor : bodyColor}" stroke="${bodyEdge}"
+        stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Cabecita grande, ligeramente girada hacia la derecha. -->
+      <path d="M51 88 C47 51 66 15 106 11 C142 7 174 27 180 62
+        C187 97 173 126 141 133 C102 144 59 122 51 88Z"
+        fill="${headColor}" stroke="${headEdge}" stroke-width="7.5"
+        stroke-linejoin="round"/>
+      <!-- Cuerpo gordito que se une de manera suave al cuello. -->
+      <path d="M48 109 C30 123 29 147 29 166 C25 186 35 206 61 214
+        C85 223 137 224 164 216 C194 208 208 187 205 165
+        C201 138 186 117 172 108 C163 121 148 128 126 128
+        C91 128 67 116 48 109Z"
+        fill="${bodyColor}" stroke="${bodyEdge}" stroke-width="7.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M69 140 Q62 163 71 181 Q82 204 126 208 Q145 207 164 198"
+        fill="none" stroke="${cheekGlow}" stroke-width="13"
+        opacity=".25" stroke-linecap="round"/>
+      <!-- Dos ojitos ovalados, sin pestañas ni brillos exagerados. -->
+      <ellipse cx="80" cy="62" rx="11" ry="14" fill="#0D1010"/>
+      <ellipse cx="160" cy="44" rx="6.9" ry="12.5"
+        transform="rotate(-27 160 44)" fill="#0D1010"/>
+      <!-- Pico naranja ancho y suave. -->
+      <path d="M102 66 C111 52 136 50 150 54 C166 56 171 69 167 77
+        C158 89 133 92 114 86 C96 82 93 75 102 66Z" fill="${beak}"/>
+      <path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z"
+        fill="${beakDark}" opacity=".72"/>
+      <path d="M112 64 C122 60 141 59 151 62"
+        stroke="${specialPinkBeak ? "#FFC1D5" : "#F8B277"}"
+        stroke-width="5" fill="none" stroke-linecap="round" opacity=".65"/>
+    </svg>`;
   }
-
   function startDuckLevel(level) {
     duckLevel = level;
     duckLocked = false;
