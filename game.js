@@ -429,6 +429,7 @@
 
   function newScramble() {
     if (rotating) return;
+    document.getElementById("rubik-secret-heart").disabled = false;
     rubikSolvedLock = false;
     moveHistory = [];
     buildCube();
@@ -437,6 +438,17 @@
     rubikMovesEl.textContent = "0";
     rubikStatus.textContent = "Arrastrá sobre una pieza para girar la capa. Fuera del cubo cambiás la vista.";
   }
+
+  // El segundo corazón secreto permite pasar de Rubik a Tetris.
+  // No resuelve el cubo ni afecta los récords: es solamente un atajo.
+  const rubikSecretHeart = document.getElementById("rubik-secret-heart");
+  rubikSecretHeart.addEventListener("click", () => {
+    if (currentLevel !== 1 || rubikSecretHeart.disabled ||
+        rubikSolvedLock || rotating) return;
+    rubikSecretHeart.disabled = true;
+    rubikSolvedLock = true;
+    levelComplete(2, "💚 Corazón secreto", "¡Encontraste el atajo escondido a Tetris!", "💚");
+  });
 
   document.getElementById("new-scramble").addEventListener("click", newScramble);
   document.getElementById("rubik-undo").addEventListener("click", () => {
