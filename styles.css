@@ -1033,3 +1033,72 @@ body{font-size:17px;line-height:1.5}
  .invitation-draft-editor{padding:14px}
  .invitation-draft-actions{flex-direction:column}
 }
+
+
+/* =============================================================
+   CANDE LECTURA REFINADA V16 — lectura accesible y final cuidado
+   ============================================================= */
+:root {font-synthesis:none}
+body {font-size:18px}
+.level-copy>p,.win-copy>p {font-size:clamp(19px,1.75vw,22px)}
+.level-copy h1 {font-size:clamp(41px,5.5vw,72px)}
+.status-text {font-size:17px}
+.eyebrow,.brand small {font-size:14px}
+.score-panel small,.duck-progress span,.tetris-layout aside>span {
+  font-size:13px;letter-spacing:.08em
+}
+.mini-card p,.rubik-tip p,.practice-body p,.practice-body li {font-size:16px}
+.mobile-touch-help {font-size:14px;line-height:1.55}
+#level-tetris .mobile-controls button>small {font-size:13px}
+.record-strip span,.retro-records summary,.record-table td {font-size:14px}
+.record-table th {font-size:12px}
+.retro-records small {font-size:13px}
+.duck-hint-text {font-size:16px}
+.duck-progress strong {font-size:23px}
+#level-tetris .tetris-card #tetris-status {font-size:15px;line-height:1.4}
+.win-copy .birthday-main-title {
+  font-size:clamp(60px,7vw,97px);
+  line-height:1.07;letter-spacing:-.045em;
+  text-shadow:0 2px 0 white,0 8px 24px rgba(52,151,91,.21)
+}
+.win-copy .birthday-main-title span {
+  color:#148653;text-decoration:underline;text-decoration-color:#a4e4b2;
+  text-decoration-thickness:4px;text-underline-offset:9px
+}
+.win-mini-victory {font-size:12px;opacity:.85}
+.birthday-topper span {font-size:17px}
+.birthday-topper strong {font-size:54px}
+/* Las tres velas quedan delante del fondant del letrero y con luz propia. */
+.birthday-candles {z-index:35;overflow:visible}
+.birthday-candle {overflow:visible}
+.birthday-candle.candle-middle .birthday-flame {
+  opacity:1!important;visibility:visible!important;
+  width:18px;height:28px;left:-2px;top:-31px;
+  background:radial-gradient(ellipse at 40% 68%,#fffdf4 0 23%,
+    #ffef96 24% 50%,#ffb847 51% 76%,#ff814c 77% 100%);
+  box-shadow:0 0 10px 3px rgba(255,177,53,.65),
+    0 0 23px 8px rgba(255,192,74,.27);
+  filter:drop-shadow(0 0 7px #ffc34d)
+}
+.birthday-candle.candle-middle::after {
+  content:"";position:absolute;pointer-events:none;
+  width:36px;height:44px;left:-12px;top:-35px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,225,117,.48),transparent 70%);
+  animation:candleLight 1s ease-in-out infinite alternate
+}
+.cake-deluxe .cake-duck {flex:0 0 44px;width:44px;max-width:44px}
+.cake-deluxe .cake-duck:nth-child(2) {transform:scale(1.04)}
+.cake-deluxe .cake-ducks {inset:9px 44px 2px;gap:15px}
+@media(max-width:900px){
+  .level-copy h1 {font-size:clamp(39px,7vw,57px)}
+  #level-tetris .mobile-controls button>small {font-size:13px}
+}
+@media(max-width:560px){
+  body{font-size:17px}
+  .level-copy h1{font-size:clamp(38px,10vw,52px)}
+  .level-copy>p,.win-copy>p{font-size:18px}
+  .win-copy .birthday-main-title{font-size:clamp(52px,12vw,72px)}
+  .mobile-touch-help{font-size:13px}
+  .birthday-topper strong{font-size:55px}
+  .birthday-topper span{font-size:17px}
+}
