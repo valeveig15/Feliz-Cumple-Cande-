@@ -1340,7 +1340,7 @@
         ? "✦ Vista previa privada. Para Cande sigue cerrada."
         : "Falta configurar la fecha exacta para activar la cuenta regresiva.";
       for (const node of Object.values(countNodes)) node.textContent = "--";
-      document.getElementById("envelope-lock").textContent = invitationPreviewUnlocked ? "💌" : "🔒";
+      document.getElementById("envelope-lock").classList.toggle("is-unlocked", invitationPreviewUnlocked);
       if (!invitationPreviewUnlocked) {
         invitationReveal.hidden = true;
         invitationReveal.replaceChildren();
@@ -1365,8 +1365,7 @@
     previewBanner.hidden = !invitationPreviewUnlocked;
     previewAccess.hidden = invitationPreviewUnlocked || birthdayReached;
     invitationDraftEditor.hidden = !invitationPreviewUnlocked;
-    document.getElementById("envelope-lock").textContent =
-      invitationCurrentlyUnlocked ? "💌" : "🔒";
+    document.getElementById("envelope-lock").classList.toggle("is-unlocked", invitationCurrentlyUnlocked);
     invitationSetup.textContent = birthdayReached
       ? "¡Llegó el día! Ya podés abrir la sorpresa."
       : invitationPreviewUnlocked
@@ -1470,7 +1469,7 @@
   <header class="surprise-topline"><span>✦ 15 OCTUBRE 2026</span><span>ALGO SOLO PARA VOS ♡</span></header>
   <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:7},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 7</small></nav>
   <article class="surprise-page surprise-opening">
-   <div class="surprise-magic">✦ ♡ ✦</div><p class="surprise-eyebrow">CONFIDENCIAL (O ALGO ASÍ)</p>
+   <div class="surprise-magic">✦ ♡ ✦</div>
    <h3>CANDE.<br><em>feliz cumpleee</em> ♡</h3>
    <div class="surprise-opening-card"><p>Bueno. Llegó el día.</p><p>Claramente no iba a hacerte algo normal porque quién me conoce JAJAJA.</p><p>Así que te hice esto. No me preguntes cuánto tardé ni cómo terminé acá.</p></div>
    <p class="surprise-soft-caption">Hay varias cositas adentro. Leelas tranqui. O no, hacé lo que quieras blda.</p>
