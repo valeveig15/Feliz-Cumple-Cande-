@@ -861,3 +861,150 @@ body{
 @media(max-width:700px){
   .duck-card .duck-item svg{width:100%;height:100%}
 }
+
+
+/* ===========================================================
+   CANDE FINAL V12 · LETRA CLARA, TORTA PROTAGONISTA E INVITACIÓN
+   =========================================================== */
+/* Accesibilidad y legibilidad en todo el juego */
+body{font-size:17px;line-height:1.5}
+.level-copy>p,.win-copy>p{font-size:clamp(18px,1.65vw,21px);line-height:1.64}
+.brand strong{font-size:17px}
+.brand small{font-size:13px}
+.eyebrow{font-size:13px}
+.status-text{font-size:clamp(15px,1.5vw,17px);line-height:1.5}
+.score-panel small,.duck-progress span{font-size:12px}
+.score-panel strong{font-size:clamp(25px,2.6vw,30px)}
+.record-strip span,.record-strip small,.record-table,.retro-records summary{font-size:13px}
+.retro-records small{font-size:12px}
+.record-table th{font-size:11px}
+.practice-panel summary,.practice-explain{font-size:16px}
+.rubik-tip small,.rubik-tip div small,.practice-body p,.practice-body li{font-size:15px}
+.game-card button:not(.mobile-controls button){font-size:clamp(14px,1.3vw,16px)}
+.duck-hint-text{font-size:15px}
+.duck-hint-button{font-size:15px;padding:12px 19px}
+.key-help{font-size:14px!important}
+.mobile-touch-help{font-size:13px}
+.retro-gameover p,.retro-gameover label{font-size:14px}
+.retro-actions button,.retro-nick-row button{font-size:14px}
+
+/* El cumpleaños es el centro; "ganaste" es una felicitación secundaria. */
+.win-level{align-items:start}
+.win-copy{text-align:center;max-width:560px;margin:0 auto}
+.win-mini-victory{display:inline-flex;align-items:center;justify-content:center;
+  color:#448b64;background:#e5fae9;border:1px solid #c5efd0;border-radius:30px;
+  font-size:12px;letter-spacing:.13em;font-weight:900;padding:9px 15px}
+.win-copy .birthday-main-title{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(49px,6.2vw,86px);
+  letter-spacing:-.03em;line-height:1.08;margin:16px 0 20px;
+  color:#22764b;background:none;-webkit-text-fill-color:initial;
+  text-shadow:0 2px 0 #fff,0 7px 24px rgba(55,159,101,.22);
+}
+.win-copy .birthday-main-title span{color:#149260;font-style:italic}
+.win-copy>p{max-width:42ch;margin-inline:auto}
+.win-action-buttons{display:flex;gap:12px;justify-content:center;align-items:center;
+  flex-wrap:wrap;margin-top:22px}
+.win-action-buttons .primary-btn{font-size:16px;min-height:48px}
+.win-action-buttons .soft-btn{font-size:15px;min-height:48px}
+
+/* Fondant del topper en verde esmeralda, más grande y legible */
+.birthday-topper{bottom:600px}
+.birthday-topper::before{width:230px;height:92px;top:28px;
+  background:linear-gradient(145deg,#fafffa,#d6f5dc 75%,#b4e5c9);
+  box-shadow:0 8px 22px rgba(36,110,69,.23),inset 0 0 0 3px #b9e9cc}
+.birthday-topper span{font-size:15px;letter-spacing:.12em;color:#276b45}
+.birthday-topper strong{font-size:50px;letter-spacing:.01em;color:#137745;
+  text-shadow:0 2px #fff,0 6px 14px #74c29f}
+.birthday-topper .topper-ornament{font-size:23px;color:#d1a858}
+.topper-bow{top:119px}
+
+/* Que se vea el fuego de las tres velitas, incluida la central. */
+.birthday-candle.candle-middle{position:relative;z-index:24}
+.birthday-candle.candle-middle .birthday-flame{
+  display:block;opacity:1;visibility:visible;z-index:30;isolation:isolate;
+  box-shadow:0 0 11px 3px rgba(255,182,68,.65);
+  background:radial-gradient(circle at 38% 66%,#fffefa 0 22%,#ffeca0 23% 46%,#ffc24c 47% 76%,#ff854c 77%);
+}
+.birthday-flame{z-index:12}
+
+/* Los patitos son pequeños adornos, no tapan el laguito. */
+.cake-deluxe .cake-duck{flex:0 0 50px;width:50px;max-width:50px}
+.cake-deluxe .cake-duck:nth-child(2){transform:scale(1.04)}
+.cake-deluxe .cake-ducks{inset:5px 42px 0;gap:12px}
+.cake-deluxe .cake-duck svg{width:100%;height:auto;filter:none}
+
+/* El desafío final de la invitación */
+.invitation-gate{grid-column:1/-1;position:relative;isolation:isolate;
+  width:min(100%,880px);margin:30px auto 65px;padding:28px 30px 34px;
+  text-align:center;border-radius:34px;
+  background:linear-gradient(160deg,#fcfffb 0%,#dff8e6 65%,#d0f2d9 100%);
+  border:2px solid #effff1;
+  box-shadow:0 18px 55px rgba(43,123,76,.16),inset 0 0 0 3px rgba(255,255,255,.38)}
+.invitation-stars{color:#bc9a4c;font-size:23px;letter-spacing:.35em}
+.invitation-kicker{color:#417e5b;font-size:13px;font-weight:900;letter-spacing:.13em}
+.invitation-gate h2{color:#19744c;font:800 clamp(30px,4.8vw,53px)/1.14 Georgia,"Times New Roman",serif;
+  margin:14px auto 16px;max-width:18ch}
+.invitation-setup{color:#48775a;font-size:17px;max-width:44ch;margin:10px auto 20px;line-height:1.6}
+.countdown-timer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;
+  width:min(100%,640px);margin:16px auto}
+.countdown-timer>div{background:#fff;border:1px solid #c7ead4;border-radius:19px;
+  padding:18px 5px;box-shadow:0 4px 11px rgba(54,138,77,.08)}
+.countdown-timer strong{display:block;font:900 clamp(27px,5vw,53px)/1.1 ui-monospace,Consolas,monospace;
+  color:#1b8451;font-variant-numeric:tabular-nums}
+.countdown-timer span{display:block;margin-top:8px;font-size:12px;font-weight:900;
+  color:#598366;letter-spacing:.12em}
+.countdown-status{font-size:16px;font-weight:700;color:#447956}
+.invitation-envelope{position:relative;margin:20px auto 22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:min(100%,300px);height:162px;
+  border:4px solid #fff;border-radius:17px;
+  background:linear-gradient(153deg,#f6fff8,#d4f1dd 56%,#b5e2c4);
+  box-shadow:0 12px 27px rgba(61,108,65,.18);transform:rotate(-2deg)}
+.invitation-envelope::before{content:"";position:absolute;inset:0;
+  clip-path:polygon(0 0,50% 55%,100% 0);background:#e6fae9;border-radius:14px;opacity:.8}
+.envelope-seal{z-index:2;font-size:35px}
+.envelope-text{z-index:2;font-size:15px;font-weight:800;color:#34754d}
+.envelope-lock{position:absolute;right:17px;bottom:10px;font-size:22px;z-index:2}
+#invitation-open{font-size:19px;padding:15px 27px}
+.invitation-reveal{margin:23px auto 0;padding:23px;border-radius:22px;
+  max-width:710px;background:linear-gradient(165deg,#fffdfa,#f0fff2);
+  box-shadow:inset 0 0 0 2px #d7efdc;text-align:left}
+.invitation-reveal h3{font:800 clamp(26px,3vw,39px)/1.2 Georgia,serif;color:#157948;text-align:center}
+.invitation-letter p{font-size:19px;line-height:1.8;color:#385643;margin:17px 0}
+.invitation-preview-banner{display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:9px;padding:13px;margin:15px auto;
+  width:min(100%,600px);background:#fff4d5;color:#705623;
+  border:1px solid #e9d69c;border-radius:13px;font-size:14px;font-weight:800}
+.invitation-preview-banner button,.preview-lock-button{border:0;border-radius:9px;
+  padding:9px 14px;background:#276f4b;color:#fff;font-weight:850;cursor:pointer}
+.preview-editor-trigger{display:flex;justify-content:center;align-items:center;
+  margin:14px auto 0;gap:7px;max-width:260px}
+.preview-editor-trigger input{width:100%;border-radius:12px;border:1px solid #b9ddc4;
+  padding:11px 13px;background:#fff;color:#315b42;font-size:15px}
+.preview-editor-trigger button{border:0;padding:10px;background:transparent;cursor:pointer;
+  color:#9abcab;font-size:16px}
+.preview-editor-trigger input::placeholder{color:#afc4b2}
+.preview-editor-trigger input:focus{outline:2px solid #96d6b4}
+.invitation-reveal[hidden],.invitation-preview-banner[hidden],.preview-editor-trigger[hidden],
+#invitation-open[hidden]{display:none!important}
+@media(max-width:900px){
+  .win-level{gap:28px}
+  .birthday-topper strong{font-size:50px}
+  .birthday-topper span{font-size:15px}
+  .mobile-tetris-hud small{font-size:11px}
+  #level-tetris .mobile-controls button>small{font-size:12px}
+  .mobile-touch-help{font-size:13px}
+}
+@media(max-width:560px){
+  .brand strong{font-size:14px}
+  .level-copy>p,.win-copy>p{font-size:18px}
+  .win-copy .birthday-main-title{font-size:clamp(46px,11vw,67px)}
+  .invitation-gate{padding:23px 12px;border-radius:24px}
+  .countdown-timer{gap:5px}
+  .countdown-timer>div{padding:11px 2px;border-radius:12px}
+  .countdown-timer strong{font-size:clamp(22px,7vw,35px)}
+  .countdown-timer span{font-size:9px;letter-spacing:.02em}
+  .invitation-letter p{font-size:17px}
+  .birthday-topper::before{width:232px}
+}
