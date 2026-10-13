@@ -1346,35 +1346,136 @@
     }
   }
 
-  const DEFAULT_INVITATION_TEXT = [
-    "Cande, llegaste hasta acá. Después del cubito, Tetris y una invasión de patitos, te ganaste algo más que una torta virtual. Q god.",
-    "Quería hacerte algo que tuviera un poquito de vos: verde, juegos, música, humor raro y un montón de cariño. Algo para sumar a todas esas cosas que nos hacen reír.",
-    "Así que esta es tu invitación a seguir juntando anécdotas, planes espontáneos, charlas eternas y momentos que después se convierten en chistes nuestros.",
-    "Feliz cumple, Cande. Gracias por ser vos y por estar.",
-    "Con mucho cariño, Vale ♡"
-  ].join("\n\n");
-  let editableInvitationText = DEFAULT_INVITATION_TEXT;
+  const DEFAULT_INVITATION_TEXT = "Cande, feliz cumple, bella. No sé muy bien por dónde empezar sin ponerme cursi, pero bueno, vamos a fingir que sé JAJAJA.\n\nHay personas que se van volviendo importantes sin que una se dé cuenta de cuándo pasó. Un día son alguien con quien hablás, y al otro tenés ganas de contarles cualquier estupidez que te pasó porque sabés que la van a entender. Y vos sos una de esas personas para mí.\n\nMe encanta que con vos podamos decir las cosas más ridículas del universo y reírnos como dos boludas, pero que también esté ese otro lado tuyo, el que se preocupa, el que pregunta si llegué bien, el que te dice «vos podés» cuando hace falta. Son cosas que capaz para vos son normales, pero yo las valoro un montón.\n\nTenés algo muy lindo, Cande. Me encanta tu forma de ser, tu humor absolutamente cuestionable (lo digo con amor), lo mucho que te entusiasman las cosas que te gustan y esa manera tuya de hacer que hasta un mensaje cualquiera pueda mejorarme el día.\n\nNo quiero escribirte la típica cosa de «ojalá seamos amigas para siempre» como si fuera una promesa de película, pero sí quiero que sepas que espero seguir compartiendo muchísimas cosas con vos. Más charlas que empiezan con una pavada, más risas que no podemos explicar y más momentos de esos que después recordamos de la nada.\n\nOjalá este año te traiga cosas tan lindas como las que vos hacés sentir a la gente que te quiere. Y ojalá nunca dudes de lo importante que sos, aunque yo no esté diciéndotelo cada cinco minutos porque me da vergüenza ponerme así de sentimental.\n\nGracias por estar, por hacerme reír y por ser vos sin tener que hacer ningún esfuerzo por parecerte a nadie. De verdad me hace muy feliz tenerte en mi vida.\n\nTe quiero muchísimo, blda. En serio. Ahora sí, basta que me voy a poner a llorar yo también. Feliz cumple, Cande. 💚";
+  let editableInvitationText=DEFAULT_INVITATION_TEXT;
+  let surpriseScene=0;
+  const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
+  const surpriseStarNotes=["Las charlas que empiezan con una pavada y terminan en cualquier cosa.","Cuando preguntás si llegué bien. Capaz parece chiquito, pero a mí me importa.","Poder reírnos juntas de algo que nadie más entendería.","Que se te ocurran detalles tan lindos para la gente que querés.","La suerte que tengo de que en mi vida exista una Cande."];
 
-  function openCandeInvitation() {
-    updateBirthdayCountdown();
-    if (!invitationCurrentlyUnlocked) return;
-    if (!invitationOpened) {
-      const heading = document.createElement("h3");
-      heading.textContent = "Una invitación especialmente para vos 💚";
-      const letter = document.createElement("div");
-      letter.className = "invitation-letter";
-      const paragraphs = editableInvitationText.split(/\n\s*\n/).filter(Boolean);
-      for (const words of paragraphs) {
-        const line = document.createElement("p");
-        line.textContent = words;
-        letter.appendChild(line);
-      }
-      invitationReveal.replaceChildren(heading,letter);
-      invitationOpened = true;
-    }
-    invitationReveal.hidden = false;
-    invitationReveal.scrollIntoView({behavior:"smooth",block:"center"});
-  }
+  function renderSurpriseLetter(){
+ const holder=invitationReveal.querySelector(".surprise-letter-copy");
+ if(!holder)return;
+ holder.replaceChildren();
+ editableInvitationText.split(/\n\s*\n/).filter(Boolean).forEach(phrase=>{
+  const p=document.createElement("p");p.textContent=phrase;holder.appendChild(p);
+ });
+}
+
+  function showSurpriseScene(n){
+ if(!invitationCurrentlyUnlocked)return;
+ const pages=[...invitationReveal.querySelectorAll(".surprise-page")];
+ if(!pages.length)return;
+ surpriseScene=Math.max(0,Math.min(n,pages.length-1));
+ pages.forEach((p,i)=>{p.hidden=i!==surpriseScene;});
+ invitationReveal.querySelectorAll(".surprise-progress-dot").forEach((p,i)=>p.classList.toggle("selected",i===surpriseScene));
+ const count=invitationReveal.querySelector(".surprise-progress-count");
+ if(count)count.textContent=`${surpriseScene+1} / ${pages.length}`;
+ invitationReveal.querySelector("[data-surprise-prev]").hidden=surpriseScene===0;
+ invitationReveal.querySelector("[data-surprise-next]").hidden=surpriseScene===pages.length-1;
+ invitationReveal.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+  function buildSurpriseExperience(){
+ invitationReveal.innerHTML=`
+ <div class="surprise-world">
+  <header class="surprise-topline"><span>✦ 15 OCTUBRE 2026</span><span>ALGO SOLO PARA VOS ♡</span></header>
+  <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:7},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 7</small></nav>
+  <article class="surprise-page surprise-opening">
+   <div class="surprise-magic">✦ ♡ ✦</div><p class="surprise-eyebrow">CONFIDENCIAL (O ALGO ASÍ)</p>
+   <h3>CANDE.<br><em>feliz cumpleee</em> 💚</h3>
+   <div class="surprise-opening-card"><p>Bueno. Llegó el día.</p><p>Claramente no iba a hacerte algo normal porque quién me conoce JAJAJA.</p><p>Así que te hice esto. No me preguntes cuánto tardé ni cómo terminé acá.</p></div>
+   <p class="surprise-soft-caption">Hay varias cositas adentro. Leelas tranqui. O no, hacé lo que quieras blda.</p>
+  </article>
+  <article class="surprise-page surprise-polaroid-page" hidden>
+   <p class="surprise-eyebrow">ARCHIVO DE COSAS QUE ME ENCANTAN DE VOS</p><h3>Cuatro motivos por los que <em>sos vos</em></h3>
+   <p>Tocá las notitas. Sí, hay que tocar todo, soy insoportable.</p>
+   <div class="surprise-polaroids">
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💬</span><strong>Cómo me hacés reír</strong><small hidden>Pasamos de hablar normal a decir estupideces en tres segundos. Me encanta JAJAJA.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Esos detalles tuyos</strong><small hidden>Como cuando te preocupás por alguien o pensás en hacerle algo lindo.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Tu manera de ser</strong><small hidden>Me encanta cómo te entusiasman las cosas que te gustan y que seas tan vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💚</span><strong>Lo cómoda que estoy</strong><small hidden>Me hace feliz poder ser yo sin pensar tanto las cosas cuando estoy con vos.</small></button>
+   </div>
+  </article>
+  <article class="surprise-page surprise-receipt-page" hidden>
+   <p class="surprise-eyebrow">DOCUMENTACIÓN ABSOLUTAMENTE OFICIAL</p><h3>Recibo de nuestra <em>amistad</em></h3>
+   <div class="surprise-receipt"><div class="receipt-stars">✳ ✳ ✳</div><h4>COMPROBANTE N.º 151026</h4><p>CLIENTA: CANDE</p>
+    <div><span>Risas en momentos random</span><b>∞</b></div>
+    <div><span>Mensajes que se van de tema</span><b>∞</b></div>
+    <div><span>Humor cuestionable</span><b>99,9%</b></div>
+    <div><span>Capacidad de ser normales</span><b>0%</b></div>
+    <div><span>Importancia que tenés para mí</span><b>INFINITA</b></div>
+    <div class="receipt-total"><span>TOTAL</span><strong>IMPOSIBLE DE PAGAR</strong></div>
+    <p class="receipt-footer">NO SE ACEPTAN DEVOLUCIONES DE AMISTAD. GRACIAS POR SU COMPRA.</p>
+   </div>
+  </article>
+  <article class="surprise-page surprise-sky-page" hidden>
+   <p class="surprise-eyebrow">COSAS CHIQUITAS QUE SE QUEDAN</p><h3>Una mini constelación <em>nuestra</em></h3>
+   <p>Hay detalles que parecen una pavada, pero a mí me importan un montón.</p>
+   <div class="surprise-sky">
+    <button data-surprise-star="0" style="left:17%;top:27%" aria-label="Primera estrella">✦</button>
+    <button data-surprise-star="1" style="left:69%;top:20%" aria-label="Segunda estrella">✧</button>
+    <button data-surprise-star="2" style="left:43%;top:48%" aria-label="Tercera estrella">★</button>
+    <button data-surprise-star="3" style="left:79%;top:71%" aria-label="Cuarta estrella">✦</button>
+    <button data-surprise-star="4" style="left:24%;top:78%" aria-label="Quinta estrella">✧</button>
+   </div><p class="surprise-star-note" aria-live="polite">Tocá alguna estrellita ♡</p>
+  </article>
+  <article class="surprise-page surprise-laugh-page" hidden>
+   <p class="surprise-eyebrow">UNA COSA SERIA (MENTIRA)</p><h3>Generador de <em>pavadas</em> certificado</h3>
+   <p>Un poquito había que reírse, sino no seríamos nosotras.</p>
+   <div class="surprise-laugh-console"><small>CANDE.EXE ✦ EN FUNCIONAMIENTO</small><strong class="surprise-laugh-result" aria-live="polite">Apretá y fijate qué dice el universo.</strong><button type="button" data-surprise-random>🎲 TIRAR OTRA PAVADA</button></div>
+  </article>
+  <article class="surprise-page surprise-letter-page" hidden>
+   <p class="surprise-eyebrow">AHORA SÍ, UN RATITO EN SERIO</p><h3>Hay algo que <em>quiero decirte</em></h3>
+   <div class="surprise-folded-letter"><button type="button" data-surprise-letter aria-expanded="false">💌 Abrir la carta</button><div class="surprise-letter-body" hidden><div class="surprise-letter-copy"></div></div></div>
+   <p class="surprise-soft-caption">Leela cuando tengas ganas. No hace falta apurarse.</p>
+  </article>
+  <article class="surprise-page surprise-ending" hidden>
+   <div class="surprise-ending-emblem">♡</div><p class="surprise-eyebrow">ÚLTIMA COSITA (AHORA SÍ)</p>
+   <h3>Feliz cumpleaños, <em>Cande</em> 💚</h3>
+   <p>No sé qué traerá este año, pero espero que tengas mil razones para reírte así como vos hacés reír a los demás.</p>
+   <p>Y que nunca te olvides de que sos re importante para mí.</p>
+   <p class="surprise-ending-sign">Te quiero un montón, bella. ♡</p>
+   <button type="button" data-surprise-confetti>✨ Un poquito más de festejo</button>
+  </article>
+  <footer class="surprise-navigation"><button type="button" data-surprise-prev>← Volver</button><button type="button" data-surprise-next>Seguir ♡ →</button></footer>
+ </div>`;
+ renderSurpriseLetter();
+ showSurpriseScene(0);
+}
+
+  function handleSurpriseInteraction(event){
+ if(!invitationCurrentlyUnlocked)return;
+ const btn=event.target.closest("button");if(!btn||!invitationReveal.contains(btn))return;
+ if(btn.hasAttribute("data-surprise-next")){showSurpriseScene(surpriseScene+1);return}
+ if(btn.hasAttribute("data-surprise-prev")){showSurpriseScene(surpriseScene-1);return}
+ if(btn.hasAttribute("data-surprise-flip")){
+  const note=btn.querySelector("small");if(note)note.hidden=!note.hidden;
+  btn.classList.toggle("flipped",note&&!note.hidden);return;
+ }
+ if(btn.hasAttribute("data-surprise-star")){
+  const msg=invitationReveal.querySelector(".surprise-star-note"),ix=Number(btn.dataset.surpriseStar);
+  if(msg&&surpriseStarNotes[ix])msg.textContent=surpriseStarNotes[ix];return;
+ }
+ if(btn.hasAttribute("data-surprise-random")){
+  const msg=invitationReveal.querySelector(".surprise-laugh-result");
+  if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
+ }
+ if(btn.hasAttribute("data-surprise-letter")){
+  const content=invitationReveal.querySelector(".surprise-letter-body");if(!content)return;
+  content.hidden=!content.hidden;
+  btn.textContent=content.hidden?"💌 Abrir la carta":"💌 Cerrar la carta";
+  btn.setAttribute("aria-expanded",String(!content.hidden));return;
+ }
+ if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="JAJAJA bueno basta 💚"}
+}
+
+  function openCandeInvitation(){
+ updateBirthdayCountdown();
+ if(!invitationCurrentlyUnlocked)return;
+ if(!invitationOpened){buildSurpriseExperience();invitationOpened=true;}
+ invitationReveal.hidden=false;
+ invitationReveal.scrollIntoView({behavior:"smooth",block:"start"});
+}
 
   // Truco privado: al escribir la frase mientras se ve la cuenta regresiva
   // (sin enfocarse en otro campo) se desbloquea una VISTA PREVIA temporal.
@@ -1483,6 +1584,7 @@
     invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
   });
 
+  invitationReveal.addEventListener("click", handleSurpriseInteraction);
   invitationOpen.addEventListener("click", openCandeInvitation);
   document.getElementById("see-invitation").addEventListener("click", () => {
     invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
