@@ -1485,48 +1485,59 @@
    </div>
   </article>
 
-  <article class="surprise-page surprise-maze-page" hidden>
-   <p class="surprise-eyebrow">ARCADE DE CANDE · NIVEL BONUS</p>
-   <h3>Comete los <em>corazoncitos</em></h3>
-   <p>Un mini laberinto medio retro. Juntá los seis corazones para desbloquear tu premio. No hay fantasmas malos acá, tranqui.</p>
-   <div class="pixel-arcade-cabinet">
-    <div class="pixel-arcade-top"><span>🟡 CANDE-MAN</span><span>👻 MODO AMISTAD</span></div>
-    <div class="pixel-maze-grid" role="img" aria-label="Laberinto de nueve por nueve, usá flechas para mover al personaje"></div>
-    <div class="pixel-arcade-status" aria-live="polite">CORAZONES: <strong class="maze-collected">0 / 6</strong></div>
-    <p class="pixel-arcade-award" aria-live="polite">Usá las flechas del teclado o los botones de acá abajo.</p>
-    <div class="pixel-maze-controls">
-     <button type="button" data-maze-dir="up" aria-label="Mover arriba">▲</button>
-     <div><button type="button" data-maze-dir="left" aria-label="Mover izquierda">◀</button>
-      <button type="button" data-maze-dir="down" aria-label="Mover abajo">▼</button>
-      <button type="button" data-maze-dir="right" aria-label="Mover derecha">▶</button></div>
+
+  <article class="surprise-page surprise-friends-page" hidden>
+   <p class="surprise-eyebrow">CORREO DE CUMPLEAÑOS</p>
+   <h3>Hay gente que también <em>te quiere un montón</em></h3>
+   <p>Y OBVIAMENTE no iban a faltar los mensajitos de tus amigos. Mirá quién apareció por acá...</p>
+   <div class="friend-mailbox">
+    <div class="friend-mailbox-top" aria-hidden="true"><span>✧</span><span>✉</span><span>✦</span></div>
+    <button type="button" class="friend-envelope" data-open-friend-note aria-expanded="false">
+     <span class="friend-envelope-stamp">✦</span>
+     <span class="friend-envelope-address">De: <strong>Juanma</strong></span>
+     <span class="friend-envelope-open-label">Abrir mensajito ♡</span>
+    </button>
+    <div class="friend-letter" hidden>
+     <span class="friend-letter-header">UNA NOTITA DE JUANMA</span>
+     <p>Cande queridaaaaaa</p>
+     <p>Soy afortunado de haberte conocido en el club de ciencias hace ya casi 6 años, sos un cague de risa y me alegra haber mantenido contacto contigo brochacha</p>
+     <p class="friend-letter-signature">Atte: el señor mayor (Jj)</p>
     </div>
-    <button type="button" class="maze-reset" data-maze-reset>↻ Reintentar</button>
    </div>
   </article>
-  <article class="surprise-page surprise-console-page" hidden>
-   <p class="surprise-eyebrow">INSERTAR CARTUCHO PARA CONTINUAR</p>
-   <h3>La consola de <em>nosotras</em></h3>
-   <p>Encontré estos tres cartuchos rarísimos. Elegí uno y apretá A para descubrir qué viene adentro.</p>
-   <div class="surprise-retro-console">
-    <div class="retro-console-screen">
-     <span class="console-pixel-line">♥ C A N D E  -  B O Y ♥</span>
-     <strong class="retro-console-message" aria-live="polite">ELEGÍ UN CARTUCHO ♡</strong>
+  <article class="surprise-page surprise-cassette-page" hidden>
+   <p class="surprise-eyebrow">ARCHIVO DE AUDIO · RECUERDOS</p>
+   <h3>La casetera de <em>los recuerdos</em></h3>
+   <p>Hay conversaciones que deberían estar en un museo JAJAJA. Acá van a quedar guardados esos audios que no se pueden escuchar sin reírse.</p>
+   <div class="memory-cassette-player">
+    <div class="cassette-player-header"><span>✦ RECUERDOS EN CINTA</span><span>ESTÉREO ♡</span></div>
+    <div class="memory-cassette">
+     <span class="memory-tape-label">NUESTRAS PAVADAS · VOL. 01</span>
+     <div class="memory-tape-window">
+      <div class="tape-reel tape-reel-left"><span></span></div>
+      <div class="tape-window-spools" aria-hidden="true">✦ ♡ ✦</div>
+      <div class="tape-reel tape-reel-right"><span></span></div>
+     </div>
+     <span class="memory-tape-bottom">SIDE A · MOMENTOS QUE NO SE OLVIDAN</span>
     </div>
-    <div class="retro-cartridges">
-     <button type="button" data-cartridge="0">01 <span>risas</span></button>
-     <button type="button" data-cartridge="1">02 <span>futuro</span></button>
-     <button type="button" data-cartridge="2">03 <span>vos</span></button>
+    <div class="memory-player-screen">
+      <span class="tape-now-playing">CINTA EN ESPERA</span>
+      <strong class="tape-track-title" aria-live="polite">Preparando nuestros recuerdos...</strong>
+      <div class="tape-timeline"><span class="tape-progress-bar"></span></div>
+      <span class="tape-time">00:00 / 00:00</span>
     </div>
-    <div class="retro-console-buttons">
-     <span class="retro-dpad" aria-hidden="true">✚</span>
-     <button type="button" data-cartridge-open aria-label="Abrir cartucho seleccionado">A</button>
-     <span class="console-start-text">PRESS A</span>
+    <div class="memory-player-buttons" aria-label="Controles de la casetera">
+      <button type="button" data-tape-prev aria-label="Audio anterior">⏮ <small>ANTERIOR</small></button>
+      <button type="button" data-tape-play class="tape-play-button" aria-label="Reproducir o pausar">▶ <small>PLAY</small></button>
+      <button type="button" data-tape-next aria-label="Audio siguiente">⏭ <small>SIGUIENTE</small></button>
     </div>
+    <p class="tape-availability" aria-live="polite">Esta cinta está esperando las grabaciones de nuestras conversaciones ♡</p>
+    <audio class="tape-audio" preload="metadata"></audio>
    </div>
   </article>
   <article class="surprise-page surprise-laugh-page" hidden>
    <p class="surprise-eyebrow">UNA COSA SERIA (MENTIRA)</p><h3>Generador de <em>pavadas</em> certificado</h3>
-   <p>Un poquito había que reírse, sino no seríamos nosotras.</p>
+   <p>Apretá el botón y comprobá por qué no se nos puede tomar en serio JAJAJA.</p>
    <div class="surprise-laugh-console"><small>CANDE.EXE ✦ EN FUNCIONAMIENTO</small><strong class="surprise-laugh-result" aria-live="polite">Apretá y fijate qué dice el universo.</strong><button type="button" data-surprise-random>🎲 TIRAR OTRA PAVADA</button></div>
   </article>
   <article class="surprise-page surprise-letter-page" hidden>
