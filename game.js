@@ -1373,7 +1373,58 @@
   let editableInvitationText=DEFAULT_INVITATION_TEXT;
   let surpriseScene=0;
   const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
-  const surpriseStarNotes=["Las charlas que empiezan con una pavada y terminan en cualquier cosa.","Cuando preguntás si llegué bien. Capaz parece chiquito, pero a mí me importa.","Poder reírnos juntas de algo que nadie más entendería.","Que se te ocurran detalles tan lindos para la gente que querés.","La suerte que tengo de que en mi vida exista una Cande."];
+
+  const surpriseMazeMap=["#########","#S..H...#","#.#.#.#.#","#...H...#","#.###.#.#","#H..H..H#","#.#.#.#.#","#...H...#","#########"];
+  let mazeBoard=[];
+  let mazePlayer={r:1,c:1};
+  let mazeHearts=0;
+  let selectedCartridge=-1;
+  let letterUnlocked=false;
+  const surpriseCartridges=[
+    "Risas infinitas desbloqueadas. Porque con vos hasta el comentario más estúpido se vuelve buenísimo JAJAJA.",
+    "Guardé un lugar para las charlas eternas, los planes improvisados y todas las cosas lindas que todavía nos faltan vivir.",
+    "Premio especial: recordatorio de que sos una persona re importante para mí. Y no, no hay botón para desactivar eso. 💚"
+  ];
+
+  function resetSurpriseMaze(){
+    mazeBoard=surpriseMazeMap.map(row=>row.split(""));
+    mazePlayer={r:1,c:1};
+    mazeHearts=0;
+    renderSurpriseMaze();
+  }
+
+  function renderSurpriseMaze(){
+    const grid=invitationReveal.querySelector(".pixel-maze-grid");
+    if(!grid)return;
+    grid.replaceChildren();
+    let found=0;
+    mazeBoard.forEach((row,r)=>row.forEach((cell,c)=>{
+      if(cell==="H")found++;
+      const span=document.createElement("span");
+      span.className="pixel-cell "+(cell==="#"?"wall":cell==="H"?"heart":cell==="S"?"path":"path");
+      span.textContent=(r===mazePlayer.r&&c===mazePlayer.c)?"ᗧ":cell==="H"?"♥":cell==="#"?"":"·";
+      if(r===mazePlayer.r&&c===mazePlayer.c)span.className+=" hero";
+      grid.appendChild(span);
+    }));
+    const count=invitationReveal.querySelector(".maze-collected");
+    if(count)count.textContent=mazeHearts+" / 6";
+  }
+
+  function moveSurpriseMaze(dir){
+    if(!invitationCurrentlyUnlocked||surpriseScene!==2)return;
+    const delta={up:[-1,0],down:[1,0],left:[0,-1],right:[0,1]}[dir];
+    if(!delta)return;
+    const r=mazePlayer.r+delta[0],c=mazePlayer.c+delta[1];
+    if(!mazeBoard[r]||mazeBoard[r][c]===undefined||mazeBoard[r][c]==="#")return;
+    if(mazeBoard[r][c]==="H"){mazeHearts++;mazeBoard[r][c]=".";}
+    mazePlayer={r,c};
+    renderSurpriseMaze();
+    if(mazeHearts===6){
+      const info=invitationReveal.querySelector(".pixel-arcade-award");
+      if(info)info.textContent="🏆 ¡TODOS LOS CORAZONES! Ganaste 9999 abrazos y el derecho a decir Q GOD.";
+    }
+  }
+
 
   function renderSurpriseLetter(){
  const holder=invitationReveal.querySelector(".surprise-letter-copy");
@@ -1419,28 +1470,45 @@
     <button type="button" data-surprise-flip class="surprise-polaroid"><span>💚</span><strong>Lo cómoda que estoy</strong><small hidden>Me hace feliz poder ser yo sin pensar tanto las cosas cuando estoy con vos.</small></button>
    </div>
   </article>
-  <article class="surprise-page surprise-receipt-page" hidden>
-   <p class="surprise-eyebrow">DOCUMENTACIÓN ABSOLUTAMENTE OFICIAL</p><h3>Recibo de nuestra <em>amistad</em></h3>
-   <div class="surprise-receipt"><div class="receipt-stars">✳ ✳ ✳</div><h4>COMPROBANTE N.º 151026</h4><p>CLIENTA: CANDE</p>
-    <div><span>Risas en momentos random</span><b>∞</b></div>
-    <div><span>Mensajes que se van de tema</span><b>∞</b></div>
-    <div><span>Humor cuestionable</span><b>99,9%</b></div>
-    <div><span>Capacidad de ser normales</span><b>0%</b></div>
-    <div><span>Importancia que tenés para mí</span><b>INFINITA</b></div>
-    <div class="receipt-total"><span>TOTAL</span><strong>IMPOSIBLE DE PAGAR</strong></div>
-    <p class="receipt-footer">NO SE ACEPTAN DEVOLUCIONES DE AMISTAD. GRACIAS POR SU COMPRA.</p>
+
+  <article class="surprise-page surprise-maze-page" hidden>
+   <p class="surprise-eyebrow">ARCADE DE CANDE · NIVEL BONUS</p>
+   <h3>Comete los <em>corazoncitos</em></h3>
+   <p>Un mini laberinto medio retro. Juntá los seis corazones para desbloquear tu premio. No hay fantasmas malos acá, tranqui.</p>
+   <div class="pixel-arcade-cabinet">
+    <div class="pixel-arcade-top"><span>🟡 CANDE-MAN</span><span>👻 MODO AMISTAD</span></div>
+    <div class="pixel-maze-grid" role="img" aria-label="Laberinto de nueve por nueve, usá flechas para mover al personaje"></div>
+    <div class="pixel-arcade-status" aria-live="polite">CORAZONES: <strong class="maze-collected">0 / 6</strong></div>
+    <p class="pixel-arcade-award" aria-live="polite">Usá las flechas del teclado o los botones de acá abajo.</p>
+    <div class="pixel-maze-controls">
+     <button type="button" data-maze-dir="up" aria-label="Mover arriba">▲</button>
+     <div><button type="button" data-maze-dir="left" aria-label="Mover izquierda">◀</button>
+      <button type="button" data-maze-dir="down" aria-label="Mover abajo">▼</button>
+      <button type="button" data-maze-dir="right" aria-label="Mover derecha">▶</button></div>
+    </div>
+    <button type="button" class="maze-reset" data-maze-reset>↻ Reintentar</button>
    </div>
   </article>
-  <article class="surprise-page surprise-sky-page" hidden>
-   <p class="surprise-eyebrow">COSAS CHIQUITAS QUE SE QUEDAN</p><h3>Una mini constelación <em>nuestra</em></h3>
-   <p>Hay detalles que parecen una pavada, pero a mí me importan un montón.</p>
-   <div class="surprise-sky">
-    <button data-surprise-star="0" style="left:17%;top:27%" aria-label="Primera estrella">✦</button>
-    <button data-surprise-star="1" style="left:69%;top:20%" aria-label="Segunda estrella">✧</button>
-    <button data-surprise-star="2" style="left:43%;top:48%" aria-label="Tercera estrella">★</button>
-    <button data-surprise-star="3" style="left:79%;top:71%" aria-label="Cuarta estrella">✦</button>
-    <button data-surprise-star="4" style="left:24%;top:78%" aria-label="Quinta estrella">✧</button>
-   </div><p class="surprise-star-note" aria-live="polite">Tocá alguna estrellita ♡</p>
+  <article class="surprise-page surprise-console-page" hidden>
+   <p class="surprise-eyebrow">INSERTAR CARTUCHO PARA CONTINUAR</p>
+   <h3>La consola de <em>nosotras</em></h3>
+   <p>Encontré estos tres cartuchos rarísimos. Elegí uno y apretá A para descubrir qué viene adentro.</p>
+   <div class="surprise-retro-console">
+    <div class="retro-console-screen">
+     <span class="console-pixel-line">♥ C A N D E  -  B O Y ♥</span>
+     <strong class="retro-console-message" aria-live="polite">ELEGÍ UN CARTUCHO 💚</strong>
+    </div>
+    <div class="retro-cartridges">
+     <button type="button" data-cartridge="0">01 <span>risas</span></button>
+     <button type="button" data-cartridge="1">02 <span>futuro</span></button>
+     <button type="button" data-cartridge="2">03 <span>vos</span></button>
+    </div>
+    <div class="retro-console-buttons">
+     <span class="retro-dpad" aria-hidden="true">✚</span>
+     <button type="button" data-cartridge-open aria-label="Abrir cartucho seleccionado">A</button>
+     <span class="console-start-text">PRESS A</span>
+    </div>
+   </div>
   </article>
   <article class="surprise-page surprise-laugh-page" hidden>
    <p class="surprise-eyebrow">UNA COSA SERIA (MENTIRA)</p><h3>Generador de <em>pavadas</em> certificado</h3>
@@ -1449,7 +1517,19 @@
   </article>
   <article class="surprise-page surprise-letter-page" hidden>
    <p class="surprise-eyebrow">AHORA SÍ, UN RATITO EN SERIO</p><h3>Hay algo que <em>quiero decirte</em></h3>
-   <div class="surprise-folded-letter"><button type="button" data-surprise-letter aria-expanded="false">💌 Abrir la carta</button><div class="surprise-letter-body" hidden><div class="surprise-letter-copy"></div></div></div>
+   <div class="surprise-folded-letter">
+     <div class="surprise-letter-lock">
+      <div class="letter-lock-symbol" aria-hidden="true">💌</div>
+      <p>Esta parte tiene contraseña. Y no se abre sin ella, ni siquiera hoy.</p>
+      <form class="surprise-letter-password" autocomplete="off">
+       <label for="birthday-letter-pass">Contraseña de la carta</label>
+       <div class="letter-password-row"><input id="birthday-letter-pass" type="password" maxlength="48" autocomplete="off" spellcheck="false" required placeholder="La frase mágica...">
+        <button type="submit">Abrir ♡</button></div>
+       <p class="letter-password-message" aria-live="polite"></p>
+      </form>
+     </div>
+     <div class="surprise-letter-body" hidden><div class="surprise-letter-copy"></div></div>
+   </div>
    <p class="surprise-soft-caption">Leela cuando tengas ganas. No hace falta apurarse.</p>
   </article>
   <article class="surprise-page surprise-ending" hidden>
@@ -1462,7 +1542,9 @@
   </article>
   <footer class="surprise-navigation"><button type="button" data-surprise-prev>← Volver</button><button type="button" data-surprise-next>Seguir ♡ →</button></footer>
  </div>`;
- renderSurpriseLetter();
+ letterUnlocked=false;
+ selectedCartridge=-1;
+ resetSurpriseMaze();
  showSurpriseScene(0);
 }
 
@@ -1475,24 +1557,54 @@
   const note=btn.querySelector("small");if(note)note.hidden=!note.hidden;
   btn.classList.toggle("flipped",note&&!note.hidden);return;
  }
- if(btn.hasAttribute("data-surprise-star")){
-  const msg=invitationReveal.querySelector(".surprise-star-note"),ix=Number(btn.dataset.surpriseStar);
-  if(msg&&surpriseStarNotes[ix])msg.textContent=surpriseStarNotes[ix];return;
+ if(btn.hasAttribute("data-maze-dir")){moveSurpriseMaze(btn.dataset.mazeDir);return}
+ if(btn.hasAttribute("data-maze-reset")){
+  resetSurpriseMaze();
+  const info=invitationReveal.querySelector(".pixel-arcade-award");
+  if(info)info.textContent="Usá las flechas del teclado o los botones de acá abajo.";
+  return;
+ }
+ if(btn.hasAttribute("data-cartridge")){
+  selectedCartridge=Number(btn.dataset.cartridge);
+  invitationReveal.querySelectorAll("[data-cartridge]").forEach(node=>node.classList.toggle("selected",node===btn));
+  const host=invitationReveal.querySelector(".retro-console-message");
+  if(host)host.textContent="CARTUCHO "+String(selectedCartridge+1).padStart(2,"0")+" CARGADO. APRETÁ A ♡";
+  return;
+ }
+ if(btn.hasAttribute("data-cartridge-open")){
+  const host=invitationReveal.querySelector(".retro-console-message");
+  if(host)host.textContent=selectedCartridge<0?"Primero elegí uno, blda JAJAJA":surpriseCartridges[selectedCartridge];
+  return;
  }
  if(btn.hasAttribute("data-surprise-random")){
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
  }
- if(btn.hasAttribute("data-surprise-letter")){
-  const content=invitationReveal.querySelector(".surprise-letter-body");if(!content)return;
-  content.hidden=!content.hidden;
-  btn.textContent=content.hidden?"💌 Abrir la carta":"💌 Cerrar la carta";
-  btn.setAttribute("aria-expanded",String(!content.hidden));return;
- }
  if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="JAJAJA bueno basta 💚"}
 }
 
-  function openCandeInvitation(){
+function handleSurpriseLetterSubmit(event){
+ const form=event.target.closest(".surprise-letter-password");
+ if(!form||!invitationReveal.contains(form))return;
+ event.preventDefault();
+ if(!invitationCurrentlyUnlocked||surpriseScene!==5)return;
+ const input=form.querySelector("input");
+ const msg=form.querySelector(".letter-password-message");
+ if(normalizePreviewPhrase(input.value)!==MAGIC_PREVIEW_KEY){
+  input.value="";
+  if(msg)msg.textContent="Mmm no, esa no es. Probá de nuevo ♡";
+  return;
+ }
+ letterUnlocked=true;
+ const locked=invitationReveal.querySelector(".surprise-letter-lock");
+ const body=invitationReveal.querySelector(".surprise-letter-body");
+ if(locked)locked.hidden=true;
+ if(body)body.hidden=false;
+ input.value="";
+ renderSurpriseLetter();
+}
+
+function openCandeInvitation(){
  updateBirthdayCountdown();
  if(!invitationCurrentlyUnlocked)return;
  if(!invitationOpened){buildSurpriseExperience();invitationOpened=true;}
@@ -1608,6 +1720,14 @@
   });
 
   invitationReveal.addEventListener("click", handleSurpriseInteraction);
+  invitationReveal.addEventListener("submit", handleSurpriseLetterSubmit);
+  document.addEventListener("keydown", event=>{
+    if(currentLevel!==4||!invitationCurrentlyUnlocked||surpriseScene!==2)return;
+    if(event.ctrlKey||event.altKey||event.metaKey||event.target.closest("input, textarea, [contenteditable=true]"))return;
+    const dir={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"}[event.key];
+    if(dir){event.preventDefault();moveSurpriseMaze(dir);}
+  });
+
   invitationOpen.addEventListener("click", openCandeInvitation);
   document.getElementById("see-invitation").addEventListener("click", () => {
     invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
