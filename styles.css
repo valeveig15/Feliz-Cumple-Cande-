@@ -1010,31 +1010,6 @@ body{font-size:17px;line-height:1.5}
 }
 
 
-/* Vista privada editable de la invitación, solo con la clave secreta. */
-.invitation-draft-editor{width:min(100%,710px);margin:18px auto;
-  padding:22px;border-radius:22px;text-align:left;
-  border:2px dashed #74bb8a;background:rgba(255,255,255,.95)}
-.invitation-draft-editor[hidden]{display:none!important}
-.invitation-draft-editor h3{font-size:24px;margin:0 0 8px;color:#196b42}
-.invitation-draft-editor p{font-size:15px;color:#457657;line-height:1.6}
-.invitation-draft-editor label{display:block;font-size:15px;font-weight:900;
-  margin:12px 0 8px;color:#245d3c}
-.invitation-draft-editor textarea{width:100%;min-height:225px;resize:vertical;
-  border-radius:13px;border:2px solid #addbb9;padding:14px;
-  font:16px/1.6 ui-rounded,system-ui,sans-serif;color:#244d33;
-  background:#fbfffc}
-.invitation-draft-editor textarea:focus{outline:3px solid #b2e9c0}
-.invitation-draft-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
-.invitation-draft-actions button{border:0;border-radius:12px;
-  padding:12px 15px;font-size:15px;font-weight:850;
-  background:#248458;color:white;cursor:pointer}
-.invitation-draft-actions button:last-child{background:#d9f3e0;color:#1e6240}
-@media(max-width:560px){
- .invitation-draft-editor{padding:14px}
- .invitation-draft-actions{flex-direction:column}
-}
-
-
 /* =============================================================
    CANDE LECTURA REFINADA V16 — lectura accesible y final cuidado
    ============================================================= */
@@ -1732,4 +1707,60 @@ body {font-size:18px}
   .envelope-lock-logo .lock-sparkle{animation:none!important}
   .envelope-lock-logo .lock-shackle,
   .envelope-lock-logo .lock-body{transition:none!important}
+}
+
+
+/* CANDE V30 · Boletín juguetón; primera escena distinta de la carta. */
+.surprise-opening .surprise-bulletin {
+  position:relative;
+  overflow:visible;
+  width:min(100%,610px);
+  padding:clamp(23px,4vw,39px) clamp(19px,4vw,42px) 28px;
+  margin:30px auto 21px;
+  border:2px solid #b6d8ac;
+  border-top:7px solid #469b69;
+  border-radius:8px 20px 13px 20px;
+  background:repeating-linear-gradient(0deg,#fcfff7 0 34px,#f1f9e9 35px 36px);
+  box-shadow:7px 9px 0 #b6e1c04a,0 12px 27px #54876229;
+  transform:rotate(-.8deg);
+}
+.surprise-bulletin-label {
+  display:inline-block;
+  margin:-48px auto 18px;
+  padding:10px 19px;
+  border-radius:12px 5px 12px 5px;
+  background:#317e52;
+  color:#fffce8;
+  font:900 13px/1.2 ui-rounded,system-ui,sans-serif;
+  letter-spacing:.14em;
+  transform:rotate(2deg);
+  box-shadow:0 5px 0 #a3ccad;
+}
+.surprise-opening .surprise-bulletin p {
+  max-width:46ch;
+  margin:11px auto 17px;
+  color:#365f43;
+  font:600 clamp(17px,2vw,21px)/1.67 ui-rounded,system-ui,sans-serif;
+}
+.surprise-opening .surprise-bulletin p:first-of-type {
+  font-weight:800;
+  color:#246b45;
+}
+.surprise-bulletin-stamp {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin:8px auto -9px;
+  padding:7px 13px;
+  border:3px double #6d986d;
+  border-radius:4px;
+  color:#4a855b;
+  font:900 12px/1.2 ui-monospace,Consolas,monospace;
+  letter-spacing:.08em;
+  transform:rotate(-5deg);
+}
+@media(max-width:620px){
+  .surprise-opening .surprise-bulletin{margin-top:30px}
+  .surprise-bulletin-label{font-size:11px;letter-spacing:.07em}
+  .surprise-opening .surprise-bulletin p{font-size:17px;line-height:1.58}
 }
