@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#e2f8e9">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261013-final-invitacion12">
+  <link rel="stylesheet" href="styles.css?v=20261013-final-invitacion13">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -291,6 +291,14 @@
           <div><strong id="count-seconds">--</strong><span>SEGUNDOS</span></div>
         </div>
         <p id="countdown-status" class="countdown-status" aria-live="polite">Preparando la cuenta regresiva…</p>
+        <form id="invitation-preview-access" class="preview-editor-trigger" autocomplete="off">
+          <input id="invitation-preview-code" type="password" aria-label="Acceso privado de vista previa" placeholder="······" autocomplete="off" spellcheck="false" maxlength="48" />
+          <button type="submit" aria-label="Comprobar clave de vista previa" title="Acceso privado">✦</button>
+        </form>
+        <div id="invitation-preview-banner" class="invitation-preview-banner" hidden>
+          <span>✦ VISTA PREVIA PRIVADA · Solo para revisar</span>
+          <button type="button" id="invitation-preview-close">🔒 Cerrar vista previa</button>
+        </div>
         <div class="invitation-envelope" id="invitation-envelope" aria-hidden="true">
           <span class="envelope-seal">💚</span>
           <span class="envelope-text">Para Cande · de Vale</span>
@@ -309,6 +317,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261013-final-invitacion12"></script>
+  <script src="game.js?v=20261013-final-invitacion13"></script>
 </body>
 </html>
