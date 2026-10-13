@@ -1102,3 +1102,39 @@ body {font-size:18px}
   .birthday-topper strong{font-size:55px}
   .birthday-topper span{font-size:17px}
 }
+
+
+/* Pequeño easter egg: corazón verde en el fondo de Tetris.
+   El icono es diminuto pero mantiene un área táctil utilizable. */
+#level-tetris .tetris-secret-heart {
+  position:fixed;
+  z-index:42;
+  bottom:max(12px,env(safe-area-inset-bottom));
+  right:max(12px,env(safe-area-inset-right));
+  width:38px;
+  height:38px;
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:50%;
+  background:transparent;
+  color:#278a5a;
+  opacity:.48;
+  font:900 12px/1 Georgia,serif;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .15s ease;
+}
+#level-tetris .tetris-secret-heart:hover,
+#level-tetris .tetris-secret-heart:focus-visible {
+  opacity:1;
+}
+#level-tetris .tetris-secret-heart:focus-visible {
+  outline:2px solid #2da66c;
+  outline-offset:2px;
+}
+#level-tetris .tetris-secret-heart:disabled { pointer-events:none; }
+#level-tetris:not(.active) .tetris-secret-heart {display:none}
