@@ -1309,9 +1309,6 @@
   const previewInput = document.getElementById("invitation-preview-code");
   const previewBanner = document.getElementById("invitation-preview-banner");
   const previewAccess = document.getElementById("invitation-preview-access");
-  const invitationDraftEditor = document.getElementById("invitation-draft-editor");
-  const invitationDraftInput = document.getElementById("invitation-draft-text");
-  const invitationDraftStatus = document.getElementById("invitation-draft-status");
 
   function birthdayTimestamp() {
     if (typeof CANDE_BIRTHDAY_DATE !== "string" ||
@@ -1332,7 +1329,6 @@
       invitationOpen.hidden = !invitationPreviewUnlocked;
       previewBanner.hidden = !invitationPreviewUnlocked;
       previewAccess.hidden = invitationPreviewUnlocked;
-      invitationDraftEditor.hidden = !invitationPreviewUnlocked;
       invitationSetup.textContent = invitationPreviewUnlocked
         ? "Vista previa activada: podés revisar la sorpresa antes del cumpleaños."
         : "El sobre se abrirá cuando caigan las 12 de la noche.";
@@ -1364,7 +1360,6 @@
     invitationOpen.hidden = !invitationCurrentlyUnlocked;
     previewBanner.hidden = !invitationPreviewUnlocked;
     previewAccess.hidden = invitationPreviewUnlocked || birthdayReached;
-    invitationDraftEditor.hidden = !invitationPreviewUnlocked;
     document.getElementById("envelope-lock").classList.toggle("is-unlocked", invitationCurrentlyUnlocked);
     invitationSetup.textContent = birthdayReached
       ? "¡Llegó el día! Ya podés abrir la sorpresa."
@@ -1384,7 +1379,6 @@
   }
 
   const DEFAULT_INVITATION_TEXT = "Cande, feliz cumple, bella. No sé muy bien por dónde empezar sin ponerme cursi, pero bueno, vamos a fingir que sé JAJAJA.\n\nHay personas que se van volviendo importantes sin que una se dé cuenta de cuándo pasó. Un día son alguien con quien hablás, y al otro tenés ganas de contarles cualquier estupidez que te pasó porque sabés que la van a entender. Y vos sos una de esas personas para mí.\n\nMe encanta que con vos podamos decir las cosas más ridículas del universo y reírnos como dos boludas, pero que también esté ese otro lado tuyo, el que se preocupa, el que pregunta si llegué bien, el que te dice «vos podés» cuando hace falta. Son cosas que capaz para vos son normales, pero yo las valoro un montón.\n\nTenés algo muy lindo, Cande. Me encanta tu forma de ser, tu humor absolutamente cuestionable (lo digo con amor), lo mucho que te entusiasman las cosas que te gustan y esa manera tuya de hacer que hasta un mensaje cualquiera pueda mejorarme el día.\n\nNo quiero escribirte la típica cosa de «ojalá seamos amigas para siempre» como si fuera una promesa de película, pero sí quiero que sepas que espero seguir compartiendo muchísimas cosas con vos. Más charlas que empiezan con una pavada, más risas que no podemos explicar y más momentos de esos que después recordamos de la nada.\n\nOjalá este año te traiga cosas tan lindas como las que vos hacés sentir a la gente que te quiere. Y ojalá nunca dudes de lo importante que sos, aunque yo no esté diciéndotelo cada cinco minutos porque me da vergüenza ponerme así de sentimental.\n\nGracias por estar, por hacerme reír y por ser vos sin tener que hacer ningún esfuerzo por parecerte a nadie. De verdad me hace muy feliz tenerte en mi vida.\n\nTe quiero muchísimo, blda. En serio. Ahora sí, basta que me voy a poner a llorar yo también. Feliz cumple, Cande. ♡";
-  let editableInvitationText=DEFAULT_INVITATION_TEXT;
   let surpriseScene=0;
   const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
 
@@ -1444,7 +1438,7 @@
  const holder=invitationReveal.querySelector(".surprise-letter-copy");
  if(!holder)return;
  holder.replaceChildren();
- editableInvitationText.split(/\n\s*\n/).filter(Boolean).forEach(phrase=>{
+ DEFAULT_INVITATION_TEXT.split(/\n\s*\n/).filter(Boolean).forEach(phrase=>{
   const p=document.createElement("p");p.textContent=phrase;holder.appendChild(p);
  });
 }
@@ -1471,17 +1465,23 @@
   <article class="surprise-page surprise-opening">
    <div class="surprise-magic">✦ ♡ ✦</div>
    <h3>CANDE.<br><em>feliz cumpleee</em> ♡</h3>
-   <div class="surprise-opening-card"><p>Bueno. Llegó el día.</p><p>Claramente no iba a hacerte algo normal porque quién me conoce JAJAJA.</p><p>Así que te hice esto. No me preguntes cuánto tardé ni cómo terminé acá.</p></div>
-   <p class="surprise-soft-caption">Hay varias cositas adentro. Leelas tranqui. O no, hacé lo que quieras blda.</p>
+   <div class="surprise-opening-card surprise-bulletin">
+    <div class="surprise-bulletin-label">✷ ÚLTIMO MOMENTO ✷</div>
+    <p>Se busca a una chica que cumple años hoy. Se la reconoce por su energía, sus ocurrencias y por andar repartiendo buena onda sin pedir permiso.</p>
+    <p>Si te suena conocida, Cande, es porque sos vos JAJAJA.</p>
+    <p>Queda oficialmente prohibido tratar este día como uno cualquiera. Hoy se festeja todo lo que te hace ser vos.</p>
+    <div class="surprise-bulletin-stamp">CASO RESUELTO ✓</div>
+   </div>
+   <p class="surprise-soft-caption">Hay unas cuantas cositas para descubrir. Algunas tiernas, otras un poquito ridículas. Como corresponde ♡</p>
   </article>
   <article class="surprise-page surprise-polaroid-page" hidden>
-   <p class="surprise-eyebrow">ARCHIVO DE COSAS QUE ME ENCANTAN DE VOS</p><h3>Cuatro motivos por los que <em>sos vos</em></h3>
-   <p>Tocá las notitas. Sí, hay que tocar todo, soy insoportable.</p>
+   <p class="surprise-eyebrow">CANDE EN CUATRO FOTITOS</p><h3>Las cosas que te hacen <em>tan vos</em></h3>
+   <p>Tocá cada notita para descubrirla ♡</p>
    <div class="surprise-polaroids">
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💬</span><strong>Cómo me hacés reír</strong><small hidden>Pasamos de hablar normal a decir estupideces en tres segundos. Me encanta JAJAJA.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Esos detalles tuyos</strong><small hidden>Como cuando te preocupás por alguien o pensás en hacerle algo lindo.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Tu manera de ser</strong><small hidden>Me encanta cómo te entusiasman las cosas que te gustan y que seas tan vos.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>♡</span><strong>Lo cómoda que estoy</strong><small hidden>Me hace feliz poder ser yo sin pensar tanto las cosas cuando estoy con vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>⚡</span><strong>Esa energía tuya</strong><small hidden>Tenés una energía que se nota al toque. Llegás y parece que todo se vuelve un poquito más divertido, más movido, más vivo. Es demasiado vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Tu entusiasmo</strong><small hidden>Cuando algo te emociona, se te nota A KILÓMETROS. En cómo lo contás, en la cara que ponés, en esas ganas que tenés. Y es re lindo que seas así.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>☀️</span><strong>Tu alegría</strong><small hidden>Tenés una manera de reírte, de hacer chistes y de encontrarle gracia hasta a las cosas más random. Esa alegría es una de esas cosas que te hacen inconfundible JAJAJA.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Tu buena onda</strong><small hidden>Sos espontánea, auténtica, cálida y tenés esa forma tan tuya de tratar bien a la gente. Todo eso, junto con mil detalles más, es lo que te hace tan espectacular.</small></button>
    </div>
   </article>
 
@@ -1654,8 +1654,6 @@ function openCandeInvitation(){
     invitationPreviewUnlocked = true;
     previewKeyBuffer = "";
     previewInput.value = "";
-    invitationDraftInput.value = editableInvitationText;
-    invitationDraftStatus.textContent = "Borrador privado. Si querés publicar tus cambios, copiá el texto y enviámelo.";
     updateBirthdayCountdown();
     openCandeInvitation();
     return true;
@@ -1692,33 +1690,6 @@ function openCandeInvitation(){
     } else {
       previewInput.value = "";
       previewInput.placeholder = "······";
-    }
-  });
-
-  document.getElementById("invitation-draft-apply").addEventListener("click", () => {
-    if (!invitationPreviewUnlocked) return;
-    const draft = invitationDraftInput.value.trim();
-    if (!draft) {
-      invitationDraftStatus.textContent = "Escribí algo para revisar tu carta.";
-      return;
-    }
-    editableInvitationText = draft.slice(0,8000);
-    invitationOpened = false;
-    openCandeInvitation();
-    invitationDraftStatus.textContent = "✓ Cambios aplicados a esta vista previa. Aún no están publicados.";
-  });
-
-  document.getElementById("invitation-draft-copy").addEventListener("click", async () => {
-    if (!invitationPreviewUnlocked) return;
-    const words = invitationDraftInput.value.trim();
-    if (!words) return;
-    try {
-      await navigator.clipboard.writeText(words);
-      invitationDraftStatus.textContent = "✓ Copiado. Enviámelo por el chat para actualizar el juego.";
-    } catch (error) {
-      invitationDraftInput.focus();
-      invitationDraftInput.select();
-      invitationDraftStatus.textContent = "Seleccioné el texto. Usá Copiar y envialo por el chat.";
     }
   });
 
