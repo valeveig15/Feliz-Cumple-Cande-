@@ -1364,6 +1364,9 @@
   const previewInput = document.getElementById("invitation-preview-code");
   const previewBanner = document.getElementById("invitation-preview-banner");
   const previewAccess = document.getElementById("invitation-preview-access");
+  const invitationDraftEditor = document.getElementById("invitation-draft-editor");
+  const invitationDraftInput = document.getElementById("invitation-draft-text");
+  const invitationDraftStatus = document.getElementById("invitation-draft-status");
 
   function birthdayTimestamp() {
     if (typeof CANDE_BIRTHDAY_DATE !== "string" ||
@@ -1384,6 +1387,7 @@
       invitationOpen.hidden = !invitationPreviewUnlocked;
       previewBanner.hidden = !invitationPreviewUnlocked;
       previewAccess.hidden = invitationPreviewUnlocked;
+      invitationDraftEditor.hidden = !invitationPreviewUnlocked;
       invitationSetup.textContent = invitationPreviewUnlocked
         ? "Vista previa activada: podés revisar la sorpresa antes del cumpleaños."
         : "Esta carta se abrirá recién el día de tu cumpleaños.";
@@ -1415,6 +1419,7 @@
     invitationOpen.hidden = !invitationCurrentlyUnlocked;
     previewBanner.hidden = !invitationPreviewUnlocked;
     previewAccess.hidden = invitationPreviewUnlocked || birthdayReached;
+    invitationDraftEditor.hidden = !invitationPreviewUnlocked;
     document.getElementById("envelope-lock").textContent =
       invitationCurrentlyUnlocked ? "💌" : "🔒";
     invitationSetup.textContent = birthdayReached
@@ -1434,6 +1439,15 @@
     }
   }
 
+  const DEFAULT_INVITATION_TEXT = [
+    "Cande, llegaste hasta acá. Después del cubito, Tetris y una invasión de patitos, te ganaste algo más que una torta virtual. Q god.",
+    "Quería hacerte algo que tuviera un poquito de vos: verde, juegos, música, humor raro y un montón de cariño. Algo para sumar a todas esas cosas que nos hacen reír.",
+    "Así que esta es tu invitación a seguir juntando anécdotas, planes espontáneos, charlas eternas y momentos que después se convierten en chistes nuestros.",
+    "Feliz cumple, Cande. Gracias por ser vos y por estar.",
+    "Con mucho cariño, Vale ♡"
+  ].join("\n\n");
+  let editableInvitationText = DEFAULT_INVITATION_TEXT;
+
   function openCandeInvitation() {
     updateBirthdayCountdown();
     if (!invitationCurrentlyUnlocked) return;
@@ -1442,13 +1456,7 @@
       heading.textContent = "Una invitación especialmente para vos 💚";
       const letter = document.createElement("div");
       letter.className = "invitation-letter";
-      const paragraphs = [
-        "Cande, llegaste hasta acá. Después del cubito, Tetris y una invasión de patitos, te ganaste algo más que una torta virtual. Q god.",
-        "Quería hacerte algo que tuviera un poquito de vos: verde, juegos, música, humor raro y un montón de cariño. Algo para sumar a todas esas cosas que nos hacen reír.",
-        "Así que esta es tu invitación a seguir juntando anécdotas, planes espontáneos, charlas eternas y momentos que después se convierten en chistes nuestros.",
-        "Feliz cumple, Cande. Gracias por ser vos y por estar.",
-        "Con mucho cariño, Vale ♡"
-      ];
+      const paragraphs = editableInvitationText.split(/\n\s*\n/).filter(Boolean);
       for (const words of paragraphs) {
         const line = document.createElement("p");
         line.textContent = words;
@@ -1489,6 +1497,8 @@
     invitationPreviewUnlocked = true;
     previewKeyBuffer = "";
     previewInput.value = "";
+    invitationDraftInput.value = editableInvitationText;
+    invitationDraftStatus.textContent = "Borrador privado. Si querés publicar tus cambios, copiá el texto y enviámelo.";
     updateBirthdayCountdown();
     openCandeInvitation();
     return true;
@@ -1525,6 +1535,33 @@
     } else {
       previewInput.value = "";
       previewInput.placeholder = "······";
+    }
+  });
+
+  document.getElementById("invitation-draft-apply").addEventListener("click", () => {
+    if (!invitationPreviewUnlocked) return;
+    const draft = invitationDraftInput.value.trim();
+    if (!draft) {
+      invitationDraftStatus.textContent = "Escribí algo para revisar tu carta.";
+      return;
+    }
+    editableInvitationText = draft.slice(0,8000);
+    invitationOpened = false;
+    openCandeInvitation();
+    invitationDraftStatus.textContent = "✓ Cambios aplicados a esta vista previa. Aún no están publicados.";
+  });
+
+  document.getElementById("invitation-draft-copy").addEventListener("click", async () => {
+    if (!invitationPreviewUnlocked) return;
+    const words = invitationDraftInput.value.trim();
+    if (!words) return;
+    try {
+      await navigator.clipboard.writeText(words);
+      invitationDraftStatus.textContent = "✓ Copiado. Enviámelo por el chat para actualizar el juego.";
+    } catch (error) {
+      invitationDraftInput.focus();
+      invitationDraftInput.select();
+      invitationDraftStatus.textContent = "Seleccioné el texto. Usá Copiar y envialo por el chat.";
     }
   });
 
