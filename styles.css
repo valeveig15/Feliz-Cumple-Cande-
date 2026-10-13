@@ -1347,70 +1347,109 @@ body {font-size:18px}
 .surprise-polaroid>strong{font:800 20px Georgia,serif}
 .surprise-polaroid small{font-size:15px;line-height:1.55;color:#426950}
 .surprise-polaroid.flipped{background:#eaf9e6}
-/* 3 / Mini arcade inspirado en laberintos clásicos, con corazones. */
-.surprise-maze-page{background:linear-gradient(160deg,#e6fae8,#d4f3de)}
-.pixel-arcade-cabinet{
- width:min(100%,540px);margin:25px auto 8px;padding:22px 18px 21px;
- background:linear-gradient(150deg,#294c3e,#112c25);border:8px solid #4f9272;
- border-radius:24px 24px 38px 38px;box-shadow:0 14px 0 #235640,0 22px 30px #2a6d4d56;
- color:#e3ffdf;
+
+/* 3 — Mensajitos de los amigos: buzón de cartas vintage. */
+.surprise-friends-page{background:radial-gradient(circle at top right,#fffdf1,#dff5e5 75%)}
+.surprise-friends-page h3{font-size:clamp(34px,5.2vw,59px)}
+.friend-mailbox{width:min(100%,630px);margin:27px auto;padding:17px;
+ background:repeating-linear-gradient(130deg,#effbed 0 17px,#d4eedd 18px 34px);
+ border:2px solid #addabd;border-radius:22px;box-shadow:0 10px 29px #2b825d24}
+.friend-mailbox-top{display:flex;justify-content:space-around;font-size:23px;color:#76b38a;margin-bottom:9px}
+.friend-envelope{position:relative;display:flex;flex-direction:column;gap:13px;
+ align-items:center;justify-content:center;width:min(100%,390px);
+ min-height:172px;margin:3px auto 17px;padding:24px;
+ border:3px solid #fff;border-radius:9px 9px 18px 18px;
+ background:linear-gradient(145deg,#fffefa,#e7f2e5);
+ box-shadow:0 8px 20px #447e552d;color:#307551;
+ transform:rotate(-2deg);transition:transform .2s;cursor:pointer}
+.friend-envelope:hover{transform:rotate(0) translateY(-3px)}
+.friend-envelope::before{content:"";position:absolute;inset:0 0 40%;
+ clip-path:polygon(0 0,50% 100%,100% 0);background:#d8eeda;opacity:.5}
+.friend-envelope>*{position:relative;z-index:1}
+.friend-envelope-stamp{position:absolute;top:8px;right:8px;width:40px;height:40px;
+ display:grid;place-items:center;border:2px dashed #71a985;background:#e8f2cf;font-size:22px}
+.friend-envelope-address{font:600 clamp(17px,2vw,22px)/1.4 Georgia,serif}
+.friend-envelope-open-label{font-size:14px;font-weight:850;letter-spacing:.05em}
+.friend-letter{max-width:540px;margin:auto;padding:clamp(22px,4vw,37px);
+ text-align:left;background:repeating-linear-gradient(#fffefa 0 33px,#e5eddc 34px 35px);
+ border:1px solid #e7e0cb;border-radius:7px 16px 16px 6px;
+ box-shadow:5px 8px 19px #4779532d;animation:storyIn .35s ease both}
+.friend-letter[hidden]{display:none!important}
+.friend-letter-header{display:block;margin-bottom:19px;text-align:center;
+ font:900 12px/1.5 system-ui,sans-serif;letter-spacing:.13em;color:#56936a}
+.friend-letter p{font:clamp(18px,2.2vw,21px)/1.85 Georgia,serif;
+ color:#3d5b49;margin:8px 0 21px;white-space:pre-wrap}
+.friend-letter .friend-letter-signature{text-align:right;font-style:italic;color:#257850;margin-bottom:0}
+
+/* 4 — Casetera analógica de los recuerdos. */
+.surprise-cassette-page{background:radial-gradient(circle at top left,#fffdec,#d5eada 80%)}
+.surprise-cassette-page h3{font-size:clamp(35px,5.3vw,60px)}
+.memory-cassette-player{isolation:isolate;width:min(100%,565px);
+ padding:24px clamp(12px,3vw,28px) 22px;margin:28px auto 10px;
+ border:5px solid #e3f5dc;border-radius:29px 29px 45px 45px;
+ background:linear-gradient(145deg,#9bd0ab,#69a385 62%,#51866d);
+ box-shadow:inset 0 4px 2px #fff6,inset 0 -9px 19px #265b4470,
+ 0 13px 0 #51795d,0 21px 32px #2267444d;color:#f2fff1}
+.cassette-player-header{display:flex;justify-content:space-between;gap:10px;
+ font:900 11px/1.4 ui-monospace,monospace;letter-spacing:.11em;
+ color:#eaffeb;margin:0 0 15px}
+.memory-cassette{padding:17px 13px;border:6px solid #fff5db;
+ border-radius:15px 15px 23px 23px;
+ background:linear-gradient(140deg,#fff6d8,#e2d6b6);
+ box-shadow:inset 0 0 0 2px #c3b898,0 9px 17px #1b513744;color:#417357}
+.memory-tape-label{display:block;font:800 clamp(15px,2vw,19px)/1.3 Georgia,serif;
+ letter-spacing:.04em;margin-bottom:13px}
+.memory-tape-window{display:flex;justify-content:space-evenly;align-items:center;gap:5px;
+ width:min(100%,375px);min-height:115px;margin:auto;padding:11px 5px;
+ border:5px solid #929d8d;border-radius:13px;background:linear-gradient(140deg,#273f34,#0f211d);
+ box-shadow:inset 0 3px 12px #0008}
+.tape-reel{position:relative;display:grid;place-items:center;
+ width:clamp(61px,18vw,92px);aspect-ratio:1;
+ border:8px solid #b4b4a4;border-radius:50%;
+ background:repeating-conic-gradient(#f6e6c4 0 29deg,#ae9f80 30deg 43deg,#f6e6c4 44deg 65deg);
+ box-shadow:0 0 0 3px #253b30,0 2px 9px #0007}
+.tape-reel::before{content:"";position:absolute;inset:25%;border:6px solid #a2a18e;
+ background:#254433;border-radius:50%;box-shadow:inset 0 0 0 3px #eee1bb}
+.tape-reel span{position:absolute;z-index:1;width:20%;height:20%;border-radius:50%;background:#e4daba}
+.memory-cassette-player.is-playing .tape-reel{animation:candeTapeSpin 2s linear infinite}
+.tape-window-spools{font-size:13px;color:#aee3bd;letter-spacing:.02em}
+.memory-tape-bottom{display:block;margin:13px auto 0;
+ font:900 10px/1.4 ui-monospace,monospace;letter-spacing:.08em}
+.memory-player-screen{display:flex;flex-direction:column;align-items:center;gap:10px;
+ min-height:137px;margin:22px auto 19px;padding:16px 13px;
+ border:4px solid #83b595;border-radius:14px;
+ background:linear-gradient(145deg,#153a29,#173d30);
+ box-shadow:inset 0 0 18px #0005;color:#c4f5c5;font-family:ui-monospace,monospace}
+.tape-now-playing{font-size:12px;font-weight:900;letter-spacing:.1em}
+.tape-track-title{font-size:clamp(15px,2.2vw,20px);line-height:1.4}
+.tape-timeline{display:block;width:100%;height:8px;border-radius:9px;overflow:hidden;background:#437955}
+.tape-progress-bar{display:block;width:0;height:100%;background:#b3e9a5;transition:width .18s}
+.tape-time{font-size:13px}
+.memory-player-buttons{display:flex;justify-content:center;gap:10px;margin:6px auto 14px}
+.memory-player-buttons button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+ min-width:71px;min-height:71px;padding:9px 12px;
+ border:3px solid #dfefda;border-radius:15px;background:#e1f6df;
+ box-shadow:0 5px 0 #447e5d;color:#236744;
+ font:900 23px/1 system-ui,sans-serif;cursor:pointer}
+.memory-player-buttons button small{font:900 10px/1.2 system-ui,sans-serif}
+.memory-player-buttons .tape-play-button{background:#fff0c0;color:#79602c;border-color:#fff4db}
+.memory-player-buttons button:disabled{opacity:.53;box-shadow:none;cursor:not-allowed}
+.tape-availability{font-size:14px;line-height:1.5;margin:12px auto 0;color:#ecffec}
+.tape-audio{display:none}
+@keyframes candeTapeSpin{to{transform:rotate(360deg)}}
+@media(max-width:620px){
+ .friend-mailbox{padding:10px}.friend-letter{padding:20px 15px}.friend-letter p{font-size:18px}
+ .memory-cassette-player{padding:20px 12px}
+ .memory-cassette{border-width:5px;padding:12px 7px}
+ .memory-tape-window{min-height:95px;border-width:4px}
+ .tape-reel{border-width:6px}.tape-reel::before{border-width:4px}
+ .memory-player-buttons button{min-width:66px;padding:8px}
+ .tape-window-spools{font-size:10px}
 }
-.pixel-arcade-top{display:flex;justify-content:space-between;gap:8px;
- color:#a6e9b8;font:800 12px/1.2 ui-monospace,monospace;margin-bottom:15px}
-.pixel-maze-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:2px;
- width:min(100%,365px);aspect-ratio:1;margin:0 auto;
- padding:7px;border-radius:9px;background:#0c211f;border:2px solid #4c9c71;
- box-shadow:inset 0 0 24px #020d0c}
-.pixel-cell{display:grid;place-items:center;color:#6ca388;font-size:10px;
- min-width:0;min-height:0;border-radius:3px}
-.pixel-cell.wall{background:#31765e;border:2px solid #5aab88;
- box-shadow:inset 0 0 0 1px #193f31}
-.pixel-cell.heart{font-size:clamp(12px,2.2vw,22px);color:#89e0a0;
- text-shadow:0 0 7px #7ed4a0}
-.pixel-cell.hero{font-size:clamp(19px,3vw,31px);color:#ffdb4b;
- line-height:1;text-shadow:0 0 8px #fce66370}
-.pixel-arcade-status{font:900 14px/1.4 ui-monospace,monospace;margin-top:14px}
-.pixel-arcade-status strong{color:#f0e68c}
-.pixel-arcade-award{min-height:48px;color:#c5f0cc;font:15px/1.5 system-ui,sans-serif}
-.pixel-maze-controls{display:flex;align-items:center;flex-direction:column;
- gap:6px;margin:9px auto 8px}
-.pixel-maze-controls>div{display:flex;gap:8px}
-.pixel-maze-controls button{border:1px solid #8ed29f;background:#4c9d70;
- color:#fff;border-radius:10px;min-width:53px;min-height:48px;
- font-size:23px;cursor:pointer;touch-action:manipulation}
-.pixel-maze-controls button:active{background:#a9dab0;color:#184d30}
-.maze-reset{color:#bde5bf;background:transparent;border:1px solid #6faa86;
- padding:8px 16px;border-radius:12px;cursor:pointer;margin:5px auto 0}
-/* 4 / Consola portátil antigua con cartuchos sorpresa */
-.surprise-console-page{background:linear-gradient(160deg,#eff7ec,#e0ebce)}
-.surprise-retro-console{width:min(100%,490px);margin:28px auto;
- padding:29px 26px 25px;background:linear-gradient(145deg,#c8d2a9,#91a986);
- border:5px solid #7e9a7a;border-radius:33px 33px 75px 34px;
- box-shadow:0 12px 0 #6a806a,0 20px 31px #465e4353}
-.retro-console-screen{min-height:230px;display:flex;flex-direction:column;
- align-items:center;justify-content:space-around;gap:20px;
- padding:24px 17px;border:14px solid #616e61;border-radius:18px 18px 35px 18px;
- color:#173f34;background:#b3d4ab;
- box-shadow:inset 0 0 30px #58896437}
-.console-pixel-line{font:900 12px/1.3 ui-monospace,monospace;letter-spacing:.16em}
-.retro-console-message{display:grid;place-items:center;flex:1;
- font:900 clamp(17px,2.3vw,23px)/1.5 ui-monospace,monospace}
-.retro-cartridges{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:23px 0}
-.retro-cartridges button{background:#e9edc6;border:3px solid #667959;
- border-radius:8px 8px 12px 12px;padding:11px 13px;
- display:flex;flex-direction:column;gap:4px;align-items:center;
- color:#304632;font:900 17px ui-monospace,monospace;cursor:pointer}
-.retro-cartridges button span{font:800 12px system-ui,sans-serif}
-.retro-cartridges button.selected{background:#fff2a1;transform:translateY(-3px);
- box-shadow:0 5px 0 #81936d}
-.retro-console-buttons{display:flex;align-items:center;justify-content:space-around;
- gap:12px}
-.retro-dpad{font:900 72px/1 ui-monospace,monospace;color:#435f4c}
-.retro-console-buttons button{width:71px;height:71px;border-radius:50%;
- border:5px solid #ad6d7c;background:#bf4f77;color:#fff;
- font:900 30px system-ui,sans-serif;cursor:pointer;
- box-shadow:0 7px 0 #873a59}
-.console-start-text{font:900 13px ui-monospace,monospace;color:#547058}
+@media(prefers-reduced-motion:reduce){
+ .memory-cassette-player.is-playing .tape-reel{animation:none}
+ .friend-letter{animation:none}
+}
 /* 5 / Consola verde pixelada, chistes */
 .surprise-laugh-page{background:linear-gradient(150deg,#e6f8e6,#c9e8d1)}
 .surprise-laugh-console{max-width:590px;display:flex;flex-direction:column;gap:25px;
@@ -1470,14 +1509,6 @@ body {font-size:18px}
 .surprise-ending button{border:0;background:#299464;color:#fff;border-radius:99px;
  cursor:pointer;padding:15px 23px;font-size:17px;font-weight:900;margin:17px auto}
 @media(max-width:620px){
- .pixel-arcade-cabinet{padding:14px 9px 17px;border-width:5px}
- .pixel-arcade-top{font-size:10px}
- .pixel-maze-grid{width:min(100%,315px);padding:5px}
- .pixel-maze-controls button{min-width:53px;min-height:50px}
- .surprise-retro-console{padding:16px 10px 20px;border-radius:22px 22px 53px 25px}
- .retro-console-screen{min-height:200px;padding:18px 8px;border-width:9px}
- .console-pixel-line{font-size:10px;letter-spacing:.06em}
- .retro-dpad{font-size:59px}
  .surprise-letter-lock{padding:20px 11px}
 }
 @media(max-width:620px){
