@@ -1123,7 +1123,6 @@
   // Cuerpo y cabeza redondos; las diferencias se conservan sin alterar el estilo.
   // Patito de goma estilo ilustración de referencia: formas simples,
   // sin brillos 3D, con contorno grueso naranja suave y ojos negros.
-  // Los colores distintos son deliberadamente visibles en 7×7–10×10.
   // La diferencia de cada ronda es una expresión, no un color.
   // Todos conservan la misma silueta y la misma paleta.
   function duckSvg(level, odd) {
