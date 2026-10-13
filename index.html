@@ -43,19 +43,6 @@
           <div class="rubik-tip"><span class="rubik-tip-icon">⤾</span><div><strong>Sobre el fondo</strong><small>Arrastrá en el espacio vacío para observar otros lados.</small></div></div>
         </div>
         <div class="rubik-meter"><span>MEZCLA INICIAL: 7 GIROS</span><span>GIROS TUYOS: <strong id="rubik-moves-count">0</strong></span></div>
-        <details id="rubik-practice" class="practice-panel" open>
-          <summary><span>🧩 Guía de práctica</span><span class="practice-label">TEMPORAL</span></summary>
-          <div class="practice-body">
-            <p class="practice-explain">Este cubo se mezcló con 7 giros. Vamos a deshacerlos, uno por uno y en orden inverso.</p>
-            <div class="rubik-step-card">
-              <span id="rubik-hint-step" class="guide-count">PASO 1 DE 7</span>
-              <strong id="rubik-hint-instruction">Preparando las indicaciones…</strong>
-              <span id="rubik-hint-detail" class="guide-detail">La capa se señalará en el cubo.</span>
-            </div>
-            <button type="button" id="rubik-demo-move" class="guide-button">▶ Ver cómo se hace este giro</button>
-            <p class="practice-foot">La capa indicada se ilumina. También podés girarla arrastrando con el mouse. El botón realiza solo el siguiente giro como demostración.</p>
-          </div>
-        </details>
       </div>
 
       <div class="game-card rubik-card">
@@ -137,7 +124,7 @@
       <div class="level-copy">
         <span class="eyebrow">NIVEL 3 · OJO DE HALCÓN</span>
         <h1 id="duck-title">Encontrá el pato <span>diferente</span></h1>
-        <p>Cinco rondas: <strong>3×3, 5×5, 7×7, 8×8 y 10×10</strong>. Hay un solo patito diferente en cada una. Sin cronómetro, con pistas opcionales y diferencias visibles hasta en las rondas grandes.</p>
+        <p>Cinco rondas: <strong>3×3, 5×5, 7×7, 8×8 y 10×10</strong>. Hay un solo patito diferente en cada una. Sin cronómetro y con intentos ilimitados. Encontrá el único patito diferente por tu cuenta.</p>
         <div class="duck-progress">
           <span>SUBNIVEL</span>
           <strong><b id="duck-level">1</b> / 5 <small id="duck-size">· 3×3</small></strong>
@@ -150,8 +137,6 @@
       <div class="game-card duck-card">
         <div class="duck-scroll" id="duck-scroll" tabindex="0" aria-label="Deslizá horizontalmente en las rondas grandes para ver todos los patitos"><div id="duck-grid" class="duck-grid" aria-label="Grupo de patos"></div></div>
         <p id="duck-status" class="status-text" aria-live="polite">👀 Mirá con atención…</p>
-        <button type="button" class="duck-hint-button" id="duck-hint">💡 Dame una pista</button>
-        <p id="duck-hint-text" class="duck-hint-text" aria-live="polite">Sin límite de tiempo. Podés equivocarte y seguir intentando.</p>
       </div>
     </section>
 
@@ -328,6 +313,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261013-final-invitacion15"></script>
+  <script src="game.js?v=20261013-sin-pistas17"></script>
 </body>
 </html>
