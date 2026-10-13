@@ -1109,30 +1109,37 @@ body {font-size:18px}
 #level-rubik .hidden-level-heart,
 #level-tetris .hidden-level-heart {
   position:fixed;
-  z-index:42;
-  bottom:max(12px,env(safe-area-inset-bottom));
-  right:max(12px,env(safe-area-inset-right));
-  width:38px;
-  height:38px;
+  z-index:80;
+  /* Antes quedaba pegado al borde inferior, demasiado difícil de ver
+     y potencialmente oculto por barras del navegador en computadoras. */
+  bottom:max(94px, 13svh);
+  right:clamp(25px, 5vw, 82px);
+  width:44px;
+  height:44px;
   padding:0;
   margin:0;
-  border:0;
+  border:1px solid rgba(31,126,75,.22);
   border-radius:50%;
-  background:transparent;
-  color:#278a5a;
-  opacity:.48;
-  font:900 12px/1 Georgia,serif;
+  background:rgba(216,247,226,.55);
+  color:#16834d;
+  opacity:.82;
+  font:900 19px/1 Georgia,serif;
   display:grid;
   place-items:center;
+  box-shadow:0 2px 12px rgba(42,136,75,.11);
   cursor:pointer;
   touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-  transition:opacity .15s ease;
+  transition:opacity .15s ease,transform .15s ease,background .15s ease;
 }
 #level-rubik .hidden-level-heart:hover,
 #level-tetris .hidden-level-heart:hover,
 #level-rubik .hidden-level-heart:focus-visible,
-#level-tetris .hidden-level-heart:focus-visible {opacity:1}
+#level-tetris .hidden-level-heart:focus-visible {
+  opacity:1;
+  background:rgba(199,246,212,.96);
+  transform:scale(1.06);
+}
 #level-rubik .hidden-level-heart:focus-visible,
 #level-tetris .hidden-level-heart:focus-visible {
   outline:2px solid #2da66c;
@@ -1142,3 +1149,13 @@ body {font-size:18px}
 #level-tetris .hidden-level-heart:disabled {pointer-events:none}
 #level-rubik:not(.active) .hidden-level-heart,
 #level-tetris:not(.active) .hidden-level-heart {display:none}
+
+/* Mantener el atajo arriba de las barras de navegación móvil. */
+@media(max-width:700px){
+  #level-rubik .hidden-level-heart,
+  #level-tetris .hidden-level-heart {
+    right:max(14px,env(safe-area-inset-right));
+    bottom:max(95px,calc(env(safe-area-inset-bottom) + 78px));
+    width:42px;height:42px;font-size:18px;
+  }
+}
