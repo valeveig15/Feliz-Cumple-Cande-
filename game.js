@@ -1247,11 +1247,9 @@
   // =========================================================
   // NIVEL SECRETO: invitación al cumpleaños de Cande
   // =========================================================
-  // PENDIENTE: confirmar día, mes y año del próximo cumpleaños.
-  // Esta fecha se introduce con YYYY-MM-DD; hora de Uruguay (UTC-03).
-  // No inventar una fecha: null significa cuenta regresiva desactivada
-  // y contenido cerrado hasta que Vale facilite la fecha real.
-  const CANDE_BIRTHDAY_DATE = null;
+  // Cumpleaños confirmado: 15 de octubre de 2026, a medianoche en Uruguay (UTC-03).
+  // El contenido no se revela antes, salvo con el modo de vista previa.
+  const CANDE_BIRTHDAY_DATE = "2026-10-15";
   const invitationGate = document.getElementById("invitation-gate");
   const invitationReveal = document.getElementById("invitation-reveal");
   const invitationOpen = document.getElementById("invitation-open");
