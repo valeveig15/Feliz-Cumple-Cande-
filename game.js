@@ -31,7 +31,6 @@
     clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
     clearTetrisTouchGesture();
     if (level === 2) startTetris();
-    if (level === 1) updateRubikPractice();
     if (level === 3) startDuckLevel(1);
     if (level === 4) { renderCakeDucks(); launchConfetti(); updateBirthdayCountdown(); }
   }
@@ -60,17 +59,6 @@
   let moveHistory = [];
   let scrambleMoves = [];
   let rubikSolvedLock = false;
-  // GUÍA TEMPORAL DE PRÁCTICA. Quitar esta sección y su interfaz
-  // cuando se prepare la versión final de cumpleaños.
-  const rubikPractice = document.getElementById("rubik-practice");
-  const rubikHintStep = document.getElementById("rubik-hint-step");
-  const rubikHintInstruction = document.getElementById("rubik-hint-instruction");
-  const rubikHintDetail = document.getElementById("rubik-hint-detail");
-  const rubikDemoButton = document.getElementById("rubik-demo-move");
-  let rubikGuideMoves = [];
-  let rubikHintOverlay = null;
-
-
   const DARK = 0x17141d;
   const FACE_COLORS = {
     px: 0xef3340, // derecha: rojo
@@ -105,93 +93,7 @@
   }
 
 
-  function removeRubikHintOverlay() {
-    if (!rubikHintOverlay || !cubeGroup) return;
-    cubeGroup.remove(rubikHintOverlay);
-    rubikHintOverlay.traverse(object => {
-      if (object.geometry) object.geometry.dispose();
-      if (object.material) object.material.dispose();
-    });
-    rubikHintOverlay = null;
-  }
-
-  function markRubikLayer(move) {
-    removeRubikHintOverlay();
-    if (!move || !rubikPractice.open || !cubeGroup || currentLevel !== 1 || rotating) return;
-    const { axis, layer } = move;
-    const dims = axis === "x" ? [1.08, 3.08, 3.08]
-      : axis === "y" ? [3.08, 1.08, 3.08] : [3.08, 3.08, 1.08];
-    const geometry = new THREE.BoxGeometry(...dims);
-    rubikHintOverlay = new THREE.Group();
-    rubikHintOverlay.position[axis] = layer;
-    rubikHintOverlay.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-      color: 0xbab5ff, transparent: true, opacity: 0.13,
-      depthWrite: false, side: THREE.DoubleSide
-    })));
-    rubikHintOverlay.add(new THREE.LineSegments(new THREE.EdgesGeometry(geometry),
-      new THREE.LineBasicMaterial({ color: 0x8152e9, transparent: true, opacity: 0.94 })));
-    cubeGroup.add(rubikHintOverlay);
-  }
-
-  function sameRubikMove(a, b) {
-    return a.axis === b.axis && a.layer === b.layer && a.turn === b.turn;
-  }
-
-  function updateRubikPractice() {
-    if (!rubikGuideMoves.length || !rubikHintStep) return;
-    let matching = 0;
-    while (matching < moveHistory.length && matching < rubikGuideMoves.length
-      && sameRubikMove(moveHistory[matching], rubikGuideMoves[matching])) matching++;
-
-    if (matching !== moveHistory.length) {
-      rubikHintStep.textContent = "REVISAR ÚLTIMO GIRO";
-      rubikHintInstruction.textContent = "Tu último giro no es el que indicaba la guía.";
-      rubikHintDetail.textContent = "Tocá «Deshacer» hasta retomar los pasos, o «Mezclar de nuevo» para empezar.";
-      rubikDemoButton.disabled = true;
-      removeRubikHintOverlay();
-      return;
-    }
-
-    if (matching >= rubikGuideMoves.length) {
-      rubikHintStep.textContent = "7 DE 7 PASOS";
-      rubikHintInstruction.textContent = "¡Completaste los 7 giros!";
-      rubikHintDetail.textContent = "Todas las caras deben tener un solo color.";
-      rubikDemoButton.disabled = true;
-      removeRubikHintOverlay();
-      return;
-    }
-
-    const move = rubikGuideMoves[matching];
-    const faceNames = {
-      x: move.layer > 0 ? "derecha" : "izquierda",
-      y: move.layer > 0 ? "superior" : "inferior",
-      z: move.layer > 0 ? "delantera" : "trasera"
-    };
-    const clockwise = move.turn * move.layer < 0;
-    rubikHintStep.textContent = "PASO " + (matching + 1) + " DE " + rubikGuideMoves.length;
-    rubikHintInstruction.textContent = "Girá la capa " + faceNames[move.axis] + " un cuarto de vuelta.";
-    rubikHintDetail.textContent = (clockwise ? "↻ Horario" : "↺ Antihorario")
-      + " · Mirá esa cara de frente para interpretar el sentido de giro.";
-    rubikDemoButton.disabled = rotating;
-    markRubikLayer(move);
-  }
-
-  rubikPractice.addEventListener("toggle", () => {
-    if (rubikPractice.open) updateRubikPractice();
-    else removeRubikHintOverlay();
-  });
-  rubikDemoButton.addEventListener("click", () => {
-    if (rotating || rubikSolvedLock || !rubikPractice.open) return;
-    const step = moveHistory.length;
-    if (step >= rubikGuideMoves.length
-      || !moveHistory.every((move, index) => sameRubikMove(move, rubikGuideMoves[index]))) return;
-    const move = rubikGuideMoves[step];
-    removeRubikHintOverlay();
-    rotateSlice(move.axis, move.layer, move.turn);
-  });
-
   function buildCube() {
-    removeRubikHintOverlay();
     while (cubeGroup.children.length) cubeGroup.remove(cubeGroup.children[0]);
     cubies = [];
     const geometry = new THREE.BoxGeometry(0.92, 0.92, 0.92, 1, 1, 1);
@@ -355,8 +257,7 @@
         if (!choice) return;
         gesture.choice = choice;
         gesture.selected = layerCubies(choice.axis, choice.layer);
-        removeRubikHintOverlay();
-        gesture.pivot = new THREE.Group();
+            gesture.pivot = new THREE.Group();
         cubeGroup.add(gesture.pivot);
         gesture.selected.forEach(cubie => gesture.pivot.attach(cubie));
         rotating = true;
@@ -466,7 +367,6 @@
       if (record && turn) moveHistory.push({ axis, layer, turn });
       rubikMovesEl.textContent = String(moveHistory.length);
       rotating = false;
-      updateRubikPractice();
       if (check && turn && isCubeSolved()) {
         rubikSolvedLock = true;
         rubikStatus.textContent = "✨ ¡Perfecto! Cubo armado.";
@@ -483,7 +383,6 @@
     const selected = layerCubies(axis, layer);
     if (!selected.length) return;
     rotating = true;
-    removeRubikHintOverlay();
     const pivot = new THREE.Group();
     cubeGroup.add(pivot);
     selected.forEach(cubie => pivot.attach(cubie));
@@ -535,13 +434,7 @@
     buildCube();
     scrambleMoves = makeScramble();
     scrambleMoves.forEach(applyMoveInstant);
-    rubikGuideMoves = [...scrambleMoves].reverse().map(move => {
-      const parsed = parseMove(move);
-      return { axis: parsed.axis, layer: parsed.layer,
-        turn: -Math.sign(parsed.angle) };
-    });
     rubikMovesEl.textContent = "0";
-    updateRubikPractice();
     rubikStatus.textContent = "Arrastrá sobre una pieza para girar la capa. Fuera del cubo cambiás la vista.";
   }
 
@@ -1152,8 +1045,6 @@
   let duckLevel = 1;
   let oddDuck = -1;
   let duckLocked = false;
-  let duckWrongGuesses = 0;
-  let duckHintsUsed = 0;
 
   // Patitos de goma brillantes, como los juguetes de bañera.
   // Los detalles cambian en solo un pato por subnivel.
@@ -1232,10 +1123,6 @@
     const sizes = [3,5,7,8,10];
     const n = sizes[level - 1];
     document.getElementById("duck-size").textContent = "· " + n + "×" + n;
-    document.getElementById("duck-hint-text").textContent =
-      "Sin cronómetro. Podés equivocarte y volver a intentar.";
-    duckWrongGuesses = 0;
-    duckHintsUsed = 0;
     duckDots.forEach((d, i) => {
       d.classList.toggle("done", i < level - 1);
       d.classList.toggle("active", i === level - 1);
@@ -1247,10 +1134,7 @@
     duckGrid.style.gridTemplateColumns = "repeat(" + n + ", 1fr)";
     duckGrid.dataset.columns = String(n);
     document.getElementById("duck-scroll").scrollLeft = 0;
-    duckStatus.textContent = level === 1 ? "👀 Encontrá el pico de otro color." :
-      level === 2 ? "🔎 Encontrá una alita de color diferente." :
-      level === 3 ? "🍀 Prestá atención a la cabecita." :
-      "🍃 Buscá el patito con el color diferente. No hay límite de tiempo.";
+    duckStatus.textContent = "🐥 Hay un patito diferente. Sin límite de tiempo, ¡a buscar!";
 
     for (let i = 0; i < total; i++) {
       const btn = document.createElement("button");
@@ -1262,30 +1146,10 @@
     }
   }
 
-  // Pistas humanas, sin revelar la casilla exacta.
-  document.getElementById("duck-hint").addEventListener("click", () => {
-    if (currentLevel !== 3 || duckLocked || oddDuck < 0) return;
-    duckHintsUsed++;
-    const n = [3,5,7,8,10][duckLevel - 1];
-    const column = oddDuck % n;
-    const row = Math.floor(oddDuck / n);
-    const location = document.getElementById("duck-hint-text");
-    const group = duckHintsUsed === 1 ? 2 : 3;
-    const columnPart = Math.min(group-1, Math.floor(column * group/n));
-    const rowPart = Math.min(group-1, Math.floor(row * group/n));
-    const colLabels = group === 2 ? ["izquierda", "derecha"] : ["izquierda", "centro", "derecha"];
-    const rowLabels = group === 2 ? ["superior", "inferior"] : ["superior", "central", "inferior"];
-    location.textContent = "💡 Pista: buscá en la zona " + rowLabels[rowPart] +
-      " " + colLabels[columnPart] + ".";
-  });
-
   function chooseDuck(index, btn) {
     if (duckLocked || currentLevel !== 3) return;
     if (index !== oddDuck) {
-      duckWrongGuesses++;
-      duckStatus.textContent = duckWrongGuesses >= 3
-        ? "Ese no era. Podés usar «Dame una pista» si querés ayuda."
-        : "Ese no era 😅 Seguí mirando.";
+      duckStatus.textContent = "Ese no era 😅 ¡Seguí intentando!";
       duckGrid.classList.remove("shake");
       void duckGrid.offsetWidth;
       duckGrid.classList.add("shake");
