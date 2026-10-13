@@ -1133,12 +1133,12 @@
     const golden = "#F2AF4D";
     const headColor = "#FFEB85";
     const bodyColor = "#FFE98A";
-    const wingColor = specialMintWing ? "#F4D981" : "#FFE78A";
+    const wingColor = specialMintWing ? "#F4DB90" : "#FFE78A";
     const headEdge = golden;
     const bodyEdge = golden;
-    const leftWingEdge = specialMintWing ? "#DBAD59" : golden;
-    const beak = specialPinkBeak ? "#E9A17C" : "#EF9653";
-    const beakDark = specialPinkBeak ? "#D98E6C" : "#E58642";
+    const leftWingEdge = specialMintWing ? "#E8C27A" : golden;
+    const beak = specialPinkBeak ? "#EDA66B" : "#EF9653";
+    const beakDark = specialPinkBeak ? "#E49450" : "#E58642";
     const cheekGlow = "#FFF0A4";
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
       role="img" aria-label="Patito de goma de aspecto tierno y redondito">
@@ -1172,16 +1172,16 @@
         : '<ellipse cx="80" cy="62" rx="11" ry="14" fill="#0D1010"/>'}
       <ellipse cx="160" cy="44" rx="6.9" ry="12.5"
         transform="rotate(-27 160 44)" fill="#0D1010"/>
-      ${cheekMark ? '<ellipse cx="79" cy="96" rx="13" ry="8" fill="#E6AD93" opacity=".81"/>' : ''}
+      ${cheekMark ? '<ellipse cx="79" cy="96" rx="13" ry="8" fill="#E9BF7F" opacity=".65"/>' : ''}
       <!-- Pico naranja ancho y suave. -->
       <path d="M102 66 C111 52 136 50 150 54 C166 56 171 69 167 77
         C158 89 133 92 114 86 C96 82 93 75 102 66Z" fill="${beak}"/>
       <path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z"
         fill="${beakDark}" opacity=".72"/>
       <path d="M112 64 C122 60 141 59 151 62"
-        stroke="${specialPinkBeak ? "#F2B392" : "#F8B277"}"
+        stroke="${specialPinkBeak ? "#F8B67E" : "#F8B277"}"
         stroke-width="5" fill="none" stroke-linecap="round" opacity=".65"/>
-      ${heartMark ? '<path d="M127 173 C116 159 102 173 112 186 L127 200 L143 185 C154 171 138 159 127 173Z" fill="#95C5A0" stroke="#65A77B" stroke-width="2.5" stroke-linejoin="round"/>' : ''}
+      ${heartMark ? '<path d="M127 173 C116 159 102 173 112 186 L127 200 L143 185 C154 171 138 159 127 173Z" fill="#F5D083" stroke="#E2B65B" stroke-width="2.5" stroke-linejoin="round"/>' : ''}
     </svg>`;
   }
   function startDuckLevel(level) {
