@@ -1356,6 +1356,14 @@
   };
   let invitationCurrentlyUnlocked = false;
   let invitationOpened = false;
+  // Nunca se persiste este estado: al recargar, la invitación se cierra.
+  let invitationPreviewUnlocked = false;
+  let previewKeyBuffer = "";
+  let lastPreviewKeystroke = 0;
+  const MAGIC_PREVIEW_KEY = "bibidi babidi bu";
+  const previewInput = document.getElementById("invitation-preview-code");
+  const previewBanner = document.getElementById("invitation-preview-banner");
+  const previewAccess = document.getElementById("invitation-preview-access");
 
   function birthdayTimestamp() {
     if (typeof CANDE_BIRTHDAY_DATE !== "string" ||
@@ -1372,15 +1380,23 @@
   function updateBirthdayCountdown(now = Date.now()) {
     const birthday = birthdayTimestamp();
     if (birthday === null) {
-      invitationCurrentlyUnlocked = false;
-      invitationOpen.hidden = true;
-      invitationSetup.textContent = "Esta carta se abrirá recién el día de tu cumpleaños.";
-      countdownStatus.textContent = "Falta configurar la fecha exacta para activar la cuenta regresiva.";
+      invitationCurrentlyUnlocked = invitationPreviewUnlocked;
+      invitationOpen.hidden = !invitationPreviewUnlocked;
+      previewBanner.hidden = !invitationPreviewUnlocked;
+      previewAccess.hidden = invitationPreviewUnlocked;
+      invitationSetup.textContent = invitationPreviewUnlocked
+        ? "Vista previa activada: podés revisar la sorpresa antes del cumpleaños."
+        : "Esta carta se abrirá recién el día de tu cumpleaños.";
+      countdownStatus.textContent = invitationPreviewUnlocked
+        ? "✦ Vista previa privada. Para Cande sigue cerrada."
+        : "Falta configurar la fecha exacta para activar la cuenta regresiva.";
       for (const node of Object.values(countNodes)) node.textContent = "--";
-      document.getElementById("envelope-lock").textContent = "🔒";
-      invitationReveal.hidden = true;
-      invitationReveal.replaceChildren();
-      invitationOpened = false;
+      document.getElementById("envelope-lock").textContent = invitationPreviewUnlocked ? "💌" : "🔒";
+      if (!invitationPreviewUnlocked) {
+        invitationReveal.hidden = true;
+        invitationReveal.replaceChildren();
+        invitationOpened = false;
+      }
       return;
     }
     const remaining = Math.max(0, birthday - now);
@@ -1394,16 +1410,23 @@
     for(const [key,value] of Object.entries(remainingTime)) {
       countNodes[key].textContent = String(value).padStart(2,"0");
     }
-    invitationCurrentlyUnlocked = now >= birthday;
+    const birthdayReached = now >= birthday;
+    invitationCurrentlyUnlocked = invitationPreviewUnlocked || birthdayReached;
     invitationOpen.hidden = !invitationCurrentlyUnlocked;
+    previewBanner.hidden = !invitationPreviewUnlocked;
+    previewAccess.hidden = invitationPreviewUnlocked || birthdayReached;
     document.getElementById("envelope-lock").textContent =
       invitationCurrentlyUnlocked ? "💌" : "🔒";
-    invitationSetup.textContent = invitationCurrentlyUnlocked
+    invitationSetup.textContent = birthdayReached
       ? "¡Hoy es el día! Tu carta está lista."
-      : "El sobre se abrirá cuando comience tu cumpleaños en Uruguay.";
-    countdownStatus.textContent = invitationCurrentlyUnlocked
+      : invitationPreviewUnlocked
+        ? "Vista previa activada: revisá la sorpresa antes del cumpleaños."
+        : "El sobre se abrirá cuando comience tu cumpleaños en Uruguay.";
+    countdownStatus.textContent = birthdayReached
       ? "💚 ¡Feliz cumple, Cande! Ya podés abrir la invitación."
-      : "Todavía no se puede abrir. Es parte de la sorpresa, shhh.";
+      : invitationPreviewUnlocked
+        ? "✦ Vista previa privada. Para Cande sigue cerrada."
+        : "Todavía no se puede abrir. Es parte de la sorpresa, shhh.";
     if (!invitationCurrentlyUnlocked) {
       invitationReveal.hidden = true;
       invitationReveal.replaceChildren();
@@ -1437,6 +1460,78 @@
     invitationReveal.hidden = false;
     invitationReveal.scrollIntoView({behavior:"smooth",block:"center"});
   }
+
+  // Truco privado: al escribir la frase mientras se ve la cuenta regresiva
+  // (sin enfocarse en otro campo) se desbloquea una VISTA PREVIA temporal.
+  // En teléfono también se puede escribir en el discreto campo bajo el reloj.
+  // Nunca mostrar la contraseña en el HTML ni en los mensajes visibles.
+  function normalizePreviewPhrase(text) {
+    return String(text).normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .toLocaleLowerCase("es")
+      .replace(/[¡!¿?]/g,"")
+      .replace(/\s+/g," ").trim();
+  }
+
+  function countdownIsVisible() {
+    if (currentLevel !== 4 || !invitationGate) return false;
+    const rect = document.getElementById("birthday-countdown").getBoundingClientRect();
+    return rect.height > 0 && rect.width > 0 &&
+      rect.bottom >= 0 && rect.top <= window.innerHeight;
+  }
+
+  function startPrivateInvitationPreview() {
+    if (!countdownIsVisible() || invitationPreviewUnlocked) return false;
+    invitationPreviewUnlocked = true;
+    previewKeyBuffer = "";
+    previewInput.value = "";
+    updateBirthdayCountdown();
+    openCandeInvitation();
+    return true;
+  }
+
+  document.addEventListener("keydown", event => {
+    if (!countdownIsVisible() || invitationPreviewUnlocked) return;
+    if (event.altKey || event.metaKey || event.ctrlKey) return;
+    if (event.target && event.target.closest &&
+        event.target.closest("input, textarea, [contenteditable=true]")) return;
+    const now = performance.now();
+    if (now-lastPreviewKeystroke > 8000) previewKeyBuffer = "";
+    lastPreviewKeystroke = now;
+    if (event.key === "Backspace") {
+      previewKeyBuffer = previewKeyBuffer.slice(0,-1);
+    } else if (event.key.length === 1 && !event.repeat) {
+      previewKeyBuffer += event.key;
+    } else {
+      return;
+    }
+    previewKeyBuffer = previewKeyBuffer.slice(-70);
+    if (normalizePreviewPhrase(previewKeyBuffer).endsWith(MAGIC_PREVIEW_KEY)) {
+      event.preventDefault();
+      startPrivateInvitationPreview();
+    }
+  });
+
+  previewAccess.addEventListener("submit", event => {
+    event.preventDefault();
+    if (countdownIsVisible() &&
+        normalizePreviewPhrase(previewInput.value) === MAGIC_PREVIEW_KEY) {
+      startPrivateInvitationPreview();
+    } else {
+      previewInput.value = "";
+      previewInput.placeholder = "······";
+    }
+  });
+
+  document.getElementById("invitation-preview-close").addEventListener("click", () => {
+    invitationPreviewUnlocked = false;
+    invitationOpened = false;
+    previewKeyBuffer = "";
+    previewInput.value = "";
+    invitationReveal.hidden = true;
+    invitationReveal.replaceChildren();
+    updateBirthdayCountdown();
+    invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
+  });
 
   invitationOpen.addEventListener("click", openCandeInvitation);
   document.getElementById("see-invitation").addEventListener("click", () => {
