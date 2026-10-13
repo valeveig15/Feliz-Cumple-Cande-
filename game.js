@@ -481,7 +481,7 @@
         rubikSolvedLock || rotating) return;
     rubikSecretHeart.disabled = true;
     rubikSolvedLock = true;
-    levelComplete(2, "💚 Corazón secreto", "¡Encontraste el atajo escondido a Tetris!", "💚");
+    levelComplete(2, "♡ Atajo secreto", "¡Encontraste el atajo escondido a Tetris!", "♥");
   });
 
   document.getElementById("new-scramble").addEventListener("click", newScramble);
@@ -1094,7 +1094,7 @@
     clearHorizontalHold();
     clearTetrisTouchGesture();
     document.getElementById("tetris-end").hidden = true;
-    levelComplete(3, "💚 Corazón secreto", "¡Encontraste el pasaje escondido a los patitos!", "💚");
+    levelComplete(3, "♡ Atajo secreto", "¡Encontraste el pasaje escondido a los patitos!", "♥");
   });
 
   document.getElementById("tetris-restart").addEventListener("click", startTetris);
@@ -1270,7 +1270,7 @@
   // =========================================================
   // NIVEL SECRETO: invitación al cumpleaños de Cande
   // =========================================================
-  // Cumpleaños confirmado: 15 de octubre de 2026, a medianoche en Uruguay (UTC-03).
+  // Cumpleaños confirmado: 15 de octubre de 2026, a medianoche (UTC-03).
   // El contenido no se revela antes, salvo con el modo de vista previa.
   const CANDE_BIRTHDAY_DATE = "2026-10-15";
   const invitationGate = document.getElementById("invitation-gate");
@@ -1320,7 +1320,7 @@
       invitationDraftEditor.hidden = !invitationPreviewUnlocked;
       invitationSetup.textContent = invitationPreviewUnlocked
         ? "Vista previa activada: podés revisar la sorpresa antes del cumpleaños."
-        : "Esta carta se abrirá recién el día de tu cumpleaños.";
+        : "El sobre se abrirá cuando caigan las 12 de la noche.";
       countdownStatus.textContent = invitationPreviewUnlocked
         ? "✦ Vista previa privada. Para Cande sigue cerrada."
         : "Falta configurar la fecha exacta para activar la cuenta regresiva.";
@@ -1353,12 +1353,12 @@
     document.getElementById("envelope-lock").textContent =
       invitationCurrentlyUnlocked ? "💌" : "🔒";
     invitationSetup.textContent = birthdayReached
-      ? "¡Hoy es el día! Tu carta está lista."
+      ? "¡Llegó el día! Ya podés abrir la sorpresa."
       : invitationPreviewUnlocked
         ? "Vista previa activada: revisá la sorpresa antes del cumpleaños."
-        : "El sobre se abrirá cuando comience tu cumpleaños en Uruguay.";
+        : "El sobre se abrirá cuando caigan las 12 de la noche.";
     countdownStatus.textContent = birthdayReached
-      ? "💚 ¡Feliz cumple, Cande! Ya podés abrir la invitación."
+      ? "✦ ¡Feliz cumple, Cande! Ya podés abrir la sorpresa."
       : invitationPreviewUnlocked
         ? "✦ Vista previa privada. Para Cande sigue cerrada."
         : "Todavía no se puede abrir. Es parte de la sorpresa, shhh.";
@@ -1369,7 +1369,7 @@
     }
   }
 
-  const DEFAULT_INVITATION_TEXT = "Cande, feliz cumple, bella. No sé muy bien por dónde empezar sin ponerme cursi, pero bueno, vamos a fingir que sé JAJAJA.\n\nHay personas que se van volviendo importantes sin que una se dé cuenta de cuándo pasó. Un día son alguien con quien hablás, y al otro tenés ganas de contarles cualquier estupidez que te pasó porque sabés que la van a entender. Y vos sos una de esas personas para mí.\n\nMe encanta que con vos podamos decir las cosas más ridículas del universo y reírnos como dos boludas, pero que también esté ese otro lado tuyo, el que se preocupa, el que pregunta si llegué bien, el que te dice «vos podés» cuando hace falta. Son cosas que capaz para vos son normales, pero yo las valoro un montón.\n\nTenés algo muy lindo, Cande. Me encanta tu forma de ser, tu humor absolutamente cuestionable (lo digo con amor), lo mucho que te entusiasman las cosas que te gustan y esa manera tuya de hacer que hasta un mensaje cualquiera pueda mejorarme el día.\n\nNo quiero escribirte la típica cosa de «ojalá seamos amigas para siempre» como si fuera una promesa de película, pero sí quiero que sepas que espero seguir compartiendo muchísimas cosas con vos. Más charlas que empiezan con una pavada, más risas que no podemos explicar y más momentos de esos que después recordamos de la nada.\n\nOjalá este año te traiga cosas tan lindas como las que vos hacés sentir a la gente que te quiere. Y ojalá nunca dudes de lo importante que sos, aunque yo no esté diciéndotelo cada cinco minutos porque me da vergüenza ponerme así de sentimental.\n\nGracias por estar, por hacerme reír y por ser vos sin tener que hacer ningún esfuerzo por parecerte a nadie. De verdad me hace muy feliz tenerte en mi vida.\n\nTe quiero muchísimo, blda. En serio. Ahora sí, basta que me voy a poner a llorar yo también. Feliz cumple, Cande. 💚";
+  const DEFAULT_INVITATION_TEXT = "Cande, feliz cumple, bella. No sé muy bien por dónde empezar sin ponerme cursi, pero bueno, vamos a fingir que sé JAJAJA.\n\nHay personas que se van volviendo importantes sin que una se dé cuenta de cuándo pasó. Un día son alguien con quien hablás, y al otro tenés ganas de contarles cualquier estupidez que te pasó porque sabés que la van a entender. Y vos sos una de esas personas para mí.\n\nMe encanta que con vos podamos decir las cosas más ridículas del universo y reírnos como dos boludas, pero que también esté ese otro lado tuyo, el que se preocupa, el que pregunta si llegué bien, el que te dice «vos podés» cuando hace falta. Son cosas que capaz para vos son normales, pero yo las valoro un montón.\n\nTenés algo muy lindo, Cande. Me encanta tu forma de ser, tu humor absolutamente cuestionable (lo digo con amor), lo mucho que te entusiasman las cosas que te gustan y esa manera tuya de hacer que hasta un mensaje cualquiera pueda mejorarme el día.\n\nNo quiero escribirte la típica cosa de «ojalá seamos amigas para siempre» como si fuera una promesa de película, pero sí quiero que sepas que espero seguir compartiendo muchísimas cosas con vos. Más charlas que empiezan con una pavada, más risas que no podemos explicar y más momentos de esos que después recordamos de la nada.\n\nOjalá este año te traiga cosas tan lindas como las que vos hacés sentir a la gente que te quiere. Y ojalá nunca dudes de lo importante que sos, aunque yo no esté diciéndotelo cada cinco minutos porque me da vergüenza ponerme así de sentimental.\n\nGracias por estar, por hacerme reír y por ser vos sin tener que hacer ningún esfuerzo por parecerte a nadie. De verdad me hace muy feliz tenerte en mi vida.\n\nTe quiero muchísimo, blda. En serio. Ahora sí, basta que me voy a poner a llorar yo también. Feliz cumple, Cande. ♡";
   let editableInvitationText=DEFAULT_INVITATION_TEXT;
   let surpriseScene=0;
   const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
@@ -1383,7 +1383,7 @@
   const surpriseCartridges=[
     "Risas infinitas desbloqueadas. Porque con vos hasta el comentario más estúpido se vuelve buenísimo JAJAJA.",
     "Guardé un lugar para las charlas eternas, los planes improvisados y todas las cosas lindas que todavía nos faltan vivir.",
-    "Premio especial: recordatorio de que sos una persona re importante para mí. Y no, no hay botón para desactivar eso. 💚"
+    "Premio especial: recordatorio de que sos una persona re importante para mí. Y no, no hay botón para desactivar eso. ♡"
   ];
 
   function resetSurpriseMaze(){
@@ -1456,7 +1456,7 @@
   <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:7},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 7</small></nav>
   <article class="surprise-page surprise-opening">
    <div class="surprise-magic">✦ ♡ ✦</div><p class="surprise-eyebrow">CONFIDENCIAL (O ALGO ASÍ)</p>
-   <h3>CANDE.<br><em>feliz cumpleee</em> 💚</h3>
+   <h3>CANDE.<br><em>feliz cumpleee</em> ♡</h3>
    <div class="surprise-opening-card"><p>Bueno. Llegó el día.</p><p>Claramente no iba a hacerte algo normal porque quién me conoce JAJAJA.</p><p>Así que te hice esto. No me preguntes cuánto tardé ni cómo terminé acá.</p></div>
    <p class="surprise-soft-caption">Hay varias cositas adentro. Leelas tranqui. O no, hacé lo que quieras blda.</p>
   </article>
@@ -1467,7 +1467,7 @@
     <button type="button" data-surprise-flip class="surprise-polaroid"><span>💬</span><strong>Cómo me hacés reír</strong><small hidden>Pasamos de hablar normal a decir estupideces en tres segundos. Me encanta JAJAJA.</small></button>
     <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Esos detalles tuyos</strong><small hidden>Como cuando te preocupás por alguien o pensás en hacerle algo lindo.</small></button>
     <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Tu manera de ser</strong><small hidden>Me encanta cómo te entusiasman las cosas que te gustan y que seas tan vos.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💚</span><strong>Lo cómoda que estoy</strong><small hidden>Me hace feliz poder ser yo sin pensar tanto las cosas cuando estoy con vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>♡</span><strong>Lo cómoda que estoy</strong><small hidden>Me hace feliz poder ser yo sin pensar tanto las cosas cuando estoy con vos.</small></button>
    </div>
   </article>
 
@@ -1496,7 +1496,7 @@
    <div class="surprise-retro-console">
     <div class="retro-console-screen">
      <span class="console-pixel-line">♥ C A N D E  -  B O Y ♥</span>
-     <strong class="retro-console-message" aria-live="polite">ELEGÍ UN CARTUCHO 💚</strong>
+     <strong class="retro-console-message" aria-live="polite">ELEGÍ UN CARTUCHO ♡</strong>
     </div>
     <div class="retro-cartridges">
      <button type="button" data-cartridge="0">01 <span>risas</span></button>
@@ -1534,7 +1534,7 @@
   </article>
   <article class="surprise-page surprise-ending" hidden>
    <div class="surprise-ending-emblem">♡</div><p class="surprise-eyebrow">ÚLTIMA COSITA (AHORA SÍ)</p>
-   <h3>Feliz cumpleaños, <em>Cande</em> 💚</h3>
+   <h3>Feliz cumpleaños, <em>Cande</em> ♡</h3>
    <p>No sé qué traerá este año, pero espero que tengas mil razones para reírte así como vos hacés reír a los demás.</p>
    <p>Y que nunca te olvides de que sos re importante para mí.</p>
    <p class="surprise-ending-sign">Te quiero un montón, bella. ♡</p>
@@ -1580,7 +1580,7 @@
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
  }
- if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="JAJAJA bueno basta 💚"}
+ if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="JAJAJA bueno basta ♡"}
 }
 
 function handleSurpriseLetterSubmit(event){
