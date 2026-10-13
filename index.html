@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#e2f8e9">
   <title>Desafío de Cumpleaños 🎂</title>
-  <link rel="stylesheet" href="styles.css?v=20261013-corazones-visibles20">
+  <link rel="stylesheet" href="styles.css?v=20261013-intro-patitos21">
 </head>
 <body>
   <div class="ambient ambient-a"></div>
@@ -33,7 +33,23 @@
   </header>
 
   <main>
-    <section id="level-rubik" class="level active" aria-labelledby="rubik-title">
+    <section id="level-welcome" class="level welcome-level active" aria-labelledby="welcome-title">
+      <div class="welcome-panel">
+        <div class="welcome-shine" aria-hidden="true">✦ ✧ ♡ ✧ ✦</div>
+        <div class="welcome-gift" aria-hidden="true">🎮 <span>💚</span> 🎂</div>
+        <span class="welcome-eyebrow">UNA AVENTURA HECHA ESPECIALMENTE PARA VOS</span>
+        <h1 id="welcome-title">Ey, <em>Cande</em>…<br>tengo algo para vos <span>💚</span></h1>
+        <p>No es un juego cualquiera. Preparé tres desafíos, unos cuantos patitos y una sorpresa que te está esperando al final.</p>
+        <p class="welcome-secret-text">No te voy a spoilear nada. Vos jugá… y confiá en mí. JAKAJJA ♡</p>
+        <div class="welcome-challenges" aria-label="Los tres desafíos">
+          <span>🧩 Rubik</span><span>⚡ Tetris</span><span>🐥 Patitos</span>
+        </div>
+        <button id="welcome-start" class="primary-btn welcome-start" type="button">¡Empezar la aventura! <span aria-hidden="true">→</span></button>
+        <small>Hecho con mucho cariño, de Vale para Cande.</small>
+      </div>
+    </section>
+
+    <section id="level-rubik" class="level" aria-labelledby="rubik-title">
       <button id="rubik-secret-heart" class="hidden-level-heart" type="button" aria-label="Corazoncito verde secreto" title="💚"><span aria-hidden="true">♥</span></button>
       <div class="level-copy">
         <span class="eyebrow">NIVEL 1 · PRECISIÓN</span>
@@ -315,6 +331,6 @@
   <div id="confetti" aria-hidden="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
-  <script src="game.js?v=20261013-rubik-corazon19"></script>
+  <script src="game.js?v=20261013-intro-patitos21"></script>
 </body>
 </html>
