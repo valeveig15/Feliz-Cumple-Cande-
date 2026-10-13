@@ -1564,3 +1564,172 @@ body {font-size:18px}
     margin-inline:auto;
   }
 }
+
+
+/* ===============================================================
+   CANDE V29 · Cuenta regresiva delicada y candado ilustrado animado
+   =============================================================== */
+.countdown-timer {
+  gap:clamp(5px,1.6vw,12px);
+  width:min(100%,670px);
+  margin:21px auto 15px;
+}
+.countdown-timer>div {
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(165deg,#ffffff 0%,#f0fff2 65%,#dff5e6 100%);
+  border:1px solid #c5e8d0;
+  border-radius:22px;
+  padding:19px 4px 17px;
+  box-shadow:0 8px 18px rgba(54,133,84,.10),inset 0 1px 0 #fff;
+}
+.countdown-timer>div::before {
+  content:"";
+  position:absolute;
+  top:0;left:10%;right:10%;height:2px;
+  border-radius:99px;
+  background:linear-gradient(90deg,transparent,#84d6a5,transparent);
+  opacity:.8;
+}
+.countdown-timer strong {
+  display:block;
+  font-family:"Fraunces","Palatino Linotype",Georgia,serif;
+  font-size:clamp(31px,5.1vw,61px);
+  font-style:normal;
+  font-weight:700;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+  letter-spacing:-.05em;
+  line-height:1.13;
+  color:#267d54;
+  text-shadow:0 2px 0 #fff;
+}
+.countdown-timer span {
+  margin-top:10px;
+  font-family:ui-rounded,system-ui,sans-serif;
+  font-size:clamp(9px,1.2vw,12px);
+  font-weight:850;
+  letter-spacing:.12em;
+  color:#57816b;
+}
+@media(max-width:600px){
+  .countdown-timer{gap:6px;margin:16px auto 12px}
+  .countdown-timer>div{padding:13px 2px 12px;border-radius:15px}
+  .countdown-timer strong{font-size:clamp(27px,7.2vw,44px);line-height:1.17}
+  .countdown-timer span{font-size:9px;letter-spacing:.05em}
+}
+
+/* Dentro del sobre no hay texto ni emoji: solo una cerradura ilustrada. */
+.invitation-envelope {
+  min-height:170px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.invitation-envelope::before {opacity:.65}
+.envelope-lock-logo {
+  position:relative;
+  z-index:3;
+  display:block;
+  flex:none;
+  width:120px;
+  height:126px;
+  transform:rotate(2deg);
+  animation:candeLockFloat 3.9s ease-in-out infinite;
+  filter:drop-shadow(0 8px 9px rgba(30,105,70,.19));
+}
+.envelope-lock-logo .lock-glow {
+  position:absolute;
+  width:120px;height:105px;
+  left:0;top:15px;
+  border-radius:50%;
+  background:radial-gradient(circle,#b3e9c2a1 0%,#c4efc955 45%,transparent 70%);
+  z-index:0;
+  animation:candeLockGlow 3.4s ease-in-out infinite alternate;
+}
+.envelope-lock-logo .lock-shackle {
+  position:absolute;
+  top:5px;left:32px;
+  width:56px;height:74px;
+  border:10px solid #368d64;
+  border-bottom:0;
+  border-radius:36px 36px 0 0;
+  background:transparent;
+  box-shadow:inset 3px 0 0 rgba(255,255,255,.24),
+    4px 1px 0 rgba(38,99,61,.10);
+  z-index:1;
+  transform-origin:14px 65px;
+  transition:transform .9s cubic-bezier(.15,.8,.2,1),border-color .6s ease;
+}
+.envelope-lock-logo .lock-body {
+  position:absolute;
+  left:14px;top:53px;
+  width:92px;height:69px;
+  z-index:2;
+  display:grid;place-items:center;
+  border:4px solid #eaffef;
+  border-radius:17px;
+  background:linear-gradient(138deg,#a9ebbf 0%,#61c993 43%,#339a71 100%);
+  box-shadow:inset 0 3px 6px #ffffff72,
+    inset 0 -7px 10px rgba(31,104,73,.25),
+    0 4px 0 rgba(18,90,59,.16),
+    0 7px 15px rgba(31,125,82,.23);
+  transition:background .5s ease,transform .7s ease;
+}
+.envelope-lock-logo .lock-keyhole {
+  position:relative;
+  display:block;
+  width:17px;height:17px;
+  background:#25694e;
+  border:2px solid #daf8e4;
+  border-radius:50%;
+  box-shadow:0 1px 4px #134d3940;
+}
+.envelope-lock-logo .lock-keyhole::after {
+  content:"";
+  position:absolute;top:10px;left:3px;
+  width:7px;height:17px;
+  background:#25694e;
+  border-radius:2px 2px 5px 5px;
+  border-left:1px solid #d9f3e2;
+  border-right:1px solid #d9f3e2;
+}
+.envelope-lock-logo .lock-sparkle {
+  position:absolute;z-index:4;
+  color:#f2d58a;
+  font-size:23px;
+  text-shadow:0 0 7px #ffffff;
+  animation:candeLockSparkle 2.6s ease-in-out infinite;
+}
+.envelope-lock-logo .lock-sparkle-a{top:13px;left:4px}
+.envelope-lock-logo .lock-sparkle-b{top:57px;right:-5px;animation-delay:1.3s}
+.envelope-lock-logo.is-unlocked .lock-shackle {
+  transform:translate(-7px,-13px) rotate(-27deg);
+  border-color:#70b991;
+}
+.envelope-lock-logo.is-unlocked .lock-body {
+  background:linear-gradient(145deg,#baf6d0,#79daa6,#45b980);
+  transform:translateY(2px);
+}
+.envelope-lock-logo.is-unlocked .lock-glow {
+  background:radial-gradient(circle,#9feac2d6 0%,#b6f1ca5e 50%,transparent 77%);
+}
+@keyframes candeLockFloat {
+  0%,100%{transform:translateY(0) rotate(2deg)}
+  50%{transform:translateY(-5px) rotate(1deg)}
+}
+@keyframes candeLockGlow {
+  0%{opacity:.5;transform:scale(.93)}
+  100%{opacity:1;transform:scale(1.12)}
+}
+@keyframes candeLockSparkle {
+  0%,100%{opacity:.45;transform:scale(.8) rotate(-13deg)}
+  50%{opacity:1;transform:scale(1.16) rotate(14deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .envelope-lock-logo,
+  .envelope-lock-logo .lock-glow,
+  .envelope-lock-logo .lock-sparkle{animation:none!important}
+  .envelope-lock-logo .lock-shackle,
+  .envelope-lock-logo .lock-body{transition:none!important}
+}
