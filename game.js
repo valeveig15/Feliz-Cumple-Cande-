@@ -1382,59 +1382,103 @@
   let surpriseScene=0;
   const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
 
-  const surpriseMazeMap=["#########","#S..H...#","#.#.#.#.#","#...H...#","#.###.#.#","#H..H..H#","#.#.#.#.#","#...H...#","#########"];
-  let mazeBoard=[];
-  let mazePlayer={r:1,c:1};
-  let mazeHearts=0;
-  let selectedCartridge=-1;
   let letterUnlocked=false;
-  const surpriseCartridges=[
-    "Risas infinitas desbloqueadas. Porque con vos hasta el comentario más estúpido se vuelve buenísimo JAJAJA.",
-    "Guardé un lugar para las charlas eternas, los planes improvisados y todas las cosas lindas que todavía nos faltan vivir.",
-    "Premio especial: recordatorio de que sos una persona re importante para mí. Y no, no hay botón para desactivar eso. ♡"
-  ];
+  // Se agregan aquí las grabaciones reales cuando estén disponibles:
+  // {title:"Audio 01", src:"audios/archivo-real.mp3"}
+  // No simular ni inventar audios de conversaciones.
+  const tapeRecordings=[];
+  let tapeTrackIndex=0;
 
-  function resetSurpriseMaze(){
-    mazeBoard=surpriseMazeMap.map(row=>row.split(""));
-    mazePlayer={r:1,c:1};
-    mazeHearts=0;
-    renderSurpriseMaze();
+  function currentTapeAudio(){
+    return invitationReveal.querySelector(".tape-audio");
   }
-
-  function renderSurpriseMaze(){
-    const grid=invitationReveal.querySelector(".pixel-maze-grid");
-    if(!grid)return;
-    grid.replaceChildren();
-    let found=0;
-    mazeBoard.forEach((row,r)=>row.forEach((cell,c)=>{
-      if(cell==="H")found++;
-      const span=document.createElement("span");
-      span.className="pixel-cell "+(cell==="#"?"wall":cell==="H"?"heart":cell==="S"?"path":"path");
-      span.textContent=(r===mazePlayer.r&&c===mazePlayer.c)?"ᗧ":cell==="H"?"♥":cell==="#"?"":"·";
-      if(r===mazePlayer.r&&c===mazePlayer.c)span.className+=" hero";
-      grid.appendChild(span);
-    }));
-    const count=invitationReveal.querySelector(".maze-collected");
-    if(count)count.textContent=mazeHearts+" / 6";
+  function tapeFormatTime(seconds){
+    if(!Number.isFinite(seconds)||seconds<0)return "00:00";
+    const n=Math.floor(seconds);
+    return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
   }
-
-  function moveSurpriseMaze(dir){
-    if(!invitationCurrentlyUnlocked||surpriseScene!==2)return;
-    const delta={up:[-1,0],down:[1,0],left:[0,-1],right:[0,1]}[dir];
-    if(!delta)return;
-    const r=mazePlayer.r+delta[0],c=mazePlayer.c+delta[1];
-    if(!mazeBoard[r]||mazeBoard[r][c]===undefined||mazeBoard[r][c]==="#")return;
-    if(mazeBoard[r][c]==="H"){mazeHearts++;mazeBoard[r][c]=".";}
-    mazePlayer={r,c};
-    renderSurpriseMaze();
-    if(mazeHearts===6){
-      const info=invitationReveal.querySelector(".pixel-arcade-award");
-      if(info)info.textContent="🏆 ¡TODOS LOS CORAZONES! Ganaste 9999 abrazos y el derecho a decir Q GOD.";
+  function updateTapeVisuals(){
+    const player=invitationReveal.querySelector(".memory-cassette-player");
+    const audio=currentTapeAudio();
+    if(!player||!audio)return;
+    const playing=!audio.paused&&!audio.ended&&audio.readyState>0;
+    player.classList.toggle("is-playing",playing);
+    const play=player.querySelector("[data-tape-play]");
+    if(play){
+      play.innerHTML=playing?'❚❚ <small>PAUSA</small>':'▶ <small>PLAY</small>';
+      play.setAttribute("aria-label",playing?"Pausar audio":"Reproducir audio");
     }
+    const progress=player.querySelector(".tape-progress-bar");
+    if(progress)progress.style.width=(audio.duration>0&&Number.isFinite(audio.duration)?(audio.currentTime/audio.duration)*100:0)+"%";
+    const clock=player.querySelector(".tape-time");
+    if(clock)clock.textContent=tapeFormatTime(audio.currentTime)+" / "+tapeFormatTime(audio.duration);
+  }
+  function updateTapeTrack(index){
+    const audio=currentTapeAudio();
+    const host=invitationReveal.querySelector(".memory-cassette-player");
+    if(!audio||!host)return;
+    audio.pause();
+    const title=host.querySelector(".tape-track-title"),indicator=host.querySelector(".tape-now-playing");
+    const message=host.querySelector(".tape-availability");
+    const buttons=host.querySelectorAll("[data-tape-prev],[data-tape-play],[data-tape-next]");
+    const available=tapeRecordings.length>0;
+    buttons.forEach(btn=>btn.disabled=!available);
+    if(!available){
+      tapeTrackIndex=0;
+      audio.removeAttribute("src");
+      audio.load();
+      if(title)title.textContent="Preparando nuestros recuerdos...";
+      if(indicator)indicator.textContent="CINTA EN ESPERA";
+      if(message)message.textContent="Esta cinta está esperando las grabaciones de nuestras conversaciones ♡";
+      updateTapeVisuals();return;
+    }
+    tapeTrackIndex=(index+tapeRecordings.length)%tapeRecordings.length;
+    const current=tapeRecordings[tapeTrackIndex];
+    audio.src=current.src;
+    audio.load();
+    if(title)title.textContent=current.title;
+    if(indicator)indicator.textContent="CINTA "+String(tapeTrackIndex+1).padStart(2,"0")+" / "+String(tapeRecordings.length).padStart(2,"0");
+    if(message)message.textContent="Tocá Play para escuchar este recuerdo ♡";
+    updateTapeVisuals();
+  }
+  function initTapePlayer(){
+    const audio=currentTapeAudio();
+    if(!audio)return;
+    audio.addEventListener("timeupdate",updateTapeVisuals);
+    audio.addEventListener("play",updateTapeVisuals);
+    audio.addEventListener("pause",updateTapeVisuals);
+    audio.addEventListener("loadedmetadata",updateTapeVisuals);
+    audio.addEventListener("ended",()=>{
+      if(tapeTrackIndex+1<tapeRecordings.length){
+        updateTapeTrack(tapeTrackIndex+1);
+        const newAudio=currentTapeAudio();
+        if(newAudio)newAudio.play().catch(()=>updateTapeVisuals());
+      } else updateTapeVisuals();
+    });
+    audio.addEventListener("error",()=>{
+      const status=invitationReveal.querySelector(".tape-availability");
+      if(status)status.textContent="Este audio no se pudo cargar. Probá otro.";
+      updateTapeVisuals();
+    });
+    updateTapeTrack(0);
+  }
+  function handleTapeClick(action){
+    const audio=currentTapeAudio();
+    if(!audio||!tapeRecordings.length)return;
+    if(action==="play"){
+      if(audio.paused){
+        audio.play().catch(()=>{
+          const status=invitationReveal.querySelector(".tape-availability");
+          if(status)status.textContent="No se pudo reproducir este audio.";
+        });
+      } else audio.pause();
+    } else if(action==="prev"){
+      if(audio.currentTime>3){audio.currentTime=0;updateTapeVisuals();}
+      else updateTapeTrack(tapeTrackIndex-1);
+    } else if(action==="next")updateTapeTrack(tapeTrackIndex+1);
   }
 
-
-  function renderSurpriseLetter(){
+function renderSurpriseLetter(){
  const holder=invitationReveal.querySelector(".surprise-letter-copy");
  if(!holder)return;
  holder.replaceChildren();
@@ -1447,6 +1491,8 @@
  if(!invitationCurrentlyUnlocked)return;
  const pages=[...invitationReveal.querySelectorAll(".surprise-page")];
  if(!pages.length)return;
+ const audio=currentTapeAudio();
+ if(audio&&surpriseScene===3&&n!==3)audio.pause();
  surpriseScene=Math.max(0,Math.min(n,pages.length-1));
  pages.forEach((p,i)=>{p.hidden=i!==surpriseScene;});
  invitationReveal.querySelectorAll(".surprise-progress-dot").forEach((p,i)=>p.classList.toggle("selected",i===surpriseScene));
@@ -1568,8 +1614,7 @@
   <footer class="surprise-navigation"><button type="button" data-surprise-prev>← Volver</button><button type="button" data-surprise-next>Seguir ♡ →</button></footer>
  </div>`;
  letterUnlocked=false;
- selectedCartridge=-1;
- resetSurpriseMaze();
+ initTapePlayer();
  showSurpriseScene(0);
 }
 
@@ -1582,25 +1627,18 @@
   const note=btn.querySelector("small");if(note)note.hidden=!note.hidden;
   btn.classList.toggle("flipped",note&&!note.hidden);return;
  }
- if(btn.hasAttribute("data-maze-dir")){moveSurpriseMaze(btn.dataset.mazeDir);return}
- if(btn.hasAttribute("data-maze-reset")){
-  resetSurpriseMaze();
-  const info=invitationReveal.querySelector(".pixel-arcade-award");
-  if(info)info.textContent="Usá las flechas del teclado o los botones de acá abajo.";
+ if(btn.hasAttribute("data-open-friend-note")){
+  const letter=invitationReveal.querySelector(".friend-letter");
+  if(!letter)return;
+  letter.hidden=!letter.hidden;
+  btn.setAttribute("aria-expanded",String(!letter.hidden));
+  const caption=btn.querySelector(".friend-envelope-open-label");
+  if(caption)caption.textContent=letter.hidden?"Abrir mensajito ♡":"Cerrar mensajito";
   return;
  }
- if(btn.hasAttribute("data-cartridge")){
-  selectedCartridge=Number(btn.dataset.cartridge);
-  invitationReveal.querySelectorAll("[data-cartridge]").forEach(node=>node.classList.toggle("selected",node===btn));
-  const host=invitationReveal.querySelector(".retro-console-message");
-  if(host)host.textContent="CARTUCHO "+String(selectedCartridge+1).padStart(2,"0")+" CARGADO. APRETÁ A ♡";
-  return;
- }
- if(btn.hasAttribute("data-cartridge-open")){
-  const host=invitationReveal.querySelector(".retro-console-message");
-  if(host)host.textContent=selectedCartridge<0?"Primero elegí uno, blda JAJAJA":surpriseCartridges[selectedCartridge];
-  return;
- }
+ if(btn.hasAttribute("data-tape-play")){handleTapeClick("play");return}
+ if(btn.hasAttribute("data-tape-prev")){handleTapeClick("prev");return}
+ if(btn.hasAttribute("data-tape-next")){handleTapeClick("next");return}
  if(btn.hasAttribute("data-surprise-random")){
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
@@ -1717,13 +1755,6 @@ function openCandeInvitation(){
 
   invitationReveal.addEventListener("click", handleSurpriseInteraction);
   invitationReveal.addEventListener("submit", handleSurpriseLetterSubmit);
-  document.addEventListener("keydown", event=>{
-    if(currentLevel!==4||!invitationCurrentlyUnlocked||surpriseScene!==2)return;
-    if(event.ctrlKey||event.altKey||event.metaKey||event.target?.closest?.("input, textarea, [contenteditable=true]"))return;
-    const dir={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"}[event.key];
-    if(dir){event.preventDefault();moveSurpriseMaze(dir);}
-  });
-
   invitationOpen.addEventListener("click", openCandeInvitation);
   document.getElementById("see-invitation").addEventListener("click", () => {
     invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
