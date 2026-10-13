@@ -1250,20 +1250,29 @@
   // =========================================================
   function launchConfetti() {
     const host = document.getElementById("confetti");
-    host.innerHTML = "";
+    // Cada clic es una lluvia independiente: nunca borra las anteriores.
+    const burst = [];
     const colors = ["#ff5f9f","#7d5cff","#ffd34e","#5ed28b","#58c8ef","#ff8b45"];
+    let lastParticleEndsAt = 0;
     for (let i = 0; i < 120; i++) {
       const c = document.createElement("i");
+      const duration = 2.8 + Math.random()*2.6;
+      const delay = Math.random()*1.7;
       c.className = "confetto";
       c.style.left = Math.random() * 100 + "vw";
       c.style.background = colors[Math.floor(Math.random()*colors.length)];
       c.style.setProperty("--drift", (Math.random()*240-120) + "px");
-      c.style.animationDuration = (2.8 + Math.random()*2.6) + "s";
-      c.style.animationDelay = (Math.random()*1.7) + "s";
+      c.style.animationDuration = duration + "s";
+      c.style.animationDelay = delay + "s";
       c.style.transform = "rotate(" + Math.random()*180 + "deg)";
       host.appendChild(c);
+      burst.push(c);
+      lastParticleEndsAt = Math.max(lastParticleEndsAt, duration + delay);
     }
-    setTimeout(() => host.innerHTML = "", 6500);
+    // Sólo retirar las partículas de ESTA tanda cuando hayan terminado.
+    // Las lluvias nuevas siguen cayendo sin interrupción ni reinicio.
+    setTimeout(() => burst.forEach(particle => particle.remove()),
+      Math.ceil(lastParticleEndsAt * 1000) + 200);
   }
 
 
@@ -1580,7 +1589,7 @@
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
  }
- if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="JAJAJA bueno basta ♡"}
+ if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="✨ ¡Más confeti!"}
 }
 
 function handleSurpriseLetterSubmit(event){
