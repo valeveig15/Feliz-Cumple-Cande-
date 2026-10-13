@@ -1723,7 +1723,7 @@ function openCandeInvitation(){
   invitationReveal.addEventListener("submit", handleSurpriseLetterSubmit);
   document.addEventListener("keydown", event=>{
     if(currentLevel!==4||!invitationCurrentlyUnlocked||surpriseScene!==2)return;
-    if(event.ctrlKey||event.altKey||event.metaKey||event.target.closest("input, textarea, [contenteditable=true]"))return;
+    if(event.ctrlKey||event.altKey||event.metaKey||event.target?.closest?.("input, textarea, [contenteditable=true]"))return;
     const dir={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right"}[event.key];
     if(dir){event.preventDefault();moveSurpriseMaze(dir);}
   });
