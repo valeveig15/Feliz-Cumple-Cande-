@@ -2,6 +2,7 @@
   "use strict";
 
   const levels = {
+    0: document.getElementById("level-welcome"),
     1: document.getElementById("level-rubik"),
     2: document.getElementById("level-tetris"),
     3: document.getElementById("level-ducks"),
@@ -12,7 +13,7 @@
   const flashSubtitle = document.getElementById("flash-subtitle");
   const flashIcon = document.getElementById("flash-icon");
 
-  let currentLevel = 1;
+  let currentLevel = 0;
 
   function setProgress(level) {
     document.querySelectorAll(".step").forEach((step) => {
@@ -30,10 +31,20 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
     clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
     clearTetrisTouchGesture();
+    if (level === 1) requestAnimationFrame(() => {
+      // The Rubik viewport was hidden behind the welcome screen.
+      resizeRubik();
+      if (renderer) renderer.render(scene, camera);
+    });
     if (level === 2) startTetris();
     if (level === 3) startDuckLevel(1);
     if (level === 4) { renderCakeDucks(); launchConfetti(); updateBirthdayCountdown(); }
   }
+
+  document.getElementById("welcome-start").addEventListener("click", () => {
+    if (currentLevel !== 0) return;
+    showLevel(1);
+  });
 
   function levelComplete(nextLevel, title, subtitle, icon = "✓") {
     flashIcon.textContent = icon;
@@ -1093,19 +1104,19 @@
   function duckSvg(level, odd) {
     const specialPinkBeak = odd && level === 1;
     const specialMintWing = odd && level === 2;
-    const specialMintHead = odd && level === 3;
-    const specialPeachBody = odd && level === 4;
-    const specialMintDuck = odd && level === 5;
+    const winkEye = odd && level === 3;
+    const cheekMark = odd && level === 4;
+    const heartMark = odd && level === 5;
     const golden = "#F2AF4D";
-    const headColor = specialMintHead ? "#F3E2A1" : specialMintDuck ? "#E9E69A" : "#FFEB85";
-    const bodyColor = specialPeachBody ? "#FFD9A1" : specialMintDuck ? "#E4E992" : "#FFE98A";
-    const wingColor = specialMintWing ? "#F4D775" : specialMintDuck ? "#8FD9A9" : "#FFE78A";
-    const headEdge = specialMintHead || specialMintDuck ? "#DEB461" : golden;
-    const bodyEdge = specialPeachBody ? "#E6A85E" : specialMintDuck ? "#D3B75B" : golden;
-    const leftWingEdge = specialMintWing || specialMintDuck ? "#D3B75B" : golden;
-    const beak = specialPinkBeak ? "#F0A069" : "#EF9653";
-    const beakDark = specialPinkBeak ? "#E78E57" : "#E58642";
-    const cheekGlow = specialMintDuck ? "#B6EBC8" : "#FFF0A4";
+    const headColor = "#FFEB85";
+    const bodyColor = "#FFE98A";
+    const wingColor = specialMintWing ? "#A5D8A0" : "#FFE78A";
+    const headEdge = golden;
+    const bodyEdge = golden;
+    const leftWingEdge = specialMintWing ? "#78B68B" : golden;
+    const beak = specialPinkBeak ? "#DA8788" : "#EF9653";
+    const beakDark = specialPinkBeak ? "#C9797B" : "#E58642";
+    const cheekGlow = "#FFF0A4";
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
       role="img" aria-label="Patito de goma de aspecto tierno y redondito">
       <!-- Aletas laterales redondeadas como en la imagen de referencia. -->
@@ -1115,7 +1126,7 @@
         stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M170 111 C190 112 207 126 208 148 C210 166 198 181 180 185
         C161 188 150 170 153 147 C156 127 161 115 170 111Z"
-        fill="${specialMintDuck ? wingColor : bodyColor}" stroke="${bodyEdge}"
+        fill="${bodyColor}" stroke="${bodyEdge}"
         stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
       <!-- Cabecita grande, ligeramente girada hacia la derecha. -->
       <path d="M51 88 C47 51 66 15 106 11 C142 7 174 27 180 62
@@ -1133,17 +1144,21 @@
         fill="none" stroke="${cheekGlow}" stroke-width="13"
         opacity=".25" stroke-linecap="round"/>
       <!-- Dos ojitos ovalados, sin pestañas ni brillos exagerados. -->
-      <ellipse cx="80" cy="62" rx="11" ry="14" fill="#0D1010"/>
+      ${winkEye
+        ? '<path d="M68 63 Q80 52 93 65" fill="none" stroke="#0D1010" stroke-width="6.5" stroke-linecap="round"/>'
+        : '<ellipse cx="80" cy="62" rx="11" ry="14" fill="#0D1010"/>'}
       <ellipse cx="160" cy="44" rx="6.9" ry="12.5"
         transform="rotate(-27 160 44)" fill="#0D1010"/>
+      ${cheekMark ? '<ellipse cx="79" cy="97" rx="19" ry="11" fill="#F2AE9E" opacity=".95"/>' : ''}
       <!-- Pico naranja ancho y suave. -->
       <path d="M102 66 C111 52 136 50 150 54 C166 56 171 69 167 77
         C158 89 133 92 114 86 C96 82 93 75 102 66Z" fill="${beak}"/>
       <path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z"
         fill="${beakDark}" opacity=".72"/>
       <path d="M112 64 C122 60 141 59 151 62"
-        stroke="${specialPinkBeak ? "#FFC08B" : "#F8B277"}"
+        stroke="${specialPinkBeak ? "#F1B6AB" : "#F8B277"}"
         stroke-width="5" fill="none" stroke-linecap="round" opacity=".65"/>
+      ${heartMark ? '<path d="M127 173 C116 159 102 173 112 186 L127 200 L143 185 C154 171 138 159 127 173Z" fill="#74B887" stroke="#4A966C" stroke-width="3" stroke-linejoin="round"/>' : ''}
     </svg>`;
   }
   function startDuckLevel(level) {
@@ -1481,9 +1496,9 @@
     tetrisRunning = false;
     rubikSolvedLock = false;
     newScramble();
-    showLevel(1);
+    showLevel(0);
   });
 
   initRubik();
-  setProgress(1);
+  setProgress(0);
 })();
