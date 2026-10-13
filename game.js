@@ -33,7 +33,7 @@
     if (level === 2) startTetris();
     if (level === 1) updateRubikPractice();
     if (level === 3) startDuckLevel(1);
-    if (level === 4) { renderCakeDucks(); launchConfetti(); }
+    if (level === 4) { renderCakeDucks(); launchConfetti(); updateBirthdayCountdown(); }
   }
 
   function levelComplete(nextLevel, title, subtitle, icon = "✓") {
@@ -1333,6 +1333,117 @@
     }
     setTimeout(() => host.innerHTML = "", 6500);
   }
+
+
+  // =========================================================
+  // NIVEL SECRETO: invitación al cumpleaños de Cande
+  // =========================================================
+  // PENDIENTE: confirmar día, mes y año del próximo cumpleaños.
+  // Esta fecha se introduce con YYYY-MM-DD; hora de Uruguay (UTC-03).
+  // No inventar una fecha: null significa cuenta regresiva desactivada
+  // y contenido cerrado hasta que Vale facilite la fecha real.
+  const CANDE_BIRTHDAY_DATE = null;
+  const invitationGate = document.getElementById("invitation-gate");
+  const invitationReveal = document.getElementById("invitation-reveal");
+  const invitationOpen = document.getElementById("invitation-open");
+  const invitationSetup = document.getElementById("invitation-setup");
+  const countdownStatus = document.getElementById("countdown-status");
+  const countNodes = {
+    days:document.getElementById("count-days"),
+    hours:document.getElementById("count-hours"),
+    minutes:document.getElementById("count-minutes"),
+    seconds:document.getElementById("count-seconds")
+  };
+  let invitationCurrentlyUnlocked = false;
+  let invitationOpened = false;
+
+  function birthdayTimestamp() {
+    if (typeof CANDE_BIRTHDAY_DATE !== "string" ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(CANDE_BIRTHDAY_DATE)) return null;
+    const parts = CANDE_BIRTHDAY_DATE.split("-").map(Number);
+    const [year, month, day] = parts;
+    const midnight = new Date(Date.UTC(year,month-1,day));
+    if (midnight.getUTCFullYear() !== year ||
+        midnight.getUTCMonth() !== month-1 || midnight.getUTCDate() !== day) return null;
+    const timestamp = Date.parse(CANDE_BIRTHDAY_DATE + "T00:00:00-03:00");
+    return Number.isFinite(timestamp) ? timestamp : null;
+  }
+
+  function updateBirthdayCountdown(now = Date.now()) {
+    const birthday = birthdayTimestamp();
+    if (birthday === null) {
+      invitationCurrentlyUnlocked = false;
+      invitationOpen.hidden = true;
+      invitationSetup.textContent = "Esta carta se abrirá recién el día de tu cumpleaños.";
+      countdownStatus.textContent = "Falta configurar la fecha exacta para activar la cuenta regresiva.";
+      for (const node of Object.values(countNodes)) node.textContent = "--";
+      document.getElementById("envelope-lock").textContent = "🔒";
+      invitationReveal.hidden = true;
+      invitationReveal.replaceChildren();
+      invitationOpened = false;
+      return;
+    }
+    const remaining = Math.max(0, birthday - now);
+    const totalSeconds = Math.ceil(remaining/1000);
+    const remainingTime = {
+      days:Math.floor(totalSeconds/86400),
+      hours:Math.floor(totalSeconds%86400/3600),
+      minutes:Math.floor(totalSeconds%3600/60),
+      seconds:totalSeconds%60
+    };
+    for(const [key,value] of Object.entries(remainingTime)) {
+      countNodes[key].textContent = String(value).padStart(2,"0");
+    }
+    invitationCurrentlyUnlocked = now >= birthday;
+    invitationOpen.hidden = !invitationCurrentlyUnlocked;
+    document.getElementById("envelope-lock").textContent =
+      invitationCurrentlyUnlocked ? "💌" : "🔒";
+    invitationSetup.textContent = invitationCurrentlyUnlocked
+      ? "¡Hoy es el día! Tu carta está lista."
+      : "El sobre se abrirá cuando comience tu cumpleaños en Uruguay.";
+    countdownStatus.textContent = invitationCurrentlyUnlocked
+      ? "💚 ¡Feliz cumple, Cande! Ya podés abrir la invitación."
+      : "Todavía no se puede abrir. Es parte de la sorpresa, shhh.";
+    if (!invitationCurrentlyUnlocked) {
+      invitationReveal.hidden = true;
+      invitationReveal.replaceChildren();
+      invitationOpened = false;
+    }
+  }
+
+  function openCandeInvitation() {
+    updateBirthdayCountdown();
+    if (!invitationCurrentlyUnlocked) return;
+    if (!invitationOpened) {
+      const heading = document.createElement("h3");
+      heading.textContent = "Una invitación especialmente para vos 💚";
+      const letter = document.createElement("div");
+      letter.className = "invitation-letter";
+      const paragraphs = [
+        "Cande, llegaste hasta acá. Después del cubito, Tetris y una invasión de patitos, te ganaste algo más que una torta virtual. Q god.",
+        "Quería hacerte algo que tuviera un poquito de vos: verde, juegos, música, humor raro y un montón de cariño. Algo para sumar a todas esas cosas que nos hacen reír.",
+        "Así que esta es tu invitación a seguir juntando anécdotas, planes espontáneos, charlas eternas y momentos que después se convierten en chistes nuestros.",
+        "Feliz cumple, Cande. Gracias por ser vos y por estar.",
+        "Con mucho cariño, Vale ♡"
+      ];
+      for (const words of paragraphs) {
+        const line = document.createElement("p");
+        line.textContent = words;
+        letter.appendChild(line);
+      }
+      invitationReveal.replaceChildren(heading,letter);
+      invitationOpened = true;
+    }
+    invitationReveal.hidden = false;
+    invitationReveal.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  invitationOpen.addEventListener("click", openCandeInvitation);
+  document.getElementById("see-invitation").addEventListener("click", () => {
+    invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  updateBirthdayCountdown();
+  setInterval(updateBirthdayCountdown,1000);
 
   document.getElementById("play-again").addEventListener("click", () => {
     tetrisRunning = false;
