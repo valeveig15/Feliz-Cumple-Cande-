@@ -23,6 +23,26 @@
     });
   }
 
+  // Ubicaciones discretas alternativas; el corazón no ocupa siempre
+  // la misma esquina. Sólo cambia al entrar de nuevo al nivel.
+  const heartHidingPlaces = [
+    {left:"clamp(17px,4vw,55px)",right:"auto",top:"28svh"},
+    {left:"auto",right:"clamp(17px,4vw,55px)",top:"38svh"},
+    {left:"clamp(17px,4vw,55px)",right:"auto",top:"69svh"},
+    {left:"auto",right:"clamp(17px,4vw,55px)",top:"75svh"},
+    {left:"clamp(22px,8vw,100px)",right:"auto",top:"50svh"},
+    {left:"auto",right:"clamp(22px,8vw,100px)",top:"56svh"}
+  ];
+  function repositionHiddenHeart(id) {
+    const heart=document.getElementById(id);
+    if(!heart)return;
+    const old=Number(heart.dataset.lastSpot);
+    const candidates=heartHidingPlaces.map((_,i)=>i).filter(i=>i!==old);
+    const spot=candidates[Math.floor(Math.random()*candidates.length)];
+    heart.dataset.lastSpot=String(spot);
+    Object.assign(heart.style,heartHidingPlaces[spot],{bottom:"auto"});
+  }
+
   function showLevel(level) {
     currentLevel = level;
     Object.values(levels).forEach((el) => el.classList.remove("active"));
@@ -31,6 +51,9 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
     clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
     clearTetrisTouchGesture();
+    if (level === 1 || level === 2) {
+      repositionHiddenHeart(level === 1 ? "rubik-secret-heart" : "tetris-secret-heart");
+    }
     if (level === 1) requestAnimationFrame(() => {
       // The Rubik viewport was hidden behind the welcome screen.
       resizeRubik();
