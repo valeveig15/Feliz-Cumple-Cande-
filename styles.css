@@ -1104,9 +1104,10 @@ body {font-size:18px}
 }
 
 
-/* Pequeño easter egg: corazón verde en el fondo de Tetris.
-   El icono es diminuto pero mantiene un área táctil utilizable. */
-#level-tetris .tetris-secret-heart {
+/* Easter egg · el mismo corazón verde para Rubik y Tetris.
+   Icono discreto, pero superficie táctil de 38×38 para celulares. */
+#level-rubik .hidden-level-heart,
+#level-tetris .hidden-level-heart {
   position:fixed;
   z-index:42;
   bottom:max(12px,env(safe-area-inset-bottom));
@@ -1128,13 +1129,16 @@ body {font-size:18px}
   -webkit-tap-highlight-color:transparent;
   transition:opacity .15s ease;
 }
-#level-tetris .tetris-secret-heart:hover,
-#level-tetris .tetris-secret-heart:focus-visible {
-  opacity:1;
-}
-#level-tetris .tetris-secret-heart:focus-visible {
+#level-rubik .hidden-level-heart:hover,
+#level-tetris .hidden-level-heart:hover,
+#level-rubik .hidden-level-heart:focus-visible,
+#level-tetris .hidden-level-heart:focus-visible {opacity:1}
+#level-rubik .hidden-level-heart:focus-visible,
+#level-tetris .hidden-level-heart:focus-visible {
   outline:2px solid #2da66c;
   outline-offset:2px;
 }
-#level-tetris .tetris-secret-heart:disabled { pointer-events:none; }
-#level-tetris:not(.active) .tetris-secret-heart {display:none}
+#level-rubik .hidden-level-heart:disabled,
+#level-tetris .hidden-level-heart:disabled {pointer-events:none}
+#level-rubik:not(.active) .hidden-level-heart,
+#level-tetris:not(.active) .hidden-level-heart {display:none}
