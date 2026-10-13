@@ -1479,8 +1479,13 @@
       rect.bottom >= 0 && rect.top <= window.innerHeight;
   }
 
+  function privatePreviewContextIsValid() {
+    // En celular el teclado puede sacar temporalmente el reloj del viewport.
+    return countdownIsVisible() || (currentLevel === 4 && document.activeElement === previewInput);
+  }
+
   function startPrivateInvitationPreview() {
-    if (!countdownIsVisible() || invitationPreviewUnlocked) return false;
+    if (!privatePreviewContextIsValid() || invitationPreviewUnlocked) return false;
     invitationPreviewUnlocked = true;
     previewKeyBuffer = "";
     previewInput.value = "";
@@ -1500,6 +1505,7 @@
     if (event.key === "Backspace") {
       previewKeyBuffer = previewKeyBuffer.slice(0,-1);
     } else if (event.key.length === 1 && !event.repeat) {
+      if (event.key === " " && previewKeyBuffer.length > 0) event.preventDefault();
       previewKeyBuffer += event.key;
     } else {
       return;
@@ -1513,7 +1519,7 @@
 
   previewAccess.addEventListener("submit", event => {
     event.preventDefault();
-    if (countdownIsVisible() &&
+    if (privatePreviewContextIsValid() &&
         normalizePreviewPhrase(previewInput.value) === MAGIC_PREVIEW_KEY) {
       startPrivateInvitationPreview();
     } else {
