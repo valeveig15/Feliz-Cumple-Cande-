@@ -1008,3 +1008,28 @@ body{font-size:17px;line-height:1.5}
   .invitation-letter p{font-size:17px}
   .birthday-topper::before{width:232px}
 }
+
+
+/* Vista privada editable de la invitación, solo con la clave secreta. */
+.invitation-draft-editor{width:min(100%,710px);margin:18px auto;
+  padding:22px;border-radius:22px;text-align:left;
+  border:2px dashed #74bb8a;background:rgba(255,255,255,.95)}
+.invitation-draft-editor[hidden]{display:none!important}
+.invitation-draft-editor h3{font-size:24px;margin:0 0 8px;color:#196b42}
+.invitation-draft-editor p{font-size:15px;color:#457657;line-height:1.6}
+.invitation-draft-editor label{display:block;font-size:15px;font-weight:900;
+  margin:12px 0 8px;color:#245d3c}
+.invitation-draft-editor textarea{width:100%;min-height:225px;resize:vertical;
+  border-radius:13px;border:2px solid #addbb9;padding:14px;
+  font:16px/1.6 ui-rounded,system-ui,sans-serif;color:#244d33;
+  background:#fbfffc}
+.invitation-draft-editor textarea:focus{outline:3px solid #b2e9c0}
+.invitation-draft-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
+.invitation-draft-actions button{border:0;border-radius:12px;
+  padding:12px 15px;font-size:15px;font-weight:850;
+  background:#248458;color:white;cursor:pointer}
+.invitation-draft-actions button:last-child{background:#d9f3e0;color:#1e6240}
+@media(max-width:560px){
+ .invitation-draft-editor{padding:14px}
+ .invitation-draft-actions{flex-direction:column}
+}
