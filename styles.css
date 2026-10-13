@@ -1362,37 +1362,70 @@ body {font-size:18px}
 .surprise-polaroid>strong{font:800 20px Georgia,serif}
 .surprise-polaroid small{font-size:15px;line-height:1.55;color:#426950}
 .surprise-polaroid.flipped{background:#eaf9e6}
-/* 3 / Recibo impreso estilo ticket antiguo */
-.surprise-receipt-page{background:#fff7e5}
-.surprise-receipt{max-width:490px;padding:31px 27px;margin:19px auto;
- background:repeating-linear-gradient(0deg,#fefbf4 0 24px,#faf5e8 25px 26px);
- box-shadow:0 9px 25px #93734b2a;color:#554c3f;text-align:left;
- border-top:6px double #cabf9d;border-bottom:7px dashed #c8bfa6;
- font:15px/1.7 ui-monospace,Consolas,monospace;transform:rotate(1deg)}
-.receipt-stars{text-align:center;color:#a4ae81;letter-spacing:.25em}
-.surprise-receipt h4{text-align:center;font:900 21px monospace;margin:5px auto 10px}
-.surprise-receipt>div:not(.receipt-stars){display:flex;justify-content:space-between;
- gap:15px;border-bottom:1px dashed #cbbfa4;padding:12px 0}
-.surprise-receipt b{white-space:nowrap;color:#305a3e}
-.surprise-receipt .receipt-total{font-size:17px;font-weight:900;border-top:3px solid #857963}
-.receipt-footer{text-align:center;font-size:11px!important;letter-spacing:.08em;margin-top:16px!important}
-/* 4 / Cielo oscuro lleno de estrellitas */
-.surprise-sky-page{background:radial-gradient(ellipse at 45% 30%,#244f55,#112d39);
- color:#e9fff4}
-.surprise-sky-page h3,.surprise-sky-page h3 em{color:#d1f8de}
-.surprise-sky-page>p{color:#d5ebdc}
-.surprise-sky-page .surprise-eyebrow{color:#a9deb8!important}
-.surprise-sky{position:relative;margin:24px auto;width:min(100%,660px);
- height:290px;border:1px solid #5f918678;border-radius:20px;
- background:radial-gradient(circle at 20% 60%,#3d677c40,transparent 60%),
- radial-gradient(circle at 80% 15%,#7cbd9640,transparent 50%),#173342;
- box-shadow:inset 0 0 33px #09161c66}
-.surprise-sky button{position:absolute;border:0;background:transparent;
- font-size:37px;color:#dff8c9;cursor:pointer;text-shadow:0 0 13px #cbefbb;
- width:50px;height:50px;transform:translate(-50%,-50%)}
-.surprise-sky button:focus-visible{outline:2px solid #ddf7c9}
-.surprise-star-note{min-height:62px;max-width:600px;margin:14px auto;
- color:#d8f9de;font-size:18px;font-style:italic;line-height:1.5}
+/* 3 / Mini arcade inspirado en laberintos clásicos, con corazones. */
+.surprise-maze-page{background:linear-gradient(160deg,#e6fae8,#d4f3de)}
+.pixel-arcade-cabinet{
+ width:min(100%,540px);margin:25px auto 8px;padding:22px 18px 21px;
+ background:linear-gradient(150deg,#294c3e,#112c25);border:8px solid #4f9272;
+ border-radius:24px 24px 38px 38px;box-shadow:0 14px 0 #235640,0 22px 30px #2a6d4d56;
+ color:#e3ffdf;
+}
+.pixel-arcade-top{display:flex;justify-content:space-between;gap:8px;
+ color:#a6e9b8;font:800 12px/1.2 ui-monospace,monospace;margin-bottom:15px}
+.pixel-maze-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:2px;
+ width:min(100%,365px);aspect-ratio:1;margin:0 auto;
+ padding:7px;border-radius:9px;background:#0c211f;border:2px solid #4c9c71;
+ box-shadow:inset 0 0 24px #020d0c}
+.pixel-cell{display:grid;place-items:center;color:#6ca388;font-size:10px;
+ min-width:0;min-height:0;border-radius:3px}
+.pixel-cell.wall{background:#31765e;border:2px solid #5aab88;
+ box-shadow:inset 0 0 0 1px #193f31}
+.pixel-cell.heart{font-size:clamp(12px,2.2vw,22px);color:#89e0a0;
+ text-shadow:0 0 7px #7ed4a0}
+.pixel-cell.hero{font-size:clamp(19px,3vw,31px);color:#ffdb4b;
+ line-height:1;text-shadow:0 0 8px #fce66370}
+.pixel-arcade-status{font:900 14px/1.4 ui-monospace,monospace;margin-top:14px}
+.pixel-arcade-status strong{color:#f0e68c}
+.pixel-arcade-award{min-height:48px;color:#c5f0cc;font:15px/1.5 system-ui,sans-serif}
+.pixel-maze-controls{display:flex;align-items:center;flex-direction:column;
+ gap:6px;margin:9px auto 8px}
+.pixel-maze-controls>div{display:flex;gap:8px}
+.pixel-maze-controls button{border:1px solid #8ed29f;background:#4c9d70;
+ color:#fff;border-radius:10px;min-width:53px;min-height:48px;
+ font-size:23px;cursor:pointer;touch-action:manipulation}
+.pixel-maze-controls button:active{background:#a9dab0;color:#184d30}
+.maze-reset{color:#bde5bf;background:transparent;border:1px solid #6faa86;
+ padding:8px 16px;border-radius:12px;cursor:pointer;margin:5px auto 0}
+/* 4 / Consola portátil antigua con cartuchos sorpresa */
+.surprise-console-page{background:linear-gradient(160deg,#eff7ec,#e0ebce)}
+.surprise-retro-console{width:min(100%,490px);margin:28px auto;
+ padding:29px 26px 25px;background:linear-gradient(145deg,#c8d2a9,#91a986);
+ border:5px solid #7e9a7a;border-radius:33px 33px 75px 34px;
+ box-shadow:0 12px 0 #6a806a,0 20px 31px #465e4353}
+.retro-console-screen{min-height:230px;display:flex;flex-direction:column;
+ align-items:center;justify-content:space-around;gap:20px;
+ padding:24px 17px;border:14px solid #616e61;border-radius:18px 18px 35px 18px;
+ color:#173f34;background:#b3d4ab;
+ box-shadow:inset 0 0 30px #58896437}
+.console-pixel-line{font:900 12px/1.3 ui-monospace,monospace;letter-spacing:.16em}
+.retro-console-message{display:grid;place-items:center;flex:1;
+ font:900 clamp(17px,2.3vw,23px)/1.5 ui-monospace,monospace}
+.retro-cartridges{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:23px 0}
+.retro-cartridges button{background:#e9edc6;border:3px solid #667959;
+ border-radius:8px 8px 12px 12px;padding:11px 13px;
+ display:flex;flex-direction:column;gap:4px;align-items:center;
+ color:#304632;font:900 17px ui-monospace,monospace;cursor:pointer}
+.retro-cartridges button span{font:800 12px system-ui,sans-serif}
+.retro-cartridges button.selected{background:#fff2a1;transform:translateY(-3px);
+ box-shadow:0 5px 0 #81936d}
+.retro-console-buttons{display:flex;align-items:center;justify-content:space-around;
+ gap:12px}
+.retro-dpad{font:900 72px/1 ui-monospace,monospace;color:#435f4c}
+.retro-console-buttons button{width:71px;height:71px;border-radius:50%;
+ border:5px solid #ad6d7c;background:#bf4f77;color:#fff;
+ font:900 30px system-ui,sans-serif;cursor:pointer;
+ box-shadow:0 7px 0 #873a59}
+.console-start-text{font:900 13px ui-monospace,monospace;color:#547058}
 /* 5 / Consola verde pixelada, chistes */
 .surprise-laugh-page{background:linear-gradient(150deg,#e6f8e6,#c9e8d1)}
 .surprise-laugh-console{max-width:590px;display:flex;flex-direction:column;gap:25px;
@@ -1418,6 +1451,31 @@ body {font-size:18px}
  text-align:left;transform:rotate(-.7deg)}
 .surprise-letter-copy p{color:#514b45;font:20px/1.85 Georgia,"Times New Roman",serif;
  margin:0 0 24px}
+
+/* La carta queda bloqueada hasta ingresar la frase secreta. */
+.surprise-letter-lock{
+ display:flex;flex-direction:column;align-items:center;gap:11px;
+ max-width:560px;margin:14px auto;padding:26px 23px;
+ background:linear-gradient(150deg,#fffef8,#eaf7e9);
+ border:2px solid #d5e9d5;border-radius:21px;
+ box-shadow:0 8px 23px #658c651e
+}
+.letter-lock-symbol{font-size:57px}
+.surprise-letter-lock>p{font-size:18px;line-height:1.55;color:#60745f;
+ max-width:34ch;margin:0 auto}
+.surprise-letter-password{width:100%;display:flex;flex-direction:column;
+ align-items:stretch;gap:9px;text-align:left}
+.surprise-letter-password label{font-size:14px;color:#49654d;font-weight:900}
+.letter-password-row{display:flex;gap:9px;flex-wrap:wrap}
+.letter-password-row input{min-width:0;flex:1 1 200px;
+ padding:13px 14px;border:2px solid #b4d4b7;
+ border-radius:12px;background:#fff;color:#304f36;font-size:17px}
+.letter-password-row button{padding:13px 19px;border:0;border-radius:12px;
+ background:#348a5e;color:white;font-size:16px;font-weight:900;cursor:pointer}
+.letter-password-message{min-height:20px;color:#a25665;
+ font-size:14px;margin:3px 0 0}
+.surprise-letter-lock[hidden]{display:none!important}
+
 /* 7 / Cierre */
 .surprise-ending{background:radial-gradient(ellipse at center,#ffffff,#d4f7df)}
 .surprise-ending-emblem{font-size:100px;line-height:1;color:#40a16d}
@@ -1426,6 +1484,17 @@ body {font-size:18px}
  font-size:clamp(23px,3vw,33px)!important;color:#238256!important}
 .surprise-ending button{border:0;background:#299464;color:#fff;border-radius:99px;
  cursor:pointer;padding:15px 23px;font-size:17px;font-weight:900;margin:17px auto}
+@media(max-width:620px){
+ .pixel-arcade-cabinet{padding:14px 9px 17px;border-width:5px}
+ .pixel-arcade-top{font-size:10px}
+ .pixel-maze-grid{width:min(100%,315px);padding:5px}
+ .pixel-maze-controls button{min-width:53px;min-height:50px}
+ .surprise-retro-console{padding:16px 10px 20px;border-radius:22px 22px 53px 25px}
+ .retro-console-screen{min-height:200px;padding:18px 8px;border-width:9px}
+ .console-pixel-line{font-size:10px;letter-spacing:.06em}
+ .retro-dpad{font-size:59px}
+ .surprise-letter-lock{padding:20px 11px}
+}
 @media(max-width:620px){
  .invitation-gate{padding:16px 9px}
  .surprise-topline{font-size:9px;padding:13px 10px}
@@ -1446,3 +1515,22 @@ body {font-size:18px}
 @media(prefers-reduced-motion:reduce){
  .surprise-page{animation:none}
 }
+
+/* Corazones secretos sin disco, aro, borde, sombra ni fondo decorativo.
+   Se conserva el área táctil invisible para no sacrificar accesibilidad. */
+#level-rubik .hidden-level-heart,
+#level-tetris .hidden-level-heart,
+#level-rubik .hidden-level-heart:hover,
+#level-tetris .hidden-level-heart:hover,
+#level-rubik .hidden-level-heart:focus-visible,
+#level-tetris .hidden-level-heart:focus-visible{
+ background:transparent;
+ border:0;
+ border-radius:0;
+ box-shadow:none;
+ outline-offset:1px;
+}
+#level-rubik .hidden-level-heart,
+#level-tetris .hidden-level-heart{color:#298d57;opacity:.49}
+#level-rubik .hidden-level-heart:hover,
+#level-tetris .hidden-level-heart:hover{opacity:.86}
