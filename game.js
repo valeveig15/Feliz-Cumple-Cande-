@@ -494,7 +494,10 @@
 
   // Marcadores permanentes estilo consola: clasificación local top 10.
   // Sólo localStorage del navegador (sin backend ni sincronización entre dispositivos).
-  const RECORD_STORAGE_KEY = "cande-tetris-records-v1";
+  // Nueva temporada de la máquina: los récords anteriores se reinician una vez.
+  // Se usa una clave nueva para no volver a importar la tabla anterior.
+  const RECORD_STORAGE_KEY = "cande-tetris-records-v2";
+  try { localStorage.removeItem("cande-tetris-records-v1"); } catch (error) {}
   const NICK_STORAGE_KEY = "cande-tetris-nickname-v1";
   const RECORD_MAX = 10;
   let currentTetrisRunId = "";
@@ -647,6 +650,7 @@
   }
 
   function startTetris() {
+    document.getElementById("tetris-secret-heart").disabled = false;
     clearHorizontalHold();
     clearTetrisTouchGesture();
     document.getElementById("tetris-end").hidden = true;
@@ -1031,6 +1035,20 @@
   window.addEventListener("blur", clearTetrisTouchGesture);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) clearTetrisTouchGesture();
+  });
+
+  // Corazoncito secreto en el fondo del nivel. Permite pasar a patitos
+  // sin llegar a 3.000 puntos; no inventa puntos ni falsifica récords.
+  const tetrisSecretHeart = document.getElementById("tetris-secret-heart");
+  tetrisSecretHeart.addEventListener("click", () => {
+    if (currentLevel !== 2 || tetrisSecretHeart.disabled) return;
+    tetrisSecretHeart.disabled = true;
+    tetrisRunning = false;
+    tetrisGameOver = true;
+    clearHorizontalHold();
+    clearTetrisTouchGesture();
+    document.getElementById("tetris-end").hidden = true;
+    levelComplete(3, "💚 Corazón secreto", "¡Encontraste el pasaje escondido a los patitos!", "💚");
   });
 
   document.getElementById("tetris-restart").addEventListener("click", startTetris);
