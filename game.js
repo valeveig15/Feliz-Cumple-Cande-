@@ -1126,11 +1126,11 @@
   // La diferencia de cada ronda es una expresión, no un color.
   // Todos conservan la misma silueta y la misma paleta.
   function duckSvg(level, odd) {
-    const winkLeft = odd && level === 1;
-    const winkRight = odd && level === 2;
-    const sleepySmile = odd && level === 3;
-    const surprised = odd && level === 4;
-    const laughing = odd && level === 5;
+    const wink = odd && level === 1;
+    const crookedBeak = odd && level === 2;
+    const raisedEyebrow = odd && level === 3;
+    const sideGlance = odd && level === 4;
+    const crookedSmile = odd && level === 5;
     const golden = "#F2AF4D";
     const headColor = "#FFEB85";
     const bodyColor = "#FFE98A";
@@ -1138,6 +1138,18 @@
     const beak = "#EF9653";
     const beakDark = "#E58642";
     const cheekGlow = "#FFF0A4";
+    const leftEye = wink
+      ? '<path d="M66 63 Q80 75 94 62" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
+      : '<ellipse cx="' + (sideGlance ? 73 : 80) + '" cy="62" rx="11" ry="14" fill="#0D1010"/>';
+    const rightEye = '<ellipse cx="' + (sideGlance ? 155 : 160) +
+      '" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>';
+    const eyebrow = raisedEyebrow
+      ? '<path d="M63 39 Q80 27 97 38" fill="none" stroke="#0D1010" stroke-width="5" stroke-linecap="round"/>'
+      : '';
+    const beakTransform = crookedBeak ? "rotate(-9 135 73)" : "translate(0 0)";
+    const beakSmile = crookedSmile
+      ? '<path d="M107 75 C128 65 149 68 165 66 C151 83 126 89 109 79Z" fill="#E58642" opacity=".72"/>'
+      : '<path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z" fill="#E58642" opacity=".72"/>';
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
       role="img" aria-label="Patito de goma de aspecto tierno y redondito">
       <!-- Mismo cuerpo amarillo para todos. -->
@@ -1162,33 +1174,20 @@
       <path d="M69 140 Q62 163 71 181 Q82 204 126 208 Q145 207 164 198"
         fill="none" stroke="${cheekGlow}" stroke-width="13"
         opacity=".25" stroke-linecap="round"/>
-      <!-- La diferencia vive únicamente en la carita. -->
-      ${winkLeft
-        ? '<path d="M67 64 Q80 74 94 61" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
-        : sleepySmile
-          ? '<path d="M65 58 Q80 78 95 59" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
-          : surprised
-            ? '<ellipse cx="80" cy="62" rx="12" ry="17" fill="#0D1010"/>'
-            : '<ellipse cx="80" cy="62" rx="11" ry="14" fill="#0D1010"/>'}
-      ${winkRight
-        ? '<path d="M151 48 Q162 56 170 39" fill="none" stroke="#0D1010" stroke-width="6.5" stroke-linecap="round"/>'
-        : sleepySmile
-          ? '<path d="M151 44 Q161 59 170 40" fill="none" stroke="#0D1010" stroke-width="6" stroke-linecap="round"/>'
-          : surprised
-            ? '<ellipse cx="160" cy="44" rx="8.5" ry="15" transform="rotate(-27 160 44)" fill="#0D1010"/>'
-            : '<ellipse cx="160" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>'}
-      ${surprised
-        ? '<path d="M63 36 Q80 22 97 34 M148 23 Q159 14 171 20" fill="none" stroke="#0D1010" stroke-width="5" stroke-linecap="round"/>'
-        : ''}
-      <!-- El pico siempre es naranja; en la última ronda cambia su sonrisa. -->
+      <!-- Detalles mínimos de gestos: sin cambiar ni cuerpo ni colores. -->
+      ${leftEye}
+      ${rightEye}
+      ${eyebrow}
+      <!-- El pico puede estar un poquito torcido o tener otra sonrisa. -->
+      <g transform="${beakTransform}">
+      <!-- El pico conserva el naranja en las cinco rondas. -->
       <path d="M102 66 C111 52 136 50 150 54 C166 56 171 69 167 77
         C158 89 133 92 114 86 C96 82 93 75 102 66Z" fill="${beak}"/>
-      ${laughing
-        ? '<path d="M105 72 C124 79 147 79 165 72 C158 94 132 103 112 86Z" fill="#E58642" opacity=".72"/>'
-        : '<path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z" fill="#E58642" opacity=".72"/>'}
+      ${beakSmile}
       <path d="M112 64 C122 60 141 59 151 62"
         stroke="#F8B277" stroke-width="5" fill="none"
         stroke-linecap="round" opacity=".65"/>
+      </g>
     </svg>`;
   }
   function startDuckLevel(level) {
