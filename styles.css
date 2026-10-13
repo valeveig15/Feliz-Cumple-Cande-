@@ -1264,3 +1264,185 @@ body {font-size:18px}
 @media(prefers-reduced-motion:reduce){
   #welcome-start{transition:none}
 }
+
+
+/* ============================================================
+   CANDE SECRET STORY V22 — siete escenas, siete estéticas.
+   ============================================================ */
+#level-rubik .hidden-level-heart,
+#level-tetris .hidden-level-heart{
+  width:42px;height:42px;
+  background:rgba(212,246,225,.3);
+  color:#238958;
+  border-color:rgba(38,129,79,.1);
+  font-size:15px;
+  opacity:.60;
+  box-shadow:none;
+  right:auto;bottom:auto;
+}
+#level-rubik .hidden-level-heart:hover,
+#level-tetris .hidden-level-heart:hover,
+#level-rubik .hidden-level-heart:focus-visible,
+#level-tetris .hidden-level-heart:focus-visible{
+  opacity:1;background:rgba(219,249,230,.85);
+}
+/* Se cambia de ubicación por JS; no lo devolvemos a una esquina
+   fija en ningún breakpoint de celular. */
+@media(max-width:700px){
+ #level-rubik .hidden-level-heart,
+ #level-tetris .hidden-level-heart{
+   right:auto;bottom:auto;width:42px;height:42px;
+   font-size:15px;opacity:.62
+ }
+}
+.invitation-gate{width:min(100%,1010px);padding:clamp(16px,3vw,34px)}
+.invitation-reveal{max-width:930px;background:transparent;box-shadow:none;padding:0;text-align:initial}
+.invitation-reveal[hidden],.surprise-page[hidden],.surprise-folded-letter [hidden],
+.surprise-navigation button[hidden],.surprise-polaroid [hidden]{display:none!important}
+.surprise-world{
+  --story-green:#1c7550;
+  position:relative;
+  overflow:hidden;
+  border-radius:29px;
+  background:#f8fff8;
+  border:2px solid rgba(255,255,255,.85);
+  box-shadow:0 16px 38px rgba(35,117,74,.14);
+}
+.surprise-topline{display:flex;justify-content:space-between;gap:10px;
+ padding:15px 20px;font:900 11px/1.2 ui-monospace,monospace;letter-spacing:.13em;
+ color:#3e7c56;background:#e1f6e8}
+.surprise-progress{display:flex;justify-content:center;align-items:center;
+ gap:9px;padding:17px 12px 8px;background:#fbfffa}
+.surprise-progress-dot{width:8px;height:8px;background:#cbe1d0;border-radius:50%}
+.surprise-progress-dot.selected{background:#27875c;transform:scale(1.5);
+ box-shadow:0 0 0 3px #d7f5df}
+.surprise-progress-count{color:#568266;font:800 12px/1 monospace;margin-left:10px}
+.surprise-page{min-height:420px;padding:clamp(25px,5vw,52px) clamp(18px,5vw,55px);
+ text-align:center;animation:storyIn .38s ease}
+@keyframes storyIn{from{opacity:.2;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}
+.surprise-page h3{font:850 clamp(35px,5.4vw,62px)/1.15 Georgia,serif;
+ color:#236b47;margin:8px auto 19px;letter-spacing:-.025em}
+.surprise-page h3 em{color:#2ba16c;font-style:italic}
+.surprise-page>p{font-size:clamp(16px,1.6vw,19px);line-height:1.65;
+ color:#48755b;margin:12px auto;max-width:53ch}
+.surprise-eyebrow{font:900 12px/1.5 ui-rounded,system-ui,sans-serif;
+ color:#3d8c64!important;letter-spacing:.15em}
+.surprise-soft-caption{font-size:15px!important;color:#678574!important}
+.surprise-navigation{display:flex;justify-content:space-between;
+ align-items:center;gap:15px;padding:18px 24px 26px;background:#fbfffc}
+.surprise-navigation button{cursor:pointer;border:1px solid #addbbc;
+ border-radius:14px;padding:13px 19px;background:#dff6e7;
+ color:#236d46;font-weight:850;font-size:16px;min-height:48px}
+.surprise-navigation button:last-child{margin-left:auto;background:#259363;
+ color:#fff;border-color:#259363;box-shadow:0 4px 11px #2d946640}
+/* 1 / Postal de bienvenida */
+.surprise-opening{background:radial-gradient(circle at top left,#ffffff,#e4f8e8 75%)}
+.surprise-magic{font-size:48px;letter-spacing:.1em;color:#b6d69a}
+.surprise-opening h3{font-size:clamp(45px,7vw,82px);color:#1b6340}
+.surprise-opening-card{max-width:590px;padding:24px;margin:23px auto;
+ border-radius:27px 27px 35px 35px;background:#fff;
+ box-shadow:0 10px 25px #83b39430;transform:rotate(-1deg)}
+.surprise-opening-card p{font-size:clamp(18px,1.9vw,21px);line-height:1.65;
+ color:#48694f;margin:7px auto}
+/* 2 / Álbum de notitas en papeles polaroid */
+.surprise-polaroid-page{background:linear-gradient(145deg,#fcfff9,#f4f7d9)}
+.surprise-polaroids{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:18px;max-width:660px;margin:29px auto 0}
+.surprise-polaroid{display:flex;flex-direction:column;align-items:center;
+ gap:10px;padding:25px 13px 22px;min-height:213px;
+ background:#fff;border:6px solid white;border-bottom-width:20px;
+ box-shadow:0 5px 15px #52775730;cursor:pointer;
+ color:#436948;transition:transform .2s ease}
+.surprise-polaroid:nth-child(1){transform:rotate(-4deg)}
+.surprise-polaroid:nth-child(2){transform:rotate(3deg)}
+.surprise-polaroid:nth-child(3){transform:rotate(3deg)}
+.surprise-polaroid:nth-child(4){transform:rotate(-3deg)}
+.surprise-polaroid:hover{transform:rotate(0) translateY(-4px)}
+.surprise-polaroid>span{font-size:39px}
+.surprise-polaroid>strong{font:800 20px Georgia,serif}
+.surprise-polaroid small{font-size:15px;line-height:1.55;color:#426950}
+.surprise-polaroid.flipped{background:#eaf9e6}
+/* 3 / Recibo impreso estilo ticket antiguo */
+.surprise-receipt-page{background:#fff7e5}
+.surprise-receipt{max-width:490px;padding:31px 27px;margin:19px auto;
+ background:repeating-linear-gradient(0deg,#fefbf4 0 24px,#faf5e8 25px 26px);
+ box-shadow:0 9px 25px #93734b2a;color:#554c3f;text-align:left;
+ border-top:6px double #cabf9d;border-bottom:7px dashed #c8bfa6;
+ font:15px/1.7 ui-monospace,Consolas,monospace;transform:rotate(1deg)}
+.receipt-stars{text-align:center;color:#a4ae81;letter-spacing:.25em}
+.surprise-receipt h4{text-align:center;font:900 21px monospace;margin:5px auto 10px}
+.surprise-receipt>div:not(.receipt-stars){display:flex;justify-content:space-between;
+ gap:15px;border-bottom:1px dashed #cbbfa4;padding:12px 0}
+.surprise-receipt b{white-space:nowrap;color:#305a3e}
+.surprise-receipt .receipt-total{font-size:17px;font-weight:900;border-top:3px solid #857963}
+.receipt-footer{text-align:center;font-size:11px!important;letter-spacing:.08em;margin-top:16px!important}
+/* 4 / Cielo oscuro lleno de estrellitas */
+.surprise-sky-page{background:radial-gradient(ellipse at 45% 30%,#244f55,#112d39);
+ color:#e9fff4}
+.surprise-sky-page h3,.surprise-sky-page h3 em{color:#d1f8de}
+.surprise-sky-page>p{color:#d5ebdc}
+.surprise-sky-page .surprise-eyebrow{color:#a9deb8!important}
+.surprise-sky{position:relative;margin:24px auto;width:min(100%,660px);
+ height:290px;border:1px solid #5f918678;border-radius:20px;
+ background:radial-gradient(circle at 20% 60%,#3d677c40,transparent 60%),
+ radial-gradient(circle at 80% 15%,#7cbd9640,transparent 50%),#173342;
+ box-shadow:inset 0 0 33px #09161c66}
+.surprise-sky button{position:absolute;border:0;background:transparent;
+ font-size:37px;color:#dff8c9;cursor:pointer;text-shadow:0 0 13px #cbefbb;
+ width:50px;height:50px;transform:translate(-50%,-50%)}
+.surprise-sky button:focus-visible{outline:2px solid #ddf7c9}
+.surprise-star-note{min-height:62px;max-width:600px;margin:14px auto;
+ color:#d8f9de;font-size:18px;font-style:italic;line-height:1.5}
+/* 5 / Consola verde pixelada, chistes */
+.surprise-laugh-page{background:linear-gradient(150deg,#e6f8e6,#c9e8d1)}
+.surprise-laugh-console{max-width:590px;display:flex;flex-direction:column;gap:25px;
+ margin:32px auto;padding:29px 25px;border:9px solid #42765b;border-radius:27px;
+ background:#1c352a;box-shadow:0 11px 0 #244d36,0 19px 26px #395f4b49;
+ color:#c8f9c8;font-family:ui-monospace,Consolas,monospace}
+.surprise-laugh-console small{color:#80cb9a;font-size:12px}
+.surprise-laugh-result{font-size:clamp(19px,2.4vw,28px);line-height:1.4;
+ min-height:70px;display:grid;place-items:center}
+.surprise-laugh-console button{border:1px solid #a5e0b9;background:#94d59d;
+ padding:15px 12px;border-radius:9px;cursor:pointer;font-weight:900;
+ color:#21462f;font-size:16px}
+/* 6 / Carta de papel crema */
+.surprise-letter-page{background:linear-gradient(135deg,#f9fff5,#f3efe3)}
+.surprise-folded-letter{max-width:700px;margin:20px auto}
+.surprise-folded-letter>button{border:2px solid #d4c8a8;border-radius:17px;
+ padding:19px 30px;background:#fffdf4;color:#7a6247;font:800 22px Georgia,serif;
+ cursor:pointer;box-shadow:0 7px 18px #9c84602b}
+.surprise-letter-body{padding:clamp(24px,5vw,47px);margin-top:18px;
+ border-radius:7px 22px 18px 6px;
+ background:repeating-linear-gradient(#fffefa 0 34px,#eee6ce 35px 36px);
+ box-shadow:0 9px 27px #76695026, inset 0 0 0 2px #f6ebd1;
+ text-align:left;transform:rotate(-.7deg)}
+.surprise-letter-copy p{color:#514b45;font:20px/1.85 Georgia,"Times New Roman",serif;
+ margin:0 0 24px}
+/* 7 / Cierre */
+.surprise-ending{background:radial-gradient(ellipse at center,#ffffff,#d4f7df)}
+.surprise-ending-emblem{font-size:100px;line-height:1;color:#40a16d}
+.surprise-ending h3{font-size:clamp(44px,6.8vw,78px)}
+.surprise-ending-sign{font-family:Georgia,serif;font-style:italic;
+ font-size:clamp(23px,3vw,33px)!important;color:#238256!important}
+.surprise-ending button{border:0;background:#299464;color:#fff;border-radius:99px;
+ cursor:pointer;padding:15px 23px;font-size:17px;font-weight:900;margin:17px auto}
+@media(max-width:620px){
+ .invitation-gate{padding:16px 9px}
+ .surprise-topline{font-size:9px;padding:13px 10px}
+ .surprise-page{min-height:390px;padding:27px 15px}
+ .surprise-polaroids{gap:9px}
+ .surprise-polaroid{padding:15px 7px;min-height:186px}
+ .surprise-polaroid>span{font-size:30px}
+ .surprise-polaroid>strong{font-size:16px}
+ .surprise-polaroid small{font-size:12px}
+ .surprise-receipt{padding:20px 12px;font-size:12px}
+ .surprise-receipt .receipt-total{font-size:13px}
+ .surprise-sky{height:260px}
+ .surprise-sky button{font-size:31px}
+ .surprise-letter-copy p{font-size:18px}
+ .surprise-navigation{padding:13px 12px 18px}
+ .surprise-navigation button{font-size:14px;padding:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .surprise-page{animation:none}
+}
