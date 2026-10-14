@@ -2010,3 +2010,30 @@ body {font-size:18px}
 @media(prefers-reduced-motion:reduce){
   .cande-memory-photo{transition:none}
 }
+
+/* CANDE V39 · galería con ocho fotografías, sin textos individuales */
+.cande-memory-grid {max-width:735px;gap:16px}
+.cande-memory-photo {
+  gap:0;
+  padding:9px;
+  overflow:hidden;
+  border-radius:13px;
+  background:#fffefa;
+  min-height:0;
+}
+.cande-memory-photo img {
+  display:block;
+  aspect-ratio:3/4;
+  object-fit:contain;
+  object-position:center;
+  background:#f5f0e9;
+  border-radius:7px;
+}
+.cande-memory-video-card {padding:12px;border-radius:18px}
+.memory-lightbox-image {max-height:74dvh}
+@media(max-width:600px) {
+  .cande-memory-grid {gap:10px}
+  .cande-memory-photo {padding:6px;border-radius:9px}
+  .cande-memory-photo img {border-radius:5px}
+  .cande-memory-video-card {padding:8px}
+}
