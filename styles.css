@@ -1741,57 +1741,142 @@ body {font-size:18px}
 }
 
 
-/* CANDE V30 · Boletín juguetón; primera escena distinta de la carta. */
-.surprise-opening .surprise-bulletin {
-  position:relative;
-  overflow:visible;
-  width:min(100%,610px);
-  padding:clamp(23px,4vw,39px) clamp(19px,4vw,42px) 28px;
-  margin:30px auto 21px;
-  border:2px solid #b6d8ac;
-  border-top:7px solid #469b69;
-  border-radius:8px 20px 13px 20px;
-  background:repeating-linear-gradient(0deg,#fcfff7 0 34px,#f1f9e9 35px 36px);
-  box-shadow:7px 9px 0 #b6e1c04a,0 12px 27px #54876229;
-  transform:rotate(-.8deg);
+
+/* ===========================================================
+   CANDE V33: cartel extraviada de verdad con foto protagonista
+   =========================================================== */
+.surprise-opening.surprise-lost-pup{
+ background:radial-gradient(circle at top left,#f6fff6,#d9f5e2);
+ padding:clamp(24px,4vw,46px) clamp(13px,3vw,35px);
 }
-.surprise-bulletin-label {
-  display:inline-block;
-  margin:-48px auto 18px;
-  padding:10px 19px;
-  border-radius:12px 5px 12px 5px;
-  background:#317e52;
-  color:#fffce8;
-  font:900 13px/1.2 ui-rounded,system-ui,sans-serif;
-  letter-spacing:.14em;
-  transform:rotate(2deg);
-  box-shadow:0 5px 0 #a3ccad;
+.lost-pup-notice{
+ position:relative;
+ width:min(100%,555px);
+ margin:9px auto 16px;
+ padding:clamp(25px,4.5vw,43px) clamp(18px,3.7vw,34px) 28px;
+ background:#fffdf2;
+ border:2px solid #e4dcc7;
+ border-radius:8px;
+ box-shadow:7px 13px 0 #b6d5b653,0 19px 36px #376b493d;
+ transform:rotate(-1deg);
+ color:#405646;
 }
-.surprise-opening .surprise-bulletin p {
-  max-width:46ch;
-  margin:11px auto 17px;
-  color:#365f43;
-  font:600 clamp(17px,2vw,21px)/1.67 ui-rounded,system-ui,sans-serif;
+.lost-pup-tape{
+ position:absolute;
+ top:-17px;
+ width:96px;height:32px;
+ border-radius:2px;
+ background:linear-gradient(115deg,#ffd0dbbf,#f3b7ccc5);
+ border:1px solid #e6b3bd5e;
+ box-shadow:inset 0 1px #fff5,0 1px 3px #8f797443;
+ z-index:2;
 }
-.surprise-opening .surprise-bulletin p:first-of-type {
-  font-weight:800;
-  color:#246b45;
+.lost-pup-tape.tape-left{left:-23px;transform:rotate(-29deg)}
+.lost-pup-tape.tape-right{right:-23px;transform:rotate(27deg)}
+.surprise-opening.surprise-lost-pup .lost-pup-header{
+ font:900 clamp(12px,1.8vw,15px)/1.2 ui-rounded,system-ui,sans-serif;
+ letter-spacing:.19em;
+ color:#ae667a;
+ margin:2px auto 14px;
 }
-.surprise-bulletin-stamp {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin:8px auto -9px;
-  padding:7px 13px;
-  border:3px double #6d986d;
-  border-radius:4px;
-  color:#4a855b;
-  font:900 12px/1.2 ui-monospace,Consolas,monospace;
-  letter-spacing:.08em;
-  transform:rotate(-5deg);
+.surprise-opening.surprise-lost-pup h3{
+ color:#426d4e;
+ font-family:"Fraunces",Georgia,serif;
+ font-size:clamp(36px,6vw,64px);
+ font-weight:850;
+ letter-spacing:-.05em;
+ line-height:1.05;
+ text-transform:uppercase;
+ margin:0 auto 19px;
+ overflow-wrap:break-word;
 }
+.surprise-opening.surprise-lost-pup h3 em{
+ display:block;
+ color:#d8849d;
+ font-style:normal;
+ letter-spacing:-.04em;
+}
+.lost-pup-photo-wrap{
+ position:relative;
+ width:min(100%,340px);
+ margin:0 auto 19px;
+ padding:9px 9px 22px;
+ border:1px solid #e6dac3;
+ border-radius:5px;
+ background:#fff;
+ box-shadow:0 8px 18px #6e7b643b;
+ transform:rotate(1.5deg);
+}
+.lost-pup-photo{
+ display:block;
+ width:100%;
+ height:auto;
+ aspect-ratio:280/373;
+ object-fit:cover;
+ object-position:center;
+ border-radius:2px;
+ background:#f1ebdd;
+}
+.lost-pup-photo-sticker{
+ position:absolute;
+ right:-13px;
+ bottom:8px;
+ width:48px;height:48px;
+ display:grid;place-items:center;
+ border-radius:50%;
+ background:#ffe1e9;
+ border:2px solid #f6c2d1;
+ color:#ba7185;
+ font-size:29px;
+ transform:rotate(15deg);
+ box-shadow:0 3px 9px #ab7f8542;
+}
+.surprise-opening.surprise-lost-pup .lost-pup-name{
+ font:900 clamp(15px,2.2vw,20px)/1.3 ui-rounded,system-ui,sans-serif;
+ letter-spacing:.045em;
+ color:#30754e;
+ margin:13px auto 13px;
+}
+.surprise-opening.surprise-lost-pup .lost-pup-details{
+ font:600 clamp(16px,1.8vw,18px)/1.65 ui-rounded,system-ui,sans-serif;
+ max-width:40ch;
+ margin:11px auto;
+ color:#4a6151;
+}
+.surprise-opening.surprise-lost-pup .lost-pup-reward{
+ font:800 clamp(17px,2vw,20px)/1.52 Georgia,serif;
+ border-top:2px dashed #d6cdbb;
+ margin:21px auto 0;
+ padding-top:17px;
+ color:#c07591;
+ max-width:43ch;
+}
+.tape-availability[hidden]{display:none!important}
 @media(max-width:620px){
-  .surprise-opening .surprise-bulletin{margin-top:30px}
-  .surprise-bulletin-label{font-size:11px;letter-spacing:.07em}
-  .surprise-opening .surprise-bulletin p{font-size:17px;line-height:1.58}
+ .surprise-opening.surprise-lost-pup{
+   padding:22px 11px 30px;
+ }
+ .lost-pup-notice{
+   padding:27px 13px 21px;
+   width:min(100%,510px);
+ }
+ .lost-pup-tape{
+   width:65px;height:24px;top:-13px;
+ }
+ .lost-pup-tape.tape-left{left:-9px}
+ .lost-pup-tape.tape-right{right:-9px}
+ .lost-pup-photo-wrap{
+   width:min(100%,295px);
+   padding:7px 7px 16px;
+ }
+ .lost-pup-photo-sticker{width:37px;height:37px;font-size:23px;right:-8px}
+ .surprise-opening.surprise-lost-pup h3{
+   font-size:clamp(32px,9vw,49px);
+   margin-bottom:16px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .surprise-opening.surprise-lost-pup .lost-pup-photo-wrap{
+   transform:none;
+ }
 }
