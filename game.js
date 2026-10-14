@@ -1494,7 +1494,11 @@ function renderSurpriseLetter(){
  const pages=[...invitationReveal.querySelectorAll(".surprise-page")];
  if(!pages.length)return;
  const audio=currentTapeAudio();
- if(audio&&surpriseScene===3&&n!==3)audio.pause();
+ if(audio&&surpriseScene===4&&n!==4)audio.pause();
+ const movie=invitationReveal.querySelector(".memory-video");
+ if(movie&&surpriseScene===3&&n!==3)movie.pause();
+ const galleryDialog=invitationReveal.querySelector(".memory-lightbox");
+ if(galleryDialog?.open&&surpriseScene===3&&n!==3)galleryDialog.close();
  surpriseScene=Math.max(0,Math.min(n,pages.length-1));
  pages.forEach((p,i)=>{p.hidden=i!==surpriseScene;});
  invitationReveal.querySelectorAll(".surprise-progress-dot").forEach((p,i)=>p.classList.toggle("selected",i===surpriseScene));
@@ -1529,7 +1533,7 @@ function renderSurpriseLetter(){
  invitationReveal.innerHTML=`
  <div class="surprise-world">
   <header class="surprise-topline"><span>✦ 15 OCTUBRE 2026</span><span>ALGO SOLO PARA VOS ♡</span></header>
-  <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:7},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 7</small></nav>
+  <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:8},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 8</small></nav>
   <article class="surprise-page surprise-opening surprise-lost-pup" hidden>
    <div class="lost-pup-notice">
     <div class="lost-pup-tape tape-left" aria-hidden="true"></div>
@@ -1571,6 +1575,44 @@ function renderSurpriseLetter(){
       <div class="friend-letter-text"></div>
     </div>
    </div>
+  </article>
+
+  <article class="surprise-page surprise-gallery-page" hidden>
+    <p class="surprise-eyebrow">EL ARCHIVO DE RECUERDOS</p>
+    <h3>Fotitos, videos y <em>momentazos</em></h3>
+    <p>Porque obvio que estas joyitas tenían que estar acá JAJAJA.</p>
+    <div class="cande-memory-grid">
+      <button type="button" class="cande-memory-photo" data-memory-photo="0" aria-label="Ampliar foto 1">
+        <img src="assets/recuerdo-1.avif" alt="Cande y una amiga posando juntas en una salida" loading="lazy" decoding="async">
+        <span>✧ Nosotras</span>
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="1" aria-label="Ampliar foto 2">
+        <img src="assets/recuerdo-2.avif" alt="Amigos de Cande reunidos en una mesa compartiendo sushi" loading="lazy" decoding="async">
+        <span>✧ La juntada</span>
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="2" aria-label="Ampliar foto 3">
+        <img src="assets/recuerdo-3.avif" alt="Cande y una amiga sacándose una selfie divertida" loading="lazy" decoding="async">
+        <span>✧ Fotón</span>
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="3" aria-label="Ampliar foto 4">
+        <img src="assets/recuerdo-4.avif" alt="Cande y una amiga en el club de ciencias" loading="lazy" decoding="async">
+        <span>✧ Club de ciencias</span>
+      </button>
+    </div>
+    <div class="cande-memory-video-card">
+      <div class="memory-video-title"><span>▶</span> UNA JOYITA EN VIDEO</div>
+      <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.avif" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
+      <p class="memory-video-caption">Una prueba más de que no somos normales JAJAJA.</p>
+    </div>
+    <dialog class="memory-lightbox" aria-label="Foto ampliada del álbum">
+      <button type="button" class="memory-lightbox-close" data-memory-close aria-label="Cerrar fotografía">×</button>
+      <img class="memory-lightbox-image" alt="Foto ampliada">
+      <p class="memory-lightbox-caption"></p>
+      <div class="memory-lightbox-controls">
+        <button type="button" data-memory-switch="-1" aria-label="Foto anterior">←</button>
+        <button type="button" data-memory-switch="1" aria-label="Foto siguiente">→</button>
+      </div>
+    </dialog>
   </article>
   <article class="surprise-page surprise-cassette-page" hidden>
    <p class="surprise-eyebrow">ARCHIVO DE AUDIO · RECUERDOS</p>
@@ -1638,6 +1680,23 @@ function renderSurpriseLetter(){
  showSurpriseScene(0);
 }
 
+
+  let openedMemoryIndex=0;
+  function openMemoryPhoto(index) {
+    const cards=[...invitationReveal.querySelectorAll("[data-memory-photo]")];
+    if(!cards.length||!invitationCurrentlyUnlocked)return;
+    openedMemoryIndex=(index+cards.length)%cards.length;
+    const src=cards[openedMemoryIndex].querySelector("img");
+    const dialog=invitationReveal.querySelector(".memory-lightbox");
+    if(!dialog||!src)return;
+    const image=dialog.querySelector(".memory-lightbox-image");
+    image.src=src.src;
+    image.alt=src.alt;
+    dialog.querySelector(".memory-lightbox-caption").textContent=
+      cards[openedMemoryIndex].querySelector("span")?.textContent||"Fotito";
+    if(!dialog.open)dialog.showModal();
+  }
+
   function handleSurpriseInteraction(event){
  if(!invitationCurrentlyUnlocked)return;
  const btn=event.target.closest("button");if(!btn||!invitationReveal.contains(btn))return;
@@ -1680,6 +1739,15 @@ function renderSurpriseLetter(){
  if(btn.hasAttribute("data-tape-play")){handleTapeClick("play");return}
  if(btn.hasAttribute("data-tape-prev")){handleTapeClick("prev");return}
  if(btn.hasAttribute("data-tape-next")){handleTapeClick("next");return}
+ if(btn.hasAttribute("data-memory-photo")){
+  openMemoryPhoto(Number(btn.dataset.memoryPhoto));return;
+ }
+ if(btn.hasAttribute("data-memory-switch")){
+  openMemoryPhoto(openedMemoryIndex+Number(btn.dataset.memorySwitch));return;
+ }
+ if(btn.hasAttribute("data-memory-close")){
+  invitationReveal.querySelector(".memory-lightbox")?.close();return;
+ }
  if(btn.hasAttribute("data-surprise-random")){
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
@@ -1691,7 +1759,7 @@ function handleSurpriseLetterSubmit(event){
  const form=event.target.closest(".surprise-letter-password");
  if(!form||!invitationReveal.contains(form))return;
  event.preventDefault();
- if(!invitationCurrentlyUnlocked||surpriseScene!==5)return;
+ if(!invitationCurrentlyUnlocked||surpriseScene!==6)return;
  const input=form.querySelector("input");
  const msg=form.querySelector(".letter-password-message");
  if(normalizePreviewPhrase(input.value)!==BIRTHDAY_LETTER_KEY){
