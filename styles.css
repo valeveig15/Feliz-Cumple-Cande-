@@ -1880,3 +1880,52 @@ body {font-size:18px}
    transform:none;
  }
 }
+
+/* Cuatro sobres independientes: los mensajes completos se leen debajo. */
+.friend-note-collection{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  width:min(100%,550px);
+  margin:14px auto 24px;
+}
+.friend-note-collection .friend-envelope{
+  width:100%;
+  min-width:0;
+  min-height:153px;
+  margin:0;
+  padding:24px 10px 17px;
+  transform:rotate(-1.5deg);
+}
+.friend-note-collection .friend-envelope:nth-child(even){
+  transform:rotate(1.5deg);
+}
+.friend-note-collection .friend-envelope:hover{
+  transform:rotate(0) translateY(-3px);
+}
+.friend-note-collection .friend-envelope[aria-expanded="true"]{
+  border-color:#d9b4b9;
+  background:linear-gradient(145deg,#fffdf8,#f9e9e8);
+}
+.friend-letter{
+  margin:20px auto 6px;
+}
+.friend-letter .friend-letter-text p{
+  white-space:pre-wrap;
+}
+.friend-letter .friend-letter-text p.friend-letter-spacer{
+  min-height:13px;
+  margin:0;
+}
+@media(max-width:500px){
+  .friend-note-collection{
+    grid-template-columns:1fr;
+    gap:12px;
+    width:min(100%,340px);
+  }
+  .friend-note-collection .friend-envelope{
+    min-height:103px;
+    padding:17px 14px;
+    gap:7px;
+  }
+}
