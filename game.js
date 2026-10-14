@@ -1141,14 +1141,15 @@
     const leftEye = wink
       ? '<path d="M66 63 Q80 75 94 62" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
       : '<ellipse cx="' + (sideGlance ? 73 : 80) + '" cy="62" rx="11" ry="14" fill="#0D1010"/>';
-    const rightEye = '<ellipse cx="' + (sideGlance ? 155 : 160) +
-      '" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>';
+    const rightEye = sideGlance
+      ? '<ellipse cx="155" cy="45" rx="7.6" ry="15" transform="rotate(28 155 45)" fill="#0D1010"/>'
+      : '<ellipse cx="160" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>';
     const eyebrow = raisedEyebrow
       ? '<path d="M63 39 Q80 27 97 38" fill="none" stroke="#0D1010" stroke-width="5" stroke-linecap="round"/>'
       : '';
-    const beakTransform = crookedBeak ? "rotate(-9 135 73)" : "translate(0 0)";
+    const beakTransform = crookedBeak ? "rotate(-20 135 73)" : "translate(0 0)";
     const beakSmile = crookedSmile
-      ? '<path d="M107 75 C128 65 149 68 165 66 C151 83 126 89 109 79Z" fill="#E58642" opacity=".72"/>'
+      ? '<path d="M103 73 C119 85 145 84 164 64 C162 80 150 91 134 92 C119 91 110 82 103 73Z" fill="#E58642" opacity=".72"/>'
       : '<path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z" fill="#E58642" opacity=".72"/>';
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
       role="img" aria-label="Patito de goma de aspecto tierno y redondito">
