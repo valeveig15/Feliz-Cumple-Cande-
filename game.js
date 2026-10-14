@@ -61,7 +61,7 @@
     });
     if (level === 2) startTetris();
     if (level === 3) startDuckLevel(1);
-    if (level === 4) { renderCakeDucks(); launchConfetti(); updateBirthdayCountdown(); }
+    if (level === 4) { renderCakeDucks(); launchConfetti(); launchGreenFireworks("win"); updateBirthdayCountdown(); }
   }
 
   document.getElementById("welcome-start").addEventListener("click", () => {
@@ -1249,6 +1249,71 @@
       '<span class="cake-duck">' + duckSvg(0, false) + '</span>').join("");
   }
 
+  // Verde, verde menta, salvia y blanco crema: paleta del regalo de Cande.
+  const candeCelebrationPalette = [
+    "#216b48", "#378f60", "#52b47b", "#75cb95",
+    "#a3e0b8", "#c8f2d4", "#e3fbe8", "#f9fff1"
+  ];
+
+  // Fuegos artificiales de partículas reales, independientes entre tandas.
+  // Se montan fuera de los niveles para que se vean incluso sobre el cartel
+  // final y nunca intercepten toques, ni tapen controles permanentemente.
+  function launchGreenFireworks(moment="welcome"){
+    if(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)return;
+    let layer=document.getElementById("cande-fireworks");
+    if(!layer){
+      layer=document.createElement("div");
+      layer.id="cande-fireworks";
+      layer.setAttribute("aria-hidden","true");
+      document.body.appendChild(layer);
+    }
+    const sequence=document.createElement("div");
+    sequence.className="cande-fireworks-sequence";
+    layer.appendChild(sequence);
+    const mobile=window.innerWidth<650;
+    const amount=moment==="win"?7:moment==="final"?6:4;
+    const positions=[
+      [.19,.28],[.78,.20],[.52,.37],[.29,.54],
+      [.81,.49],[.56,.16],[.13,.49]
+    ];
+    const step=moment==="welcome"?210:170;
+    function burst(x,y){
+      const count=mobile?22:31;
+      const spread=mobile?Math.min(window.innerWidth*.21,76):118;
+      const fragment=document.createDocumentFragment();
+      const core=document.createElement("i");
+      core.className="cande-firework-core";
+      core.style.left=x+"px";
+      core.style.top=y+"px";
+      core.style.background=candeCelebrationPalette[Math.floor(Math.random()*candeCelebrationPalette.length)];
+      fragment.appendChild(core);
+      for(let i=0;i<count;i++){
+        const angle=(2*Math.PI*i)/count + (Math.random()-.5)*.18;
+        const distance=spread*(.65+Math.random()*.55);
+        const spark=document.createElement("i");
+        spark.className="cande-firework-spark";
+        spark.style.left=x+"px";
+        spark.style.top=y+"px";
+        spark.style.background=candeCelebrationPalette[Math.floor(Math.random()*candeCelebrationPalette.length)];
+        spark.style.setProperty("--fx",(Math.cos(angle)*distance).toFixed(1)+"px");
+        spark.style.setProperty("--fy",(Math.sin(angle)*distance).toFixed(1)+"px");
+        spark.style.setProperty("--rotation",(angle*180/Math.PI+90).toFixed(1)+"deg");
+        spark.style.animationDuration=(950+Math.floor(Math.random()*360))+"ms";
+        spark.style.width=(mobile?3:4)+"px";
+        spark.style.height=(7+Math.random()*7).toFixed(1)+"px";
+        fragment.appendChild(spark);
+      }
+      sequence.appendChild(fragment);
+    }
+    for(let k=0;k<amount;k++){
+      const [u,v]=positions[k];
+      setTimeout(()=>burst(Math.round(window.innerWidth*u),Math.round(window.innerHeight*v)),k*step);
+    }
+    // Sólo se eliminan los elementos de ESTA tanda. Los clics sucesivos
+    // pueden lanzar otros fuegos artificiales sin cortar los anteriores.
+    setTimeout(()=>sequence.remove(),amount*step+1600);
+  }
+
   // =========================================================
   // FINAL — TORTA + CONFETI
   // =========================================================
@@ -1256,7 +1321,7 @@
     const host = document.getElementById("confetti");
     // Cada clic es una lluvia independiente: nunca borra las anteriores.
     const burst = [];
-    const colors = ["#ff5f9f","#7d5cff","#ffd34e","#5ed28b","#58c8ef","#ff8b45"];
+    const colors = candeCelebrationPalette;
     let lastParticleEndsAt = 0;
     for (let i = 0; i < 120; i++) {
       const c = document.createElement("i");
@@ -1754,7 +1819,7 @@ function renderSurpriseLetter(){
   const msg=invitationReveal.querySelector(".surprise-laugh-result");
   if(msg)msg.textContent=surpriseLines[Math.floor(Math.random()*surpriseLines.length)];return;
  }
- if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();btn.textContent="✨ ¡Más confeti!"}
+ if(btn.hasAttribute("data-surprise-confetti")){launchConfetti();launchGreenFireworks("final");btn.textContent="✨ ¡Más confeti!"}
 }
 
 function handleSurpriseLetterSubmit(event){
@@ -1884,4 +1949,6 @@ function openCandeInvitation(){
 
   initRubik();
   setProgress(0);
+  // Bienvenida: los fuegos se lanzan una vez al entrar a la página.
+  setTimeout(()=>launchGreenFireworks("welcome"),350);
 })();
