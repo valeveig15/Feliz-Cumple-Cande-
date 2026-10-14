@@ -1541,7 +1541,7 @@ function renderSurpriseLetter(){
     <p class="lost-pup-header">⚠ AVISO IMPORTANTE ⚠</p>
     <h3>PERRITA <em>EXTRAVIADA</em></h3>
     <div class="lost-pup-photo-wrap">
-      <img class="lost-pup-photo" src="assets/perrita-extraviada-cande.webp" width="280" height="373" alt="Foto de Cande con orejitas rosas, sacando la lengua y haciendo el gesto de paz con las dos manos" decoding="async">
+      <img class="lost-pup-photo" src="assets/cande-perrita-original.jpg" width="280" height="373" alt="Foto de Cande con orejitas rosas, sacando la lengua y haciendo el gesto de paz con las dos manos" decoding="async">
       <span class="lost-pup-photo-sticker" aria-hidden="true">✦</span>
     </div>
     <p class="lost-pup-name">RESPONDE AL NOMBRE DE CANDE</p>
@@ -1583,25 +1583,25 @@ function renderSurpriseLetter(){
     <p>Porque obvio que estas joyitas tenían que estar acá JAJAJA.</p>
     <div class="cande-memory-grid">
       <button type="button" class="cande-memory-photo" data-memory-photo="0" aria-label="Ampliar foto 1">
-        <img src="assets/recuerdo-1.avif" alt="Cande y una amiga posando juntas en una salida" loading="lazy" decoding="async">
+        <img src="assets/recuerdo-1.jpg" alt="Cande y una amiga posando juntas en una salida" loading="lazy" decoding="async">
         <span>✧ Nosotras</span>
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="1" aria-label="Ampliar foto 2">
-        <img src="assets/recuerdo-2.avif" alt="Amigos de Cande reunidos en una mesa compartiendo sushi" loading="lazy" decoding="async">
+        <img src="assets/recuerdo-2.jpg" alt="Amigos de Cande reunidos en una mesa compartiendo sushi" loading="lazy" decoding="async">
         <span>✧ La juntada</span>
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="2" aria-label="Ampliar foto 3">
-        <img src="assets/recuerdo-3.avif" alt="Cande y una amiga sacándose una selfie divertida" loading="lazy" decoding="async">
+        <img src="assets/recuerdo-3.jpg" alt="Cande y una amiga sacándose una selfie divertida" loading="lazy" decoding="async">
         <span>✧ Fotón</span>
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="3" aria-label="Ampliar foto 4">
-        <img src="assets/recuerdo-4.avif" alt="Cande y una amiga en el club de ciencias" loading="lazy" decoding="async">
+        <img src="assets/recuerdo-4.jpg" alt="Cande y una amiga en el club de ciencias" loading="lazy" decoding="async">
         <span>✧ Club de ciencias</span>
       </button>
     </div>
     <div class="cande-memory-video-card">
       <div class="memory-video-title"><span>▶</span> UNA JOYITA EN VIDEO</div>
-      <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.avif" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
+      <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.webp" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
       <p class="memory-video-caption">Una prueba más de que no somos normales JAJAJA.</p>
     </div>
     <dialog class="memory-lightbox" aria-label="Foto ampliada del álbum">
