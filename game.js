@@ -1507,6 +1507,26 @@ function renderSurpriseLetter(){
  invitationReveal.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
+  // Mensajes originales de amigos.
+  const birthdayFriendMessages = [
+  {
+    "name": "Juanma",
+    "text": "Cande queridaaaaaa\nSoy afortunado de haberte conocido en el club de ciencias hace ya casi 6 años, sos un cague de risa y me alegra haber mantenido contacto contigo brochacha\nAtte: el señor mayor (Jj)"
+  },
+  {
+    "name": "Toty",
+    "text": "muyy feliiz cumplee candelita! estoy muy agradecida d q hayas aparecido en mi vida, gracias x cada risa y también x cada charla profunda. te amoo cande 💗"
+  },
+  {
+    "name": "Martí",
+    "text": "Feliz cumpleee amiga!! 💗 Te quiero mucho, gracias por estar y por escuchar siempre. Sos divina y espero que tengas un día hermoso y que se te venga todo lo lindo. Te quiero muchoo ❤️"
+  },
+  {
+    "name": "Anto",
+    "text": "Feliz cumpleaños Candeee!!🎉🎉\nBueno beba, no sé mucho que decir, no planeo explayarme mucho en una carta vía Vale. Espero hoy la pases hermoso. Estos ultimos años la verdad posta has sido una persona muy importante para mi y ocupás un espacio muy importante en mi vida, sos alguien con la que nunca pensé tener tanta confianza y te convertiste en una de las primeras personas en las que pienso cuando tengo algo que contar.\n\nMuy feliz Cumpleaños,\nTotonia\n\nPD: De regalo pelo las gomas"
+  }
+];
+
   function buildSurpriseExperience(){
  invitationReveal.innerHTML=`
  <div class="surprise-world">
@@ -1523,7 +1543,6 @@ function renderSurpriseLetter(){
       <span class="lost-pup-photo-sticker" aria-hidden="true">✦</span>
     </div>
     <p class="lost-pup-name">RESPONDE AL NOMBRE DE CANDE</p>
-    <p class="lost-pup-details">Última vez vista con orejitas rosas, haciendo ✌️ con las dos manos y probablemente diciendo alguna pavada JAJAJA.</p>
     <p class="lost-pup-reward">Si la encontrás, decile feliz cumple y dale un abrazo enorme ♡</p>
    </div>
   </article>
@@ -1543,16 +1562,15 @@ function renderSurpriseLetter(){
    <p>Obvio que tus amigos también tenían cositas para decirte ♡</p>
    <div class="friend-mailbox">
     <div class="friend-mailbox-top" aria-hidden="true"><span>✧</span><span>✉</span><span>✦</span></div>
-    <button type="button" class="friend-envelope" data-open-friend-note aria-expanded="false">
-     <span class="friend-envelope-stamp">✦</span>
-     <span class="friend-envelope-address">De: <strong>Juanma</strong></span>
-     <span class="friend-envelope-open-label">Abrir mensajito ♡</span>
-    </button>
-    <div class="friend-letter" hidden>
-     <span class="friend-letter-header">UNA NOTITA DE JUANMA</span>
-     <p>Cande queridaaaaaa</p>
-     <p>Soy afortunado de haberte conocido en el club de ciencias hace ya casi 6 años, sos un cague de risa y me alegra haber mantenido contacto contigo brochacha</p>
-     <p class="friend-letter-signature">Atte: el señor mayor (Jj)</p>
+    <div class="friend-note-collection">
+     <button type="button" class="friend-envelope" data-open-friend-note="0" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Juanma</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="1" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Toty</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="2" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Martí</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="3" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Anto</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+    </div>
+    <div class="friend-letter" hidden aria-live="polite">
+      <span class="friend-letter-header"></span>
+      <div class="friend-letter-text"></div>
     </div>
    </div>
   </article>
@@ -1633,11 +1651,32 @@ function renderSurpriseLetter(){
  }
  if(btn.hasAttribute("data-open-friend-note")){
   const letter=invitationReveal.querySelector(".friend-letter");
-  if(!letter)return;
-  letter.hidden=!letter.hidden;
-  btn.setAttribute("aria-expanded",String(!letter.hidden));
+  const friend=birthdayFriendMessages[Number(btn.dataset.openFriendNote)];
+  if(!letter||!friend)return;
+  const alreadyOpen=!letter.hidden && btn.getAttribute("aria-expanded")==="true";
+  invitationReveal.querySelectorAll("[data-open-friend-note]").forEach(b=>{
+    b.setAttribute("aria-expanded","false");
+    const label=b.querySelector(".friend-envelope-open-label");
+    if(label)label.textContent="Abrir mensajito ♡";
+  });
+  if(alreadyOpen){letter.hidden=true;return;}
+  const heading=letter.querySelector(".friend-letter-header");
+  const copy=letter.querySelector(".friend-letter-text");
+  if(heading)heading.textContent="UNA NOTITA DE "+friend.name.toUpperCase();
+  if(copy){
+    copy.replaceChildren();
+    friend.text.split("\n").forEach(line=>{
+      const p=document.createElement("p");
+      p.textContent=line;
+      if(!line.trim())p.className="friend-letter-spacer";
+      copy.appendChild(p);
+    });
+  }
+  letter.hidden=false;
+  btn.setAttribute("aria-expanded","true");
   const caption=btn.querySelector(".friend-envelope-open-label");
-  if(caption)caption.textContent=letter.hidden?"Abrir mensajito ♡":"Cerrar mensajito";
+  if(caption)caption.textContent="Cerrar mensajito";
+  letter.scrollIntoView({behavior:"smooth",block:"nearest"});
   return;
  }
  if(btn.hasAttribute("data-tape-play")){handleTapeClick("play");return}
