@@ -1306,6 +1306,8 @@
   let previewKeyBuffer = "";
   let lastPreviewKeystroke = 0;
   const MAGIC_PREVIEW_KEY = "bibidi babidi bu";
+  // Distinta de la clave privada de vista previa: sólo abre la carta.
+  const BIRTHDAY_LETTER_KEY = "i gotta feeling";
   const previewInput = document.getElementById("invitation-preview-code");
   const previewBanner = document.getElementById("invitation-preview-banner");
   const previewAccess = document.getElementById("invitation-preview-access");
@@ -1380,7 +1382,7 @@
 
   const DEFAULT_INVITATION_TEXT = "Cande, feliz cumple, bella. No sé muy bien por dónde empezar sin ponerme cursi, pero bueno, vamos a fingir que sé JAJAJA.\n\nHay personas que se van volviendo importantes sin que una se dé cuenta de cuándo pasó. Un día son alguien con quien hablás, y al otro tenés ganas de contarles cualquier estupidez que te pasó porque sabés que la van a entender. Y vos sos una de esas personas para mí.\n\nMe encanta que con vos podamos decir las cosas más ridículas del universo y reírnos como dos boludas, pero que también esté ese otro lado tuyo, el que se preocupa, el que pregunta si llegué bien, el que te dice «vos podés» cuando hace falta. Son cosas que capaz para vos son normales, pero yo las valoro un montón.\n\nTenés algo muy lindo, Cande. Me encanta tu forma de ser, tu humor absolutamente cuestionable (lo digo con amor), lo mucho que te entusiasman las cosas que te gustan y esa manera tuya de hacer que hasta un mensaje cualquiera pueda mejorarme el día.\n\nNo quiero escribirte la típica cosa de «ojalá seamos amigas para siempre» como si fuera una promesa de película, pero sí quiero que sepas que espero seguir compartiendo muchísimas cosas con vos. Más charlas que empiezan con una pavada, más risas que no podemos explicar y más momentos de esos que después recordamos de la nada.\n\nOjalá este año te traiga cosas tan lindas como las que vos hacés sentir a la gente que te quiere. Y ojalá nunca dudes de lo importante que sos, aunque yo no esté diciéndotelo cada cinco minutos porque me da vergüenza ponerme así de sentimental.\n\nGracias por estar, por hacerme reír y por ser vos sin tener que hacer ningún esfuerzo por parecerte a nadie. De verdad me hace muy feliz tenerte en mi vida.\n\nTe quiero muchísimo, blda. En serio. Ahora sí, basta que me voy a poner a llorar yo también. Feliz cumple, Cande. ♡";
   let surpriseScene=0;
-  const surpriseLines=["Cande cuando aparece un problema: diavlo","Cande cuando algo es buenísimo: Q GOD","Cande si la conversación se descarrila: spawneó blda","Capacidad de ser normales: error 404","Recomendación: reírnos de algo incomprensible","Vroderr. No tengo nada más que agregar."];
+  const surpriseLines=["Cande cuando aparece un problema, diciendo: «diavlo»","Cande cuando algo es buenísimo, diciendo: «Q GOD»","Cande cuando pasa algo inesperado: «spawneó blda»","Conversación seria, según nosotras: «error 404»","Cuando ninguna puede parar de reírse: «JAJAJA»","Cande en medio de cualquier charla: «Vroderr»"];
 
   let letterUnlocked=false;
   // Se agregan aquí las grabaciones reales cuando estén disponibles:
@@ -1595,19 +1597,18 @@ function renderSurpriseLetter(){
       <div class="letter-lock-symbol" aria-hidden="true">💌</div>
       <p>Esta parte tiene contraseña. Y no se abre sin ella, ni siquiera hoy.</p>
       <form class="surprise-letter-password" autocomplete="off">
-       <label for="birthday-letter-pass">Contraseña de la carta</label>
-       <div class="letter-password-row"><input id="birthday-letter-pass" type="password" maxlength="48" autocomplete="off" spellcheck="false" required placeholder="La frase mágica...">
+       <label for="birthday-letter-pass">Nuestra canción</label>
+       <div class="letter-password-row"><input id="birthday-letter-pass" type="password" maxlength="48" autocomplete="off" spellcheck="false" required placeholder="Nombre de la canción...">
         <button type="submit">Abrir ♡</button></div>
        <p class="letter-password-message" aria-live="polite"></p>
       </form>
      </div>
      <div class="surprise-letter-body" hidden><div class="surprise-letter-copy"></div></div>
    </div>
-   <p class="surprise-soft-caption">Leela cuando tengas ganas. No hace falta apurarse.</p>
   </article>
   <article class="surprise-page surprise-ending" hidden>
-   <div class="surprise-ending-emblem">♡</div><p class="surprise-eyebrow">ÚLTIMA COSITA (AHORA SÍ)</p>
-   <h3>Feliz cumpleaños, <em>Cande</em> ♡</h3>
+   <div class="surprise-ending-emblem">✦</div><p class="surprise-eyebrow">ÚLTIMA COSITA (AHORA SÍ)</p>
+   <h3>Feliz cumpleaños, <em>Cande</em></h3>
    <p>No sé qué traerá este año, pero espero que tengas mil razones para reírte así como vos hacés reír a los demás.</p>
    <p>Y que nunca te olvides de que sos re importante para mí.</p>
    <p class="surprise-ending-sign">Te quiero un montón, bella. ♡</p>
@@ -1655,7 +1656,7 @@ function handleSurpriseLetterSubmit(event){
  if(!invitationCurrentlyUnlocked||surpriseScene!==5)return;
  const input=form.querySelector("input");
  const msg=form.querySelector(".letter-password-message");
- if(normalizePreviewPhrase(input.value)!==MAGIC_PREVIEW_KEY){
+ if(normalizePreviewPhrase(input.value)!==BIRTHDAY_LETTER_KEY){
   input.value="";
   if(msg)msg.textContent="Mmm no, esa no es. Probá de nuevo ♡";
   return;
