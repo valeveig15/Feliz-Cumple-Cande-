@@ -1433,7 +1433,7 @@
       }
       if(title)title.textContent="Preparando nuestros recuerdos...";
       if(indicator)indicator.textContent="CINTA EN ESPERA";
-      if(message)message.textContent="Esta cinta está esperando las grabaciones de nuestras conversaciones ♡";
+      if(message){message.textContent="";message.hidden=true;}
       updateTapeVisuals();return;
     }
     tapeTrackIndex=(index+tapeRecordings.length)%tapeRecordings.length;
@@ -1442,7 +1442,7 @@
     audio.load();
     if(title)title.textContent=current.title;
     if(indicator)indicator.textContent="CINTA "+String(tapeTrackIndex+1).padStart(2,"0")+" / "+String(tapeRecordings.length).padStart(2,"0");
-    if(message)message.textContent="Tocá Play para escuchar este recuerdo ♡";
+    if(message){message.hidden=false;message.textContent="Tocá Play para escuchar este recuerdo ♡";}
     updateTapeVisuals();
   }
   function initTapePlayer(){
@@ -1512,34 +1512,35 @@ function renderSurpriseLetter(){
  <div class="surprise-world">
   <header class="surprise-topline"><span>✦ 15 OCTUBRE 2026</span><span>ALGO SOLO PARA VOS ♡</span></header>
   <nav class="surprise-progress" aria-label="Progreso">${Array.from({length:7},()=>'<span class="surprise-progress-dot"></span>').join("")}<small class="surprise-progress-count">1 / 7</small></nav>
-  <article class="surprise-page surprise-opening">
-   <div class="surprise-magic">✦ ♡ ✦</div>
-   <h3>CANDE.<br><em>feliz cumpleee</em> ♡</h3>
-   <div class="surprise-opening-card surprise-bulletin">
-    <div class="surprise-bulletin-label">✷ ÚLTIMO MOMENTO ✷</div>
-    <p>Se busca a una chica que cumple años hoy. Se la reconoce por su energía, sus ocurrencias y por andar repartiendo buena onda sin pedir permiso.</p>
-    <p>Si te suena conocida, Cande, es porque sos vos JAJAJA.</p>
-    <p>Queda oficialmente prohibido tratar este día como uno cualquiera. Hoy se festeja todo lo que te hace ser vos.</p>
-    <div class="surprise-bulletin-stamp">CASO RESUELTO ✓</div>
+  <article class="surprise-page surprise-opening surprise-lost-pup" hidden>
+   <div class="lost-pup-notice">
+    <div class="lost-pup-tape tape-left" aria-hidden="true"></div>
+    <div class="lost-pup-tape tape-right" aria-hidden="true"></div>
+    <p class="lost-pup-header">⚠ AVISO IMPORTANTE ⚠</p>
+    <h3>PERRITA <em>EXTRAVIADA</em></h3>
+    <div class="lost-pup-photo-wrap">
+      <img class="lost-pup-photo" src="assets/perrita-extraviada-cande.webp" width="280" height="373" alt="Foto de Cande con orejitas rosas, sacando la lengua y haciendo el gesto de paz con las dos manos" decoding="async">
+      <span class="lost-pup-photo-sticker" aria-hidden="true">✦</span>
+    </div>
+    <p class="lost-pup-name">RESPONDE AL NOMBRE DE CANDE</p>
+    <p class="lost-pup-details">Última vez vista con orejitas rosas, haciendo ✌️ con las dos manos y probablemente diciendo alguna pavada JAJAJA.</p>
+    <p class="lost-pup-reward">Si la encontrás, decile feliz cumple y dale un abrazo enorme ♡</p>
    </div>
-   <p class="surprise-soft-caption">Hay unas cuantas cositas para descubrir. Algunas tiernas, otras un poquito ridículas. Como corresponde ♡</p>
   </article>
   <article class="surprise-page surprise-polaroid-page" hidden>
    <p class="surprise-eyebrow">CANDE EN CUATRO FOTITOS</p><h3>Las cosas que te hacen <em>tan vos</em></h3>
-   <p>Tocá cada notita para descubrirla ♡</p>
+   <p>Tocá las notitas para leerlas ♡</p>
    <div class="surprise-polaroids">
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>⚡</span><strong>Esa energía tuya</strong><small hidden>Tenés una energía que se nota al toque. Llegás y parece que todo se vuelve un poquito más divertido, más movido, más vivo. Es demasiado vos.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Tu entusiasmo</strong><small hidden>Cuando algo te emociona, se te nota A KILÓMETROS. En cómo lo contás, en la cara que ponés, en esas ganas que tenés. Y es re lindo que seas así.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>☀️</span><strong>Tu alegría</strong><small hidden>Tenés una manera de reírte, de hacer chistes y de encontrarle gracia hasta a las cosas más random. Esa alegría es una de esas cosas que te hacen inconfundible JAJAJA.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Tu buena onda</strong><small hidden>Sos espontánea, auténtica, cálida y tenés esa forma tan tuya de tratar bien a la gente. Todo eso, junto con mil detalles más, es lo que te hace tan espectacular.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>☀️</span><strong>Tu buena onda</strong><small hidden>Posta que tenés una buena onda que contagia. Llegás a cualquier lado y ya se nota esa energía tuya que hace que todo sea un poquito más lindo y divertido.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💬</span><strong>Tus ocurrencias</strong><small hidden>Las cosas que se te ocurren son un tema aparte JAJAJA. Tenés cada salida de la nada que no se puede ni explicar. Nunca sabés con qué vas a salir, y eso es demasiado vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Lo detallista que sos</strong><small hidden>Siempre estás pendiente de todos. Te das cuenta cuando alguien quedó medio afuera, cuando alguien está incómodo o necesita que lo incluyan, y hacés algo para que nadie se sienta dejado de lado. Es re lindo eso de vos.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Lo cálida que sos</strong><small hidden>Tenés un calorcito humano que le llega a cualquiera que esté a diez metros a la redonda JAJAJA. Hacés sentir bien a las personas con algo tan simple como ser vos, y eso es una cosa hermosa.</small></button>
    </div>
   </article>
-
-
   <article class="surprise-page surprise-friends-page" hidden>
    <p class="surprise-eyebrow">CORREO DE CUMPLEAÑOS</p>
-   <h3>Hay gente que también <em>te quiere un montón</em></h3>
-   <p>Y OBVIAMENTE no iban a faltar los mensajitos de tus amigos. Mirá quién apareció por acá...</p>
+   <h3>Te llegaron <em>mensajitosss</em></h3>
+   <p>Obvio que tus amigos también tenían cositas para decirte ♡</p>
    <div class="friend-mailbox">
     <div class="friend-mailbox-top" aria-hidden="true"><span>✧</span><span>✉</span><span>✦</span></div>
     <button type="button" class="friend-envelope" data-open-friend-note aria-expanded="false">
@@ -1581,7 +1582,7 @@ function renderSurpriseLetter(){
       <button type="button" data-tape-play class="tape-play-button" aria-label="Reproducir o pausar">▶ <small>PLAY</small></button>
       <button type="button" data-tape-next aria-label="Audio siguiente">⏭ <small>SIGUIENTE</small></button>
     </div>
-    <p class="tape-availability" aria-live="polite">Esta cinta está esperando las grabaciones de nuestras conversaciones ♡</p>
+    <p class="tape-availability" aria-live="polite" hidden></p>
     <audio class="tape-audio" preload="metadata"></audio>
    </div>
   </article>
