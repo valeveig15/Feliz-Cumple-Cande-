@@ -1929,3 +1929,84 @@ body {font-size:18px}
     gap:7px;
   }
 }
+
+
+/* CANDE PHOTO GALLERY V38 — Álbum de recuerdos y video */
+.surprise-gallery-page {
+  background: radial-gradient(circle at 90% 0%,#fffaf1,#eaf8ee 70%,#e2f6ee);
+}
+.surprise-gallery-page h3 {font-size:clamp(35px,5vw,58px)}
+.cande-memory-grid {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;max-width:720px;margin:28px auto 35px;
+}
+.cande-memory-photo {
+  display:flex;flex-direction:column;align-items:stretch;gap:10px;
+  padding:10px 10px 17px;border:2px solid #fff;background:#fff;
+  border-radius:7px 7px 15px 12px;cursor:pointer;
+  box-shadow:0 8px 19px #5b855e36;
+  color:#52765d;font:800 clamp(15px,2vw,20px)/1.5 Georgia,serif;
+  transition:transform .18s,box-shadow .18s;
+}
+.cande-memory-photo:nth-child(1){transform:rotate(-2.2deg)}
+.cande-memory-photo:nth-child(2){transform:rotate(2deg)}
+.cande-memory-photo:nth-child(3){transform:rotate(1.5deg)}
+.cande-memory-photo:nth-child(4){transform:rotate(-2deg)}
+.cande-memory-photo:hover,.cande-memory-photo:focus-visible{
+  transform:rotate(0) translateY(-4px);
+  box-shadow:0 13px 24px #5b855e4d;
+}
+.cande-memory-photo img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;
+  display:block;background:#d7ebd8;border-radius:3px;
+}
+.cande-memory-video-card{
+  width:min(100%,700px);margin:20px auto 5px;padding:21px;
+  border:2px solid #d3e9cb;border-radius:23px;
+  background:linear-gradient(150deg,#fffdf8,#eef8ea);
+  box-shadow:0 11px 27px #597c5929;
+}
+.memory-video-title{
+  text-align:left;display:flex;align-items:center;gap:11px;
+  color:#48835b;letter-spacing:.13em;font:900 13px ui-monospace,Consolas,monospace;
+  margin-bottom:14px;
+}
+.memory-video-title span{font-size:26px;color:#df93ab}
+.memory-video{display:block;width:100%;aspect-ratio:16/9;background:#17392c;
+ border-radius:13px;object-fit:contain;box-shadow:0 5px 16px #36534142}
+.memory-video-caption{font-size:15px;color:#5b7c60;margin:17px auto 0}
+.memory-lightbox{
+  position:fixed;inset:0;margin:auto;box-sizing:border-box;
+  width:min(93vw,900px);max-height:93dvh;padding:43px 13px 15px;
+  border:3px solid #eff7e7;border-radius:19px;background:#fcfff9;
+  box-shadow:0 24px 85px #15271b8f;
+  color:#376849;text-align:center;
+}
+.memory-lightbox[open]{display:flex;flex-direction:column;align-items:center}
+.memory-lightbox::backdrop{background:#112b1ddd;backdrop-filter:blur(5px)}
+.memory-lightbox-image{
+  display:block;max-width:100%;max-height:65dvh;
+  object-fit:contain;border-radius:6px;
+  box-shadow:0 5px 17px #62745a35;
+}
+.memory-lightbox-close{
+  position:absolute;right:9px;top:6px;cursor:pointer;
+  font:900 32px/1 system-ui;color:#568666;
+  border:0;background:transparent;padding:6px 12px;
+}
+.memory-lightbox-caption{font:800 20px Georgia,serif;margin:15px auto 8px}
+.memory-lightbox-controls{display:flex;gap:24px;justify-content:center}
+.memory-lightbox-controls button{
+  cursor:pointer;border:0;border-radius:14px;background:#d6f0db;
+  color:#287448;font-size:23px;padding:6px 24px;
+}
+@media(max-width:600px){
+  .cande-memory-grid{gap:10px;margin-top:19px}
+  .cande-memory-photo{padding:6px 6px 12px;gap:7px;font-size:14px}
+  .cande-memory-video-card{padding:12px}
+  .memory-video-title{font-size:11px}
+  .memory-lightbox{padding:44px 8px 13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .cande-memory-photo{transition:none}
+}
