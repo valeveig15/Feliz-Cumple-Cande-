@@ -1425,8 +1425,10 @@
     buttons.forEach(btn=>btn.disabled=!available);
     if(!available){
       tapeTrackIndex=0;
-      audio.removeAttribute("src");
-      audio.load();
+      if(audio.hasAttribute("src")){
+        audio.removeAttribute("src");
+        audio.load();
+      }
       if(title)title.textContent="Preparando nuestros recuerdos...";
       if(indicator)indicator.textContent="CINTA EN ESPERA";
       if(message)message.textContent="Esta cinta está esperando las grabaciones de nuestras conversaciones ♡";
@@ -1743,6 +1745,8 @@ function openCandeInvitation(){
   });
 
   document.getElementById("invitation-preview-close").addEventListener("click", () => {
+    const cassetteAudio=currentTapeAudio();
+    if(cassetteAudio)cassetteAudio.pause();
     invitationPreviewUnlocked = false;
     invitationOpened = false;
     previewKeyBuffer = "";
