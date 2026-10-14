@@ -2037,3 +2037,63 @@ body {font-size:18px}
   .cande-memory-photo img {border-radius:5px}
   .cande-memory-video-card {padding:8px}
 }
+
+
+/* Fuegos artificiales verdes: bienvenida, victoria y cierre.
+   Completamente decorativos y sin bloquear toques o scroll. */
+#cande-fireworks{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:145;
+  contain:layout style paint;
+}
+.cande-fireworks-sequence{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.cande-firework-spark{
+  position:absolute;
+  display:block;
+  width:4px;
+  height:11px;
+  border-radius:100px;
+  pointer-events:none;
+  opacity:0;
+  transform-origin:center;
+  box-shadow:0 0 7px #9be6b7,0 0 12px #dffce9;
+  will-change:transform,opacity;
+  animation:candeSparkBurst 1100ms cubic-bezier(.13,.55,.23,1) forwards;
+}
+.cande-firework-core{
+  position:absolute;
+  display:block;
+  width:18px;
+  height:18px;
+  pointer-events:none;
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);
+  box-shadow:0 0 18px #74d49c,0 0 30px #c2f4d2;
+  animation:candeFireworkFlash 520ms ease-out forwards;
+}
+@keyframes candeSparkBurst{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--rotation)) scale(.45)}
+  8%{opacity:1}
+  65%{opacity:1}
+  100%{
+    opacity:0;
+    transform:translate(calc(-50% + var(--fx)),calc(-50% + var(--fy)))
+      rotate(var(--rotation)) scale(.2);
+  }
+}
+@keyframes candeFireworkFlash{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  20%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(2.7)}
+}
+@media(prefers-reduced-motion:reduce){
+  #cande-fireworks{display:none!important}
+  .cande-firework-spark,.cande-firework-core{animation:none!important}
+}
