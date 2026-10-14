@@ -1560,8 +1560,10 @@ function renderSurpriseLetter(){
  if(!pages.length)return;
  const audio=currentTapeAudio();
  if(audio&&surpriseScene===4&&n!==4)audio.pause();
- const movie=invitationReveal.querySelector(".memory-video");
- if(movie&&surpriseScene===3&&n!==3)movie.pause();
+ if(surpriseScene===3&&n!==3){
+   invitationReveal.querySelectorAll(".memory-video").forEach(movie=>movie.pause());
+ }
+ if(n===3)void refreshCandeGallery();
  const galleryDialog=invitationReveal.querySelector(".memory-lightbox");
  if(galleryDialog?.open&&surpriseScene===3&&n!==3)galleryDialog.close();
  surpriseScene=Math.max(0,Math.min(n,pages.length-1));
@@ -1671,8 +1673,10 @@ function renderSurpriseLetter(){
         <img src="assets/cande-foto-8.avif" alt="Cande sonriendo con el pulgar levantado" loading="lazy" decoding="async">
       </button>
     </div>
-    <div class="cande-memory-video-card">
-      <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.webp" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
+    <div class="cande-memory-videos">
+      <div class="cande-memory-video-card">
+        <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.webp" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
+      </div>
     </div>
     <dialog class="memory-lightbox" aria-label="Foto ampliada del álbum">
       <button type="button" class="memory-lightbox-close" data-memory-close aria-label="Cerrar fotografía">×</button>
@@ -1750,6 +1754,100 @@ function renderSurpriseLetter(){
 }
 
 
+
+  // Álbum automático: cada vez que se visita la galería, consulta la lista
+  // pública de archivos de main. No hay que agregar nombres al código al
+  // subir nuevas fotos o videos a cualquier carpeta del repositorio.
+  const candeGalleryTreeUrl =
+    "https://api.github.com/repos/valeveig15/Feliz-Cumple-Cande-/git/trees/main?recursive=1";
+  // Son ilustraciones del propio sitio, no fotos de la galería.
+  const candeGalleryNotMemories = new Set([
+    "assets/cande-perrita-original.jpg",
+    "assets/perrita-extraviada-cande.webp",
+    "assets/recuerdo-video-poster.webp"
+  ]);
+  let galleryLastChecked=0;
+  let galleryRequest=null;
+
+  function galleryMediaUrl(path,sha){
+    const safe=path.split("/").map(part=>encodeURIComponent(part)).join("/");
+    return "https://raw.githubusercontent.com/valeveig15/Feliz-Cumple-Cande-/main/"+
+      safe+"?v="+encodeURIComponent(String(sha||"").slice(0,12));
+  }
+  function galleryMediaPathEligible(path){
+    if(typeof path!=="string"||!path||path.split("/").some(s=>!s||s==="."||s===".."||s.startsWith(".")))return false;
+    const normalized=path.replace(/^[\u200e\u200f\ufeff]/,"");
+    if(candeGalleryNotMemories.has(normalized))return false;
+    if(/(?:^|\/)(?:node_modules|__MACOSX|test-fixtures)(?:\/|$)/i.test(path))return false;
+    return true;
+  }
+  async function refreshCandeGallery(){
+    const gallery=invitationReveal.querySelector(".surprise-gallery-page");
+    if(!gallery||!invitationCurrentlyUnlocked)return;
+    if(galleryRequest)return galleryRequest;
+    if(galleryLastChecked&&Date.now()-galleryLastChecked<45000)return;
+    galleryLastChecked=Date.now();
+    const grid=gallery.querySelector(".cande-memory-grid");
+    const videoContainer=gallery.querySelector(".cande-memory-videos");
+    if(!grid||!videoContainer)return;
+    const fetchIndex=async()=>{
+      const response=await fetch(candeGalleryTreeUrl,{cache:"no-store",headers:{"Accept":"application/vnd.github+json"}});
+      if(!response.ok)throw new Error("No se pudo consultar GitHub: "+response.status);
+      const listing=await response.json();
+      if(!Array.isArray(listing.tree)||listing.truncated)throw new Error("Listado de imágenes incompleto");
+      const found=listing.tree.filter(entry=>entry.type==="blob"&&galleryMediaPathEligible(entry.path));
+      const images=found.filter(entry=>/\.(?:jpe?g|jfif|png|webp|avif|gif|bmp|svg)$/i.test(entry.path));
+      const videos=found.filter(entry=>/\.(?:mp4|webm|m4v|mov|ogv)$/i.test(entry.path));
+      // Los HEIC/HEIF se convierten automáticamente a WebP con el workflow;
+      // no mostrar el original porque muchos navegadores no pueden abrirlo.
+      const staticPictures=[...grid.querySelectorAll("img[src]")];
+      const staticVideos=[...videoContainer.querySelectorAll("video[src]")];
+      const identity=el=>{
+        try{return decodeURIComponent(new URL(el.getAttribute("src"),document.baseURI).pathname)
+          .replace(/^\/Feliz-Cumple-Cande-\//,"").replace(/^\/valeveig15\/Feliz-Cumple-Cande-\/main\//,"");}
+        catch{return "";}
+      };
+      const photoKeys=new Set(staticPictures.map(identity));
+      const videoKeys=new Set(staticVideos.map(identity));
+      for(const file of images){
+        if(photoKeys.has(file.path))continue;
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="cande-memory-photo";
+        const index=grid.querySelectorAll("[data-memory-photo]").length;
+        button.dataset.memoryPhoto=String(index);
+        button.setAttribute("aria-label","Ampliar foto "+(index+1));
+        const img=document.createElement("img");
+        img.src=galleryMediaUrl(file.path,file.sha);
+        img.alt="Fotografía del álbum de recuerdos";
+        img.loading="lazy";
+        img.decoding="async";
+        button.appendChild(img);
+        grid.appendChild(button);
+        photoKeys.add(file.path);
+      }
+      for(const file of videos){
+        if(videoKeys.has(file.path))continue;
+        const card=document.createElement("div");
+        card.className="cande-memory-video-card";
+        const vid=document.createElement("video");
+        vid.className="memory-video";
+        vid.src=galleryMediaUrl(file.path,file.sha);
+        vid.controls=true;
+        vid.playsInline=true;
+        vid.preload="metadata";
+        vid.setAttribute("aria-label","Video del álbum de recuerdos");
+        card.appendChild(vid);
+        videoContainer.appendChild(card);
+        videoKeys.add(file.path);
+      }
+    };
+    galleryRequest=fetchIndex().catch(err=>{
+      console.warn("La galería sigue mostrando las fotos guardadas, pero no se pudo consultar GitHub.",err);
+      galleryLastChecked=0;
+    }).finally(()=>{galleryRequest=null;});
+    return galleryRequest;
+  }
   let openedMemoryIndex=0;
   function openMemoryPhoto(index) {
     const cards=[...invitationReveal.querySelectorAll("[data-memory-photo]")];
