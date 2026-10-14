@@ -1128,11 +1128,10 @@
   function duckSvg(level, odd) {
     const wink = odd && level === 1;
     const crookedBeak = odd && level === 2;
-    const raisedEyebrow = odd && level === 3;
+    const noWings = odd && level === 3;
     const sideGlance = odd && level === 4;
-    // En el 10×10 se reconoce por una carita distinta y las alitas
-    // intercambiadas de tamaño; el color es exactamente el mismo.
-    const lastRoundOdd = odd && level === 5;
+    // Nivel 5: ceja levantada. Nivel 3: solamente sin alas.
+    const raisedEyebrow = odd && level === 5;
     const golden = "#F2AF4D";
     const headColor = "#FFEB85";
     const bodyColor = "#FFE98A";
@@ -1140,36 +1139,26 @@
     const beak = "#EF9653";
     const beakDark = "#E58642";
     const cheekGlow = "#FFF0A4";
-    const leftEye = lastRoundOdd
-      ? '<path d="M60 61 Q79 43 99 62 Q80 77 60 61Z" fill="#0D1010"/>'
-      : wink
-        ? '<path d="M66 63 Q80 75 94 62" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
-        : '<ellipse cx="' + (sideGlance ? 73 : 80) + '" cy="62" rx="11" ry="14" fill="#0D1010"/>';
-    const rightEye = lastRoundOdd
-      ? '<path d="M146 44 Q159 27 173 42 Q164 57 146 44Z" fill="#0D1010"/>'
-      : sideGlance
-        ? '<ellipse cx="155" cy="45" rx="7.6" ry="15" transform="rotate(28 155 45)" fill="#0D1010"/>'
-        : '<ellipse cx="160" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>';
+    const leftEye = wink
+      ? '<path d="M66 63 Q80 75 94 62" fill="none" stroke="#0D1010" stroke-width="7" stroke-linecap="round"/>'
+      : '<ellipse cx="' + (sideGlance ? 73 : 80) + '" cy="62" rx="11" ry="14" fill="#0D1010"/>';
+    const rightEye = sideGlance
+      ? '<ellipse cx="155" cy="45" rx="7.6" ry="15" transform="rotate(28 155 45)" fill="#0D1010"/>'
+      : '<ellipse cx="160" cy="44" rx="6.9" ry="12.5" transform="rotate(-27 160 44)" fill="#0D1010"/>';
     const eyebrow = raisedEyebrow
       ? '<path d="M63 39 Q80 27 97 38" fill="none" stroke="#0D1010" stroke-width="5" stroke-linecap="round"/>'
       : '';
     const beakTransform = crookedBeak ? "rotate(-20 135 73)" : "translate(0 0)";
     const beakSmile = '<path d="M106 71 C126 63 153 69 163 73 C153 83 129 84 109 79Z" fill="#E58642" opacity=".72"/>';
-    const leftWingPath = lastRoundOdd
-      ? "M51 123 C34 121 24 136 24 151 C24 168 33 179 45 177 C60 176 67 161 65 144 C64 133 57 125 51 123Z"
-      : "M48 112 C28 107 10 120 7 142 C3 161 13 179 32 182 C53 189 69 170 67 144 C65 127 59 116 48 112Z";
-    const rightWingPath = lastRoundOdd
-      ? "M170 103 C195 102 218 122 219 148 C220 176 200 198 177 200 C156 201 145 180 149 147 C152 122 161 108 170 103Z"
-      : "M170 111 C190 112 207 126 208 148 C210 166 198 181 180 185 C161 188 150 170 153 147 C156 127 161 115 170 111Z";
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 230"
       role="img" aria-label="Patito de goma de aspecto tierno y redondito">
       <!-- Mismo cuerpo amarillo para todos. -->
-      <path d="${leftWingPath}"
+      ${noWings ? "" : `<path d="M48 112 C28 107 10 120 7 142 C3 161 13 179 32 182 C53 189 69 170 67 144 C65 127 59 116 48 112Z"
         fill="${wingColor}" stroke="${golden}" stroke-width="7"
         stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="${rightWingPath}"
+      <path d="M170 111 C190 112 207 126 208 148 C210 166 198 181 180 185 C161 188 150 170 153 147 C156 127 161 115 170 111Z"
         fill="${bodyColor}" stroke="${golden}"
-        stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`}
       <path d="M51 88 C47 51 66 15 106 11 C142 7 174 27 180 62
         C187 97 173 126 141 133 C102 144 59 122 51 88Z"
         fill="${headColor}" stroke="${golden}" stroke-width="7.5"
