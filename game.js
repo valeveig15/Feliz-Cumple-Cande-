@@ -1593,6 +1593,10 @@ function renderSurpriseLetter(){
   {
     "name": "Anto",
     "text": "Feliz cumpleaños Candeee!!🎉🎉\nBueno beba, no sé mucho que decir, no planeo explayarme mucho en una carta vía Vale. Espero hoy la pases hermoso. Estos ultimos años la verdad posta has sido una persona muy importante para mi y ocupás un espacio muy importante en mi vida, sos alguien con la que nunca pensé tener tanta confianza y te convertiste en una de las primeras personas en las que pienso cuando tengo algo que contar.\n\nMuy feliz Cumpleaños,\nTotonia\n\nPD: De regalo pelo las gomas"
+  },
+  {
+    "name": "Casavieja",
+    "text": "Hola candee, todo bientenga? Bueno, este cumpe te queria desear lo mejor de lo mejor, que tengas un muy lindo dia y año, gracias por todo lo vivido y lo que nos queda por vivir, te quiero un montonaso, gracias por estar ahí en todo momento y por bancarme y decirme las cosas de frente.\nFeliz cumple, casa\nP.D: No te pases de la FRANJA"
   }
 ];
 
@@ -1632,10 +1636,11 @@ function renderSurpriseLetter(){
    <div class="friend-mailbox">
     <div class="friend-mailbox-top" aria-hidden="true"><span>✧</span><span>✉</span><span>✦</span></div>
     <div class="friend-note-collection">
-     <button type="button" class="friend-envelope" data-open-friend-note="0" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Juanma</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
-     <button type="button" class="friend-envelope" data-open-friend-note="1" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Toty</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
-     <button type="button" class="friend-envelope" data-open-friend-note="2" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Martí</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
-     <button type="button" class="friend-envelope" data-open-friend-note="3" aria-expanded="false"><span class="friend-envelope-stamp">✦</span><span class="friend-envelope-address">De: <strong>Anto</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="0" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🔬</span><span class="friend-envelope-address">De: <strong>Juanma</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="1" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">💗</span><span class="friend-envelope-address">De: <strong>Toty</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="2" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🌷</span><span class="friend-envelope-address">De: <strong>Martí</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="3" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🎀</span><span class="friend-envelope-address">De: <strong>Anto</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="4" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🏡</span><span class="friend-envelope-address">De: <strong>Casavieja</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
     </div>
     <div class="friend-letter" hidden aria-live="polite">
       <span class="friend-letter-header"></span>
