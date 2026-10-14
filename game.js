@@ -1580,34 +1580,38 @@ function renderSurpriseLetter(){
   <article class="surprise-page surprise-gallery-page" hidden>
     <p class="surprise-eyebrow">EL ARCHIVO DE RECUERDOS</p>
     <h3>Fotitos, videos y <em>momentazos</em></h3>
-    <p>Porque obvio que estas joyitas tenían que estar acá JAJAJA.</p>
     <div class="cande-memory-grid">
       <button type="button" class="cande-memory-photo" data-memory-photo="0" aria-label="Ampliar foto 1">
-        <img src="assets/recuerdo-1.jpg" alt="Cande y una amiga posando juntas en una salida" loading="lazy" decoding="async">
-        <span>✧ Nosotras</span>
+        <img src="assets/recuerdo-1.jpg" alt="Cande con una amiga en una salida" loading="lazy" decoding="async">
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="1" aria-label="Ampliar foto 2">
-        <img src="assets/recuerdo-2.jpg" alt="Amigos de Cande reunidos en una mesa compartiendo sushi" loading="lazy" decoding="async">
-        <span>✧ La juntada</span>
+        <img src="assets/recuerdo-2.jpg" alt="Cande y sus amigos compartiendo una comida" loading="lazy" decoding="async">
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="2" aria-label="Ampliar foto 3">
-        <img src="assets/recuerdo-3.jpg" alt="Cande y una amiga sacándose una selfie divertida" loading="lazy" decoding="async">
-        <span>✧ Fotón</span>
+        <img src="assets/recuerdo-3.jpg" alt="Cande con una amiga sacándose una selfie" loading="lazy" decoding="async">
       </button>
       <button type="button" class="cande-memory-photo" data-memory-photo="3" aria-label="Ampliar foto 4">
-        <img src="assets/recuerdo-4.jpg" alt="Cande y una amiga en el club de ciencias" loading="lazy" decoding="async">
-        <span>✧ Club de ciencias</span>
+        <img src="assets/recuerdo-4.jpg" alt="Cande y una amiga en una clase" loading="lazy" decoding="async">
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="4" aria-label="Ampliar foto 5">
+        <img src="assets/cande-foto-5.avif" alt="Cande con un vestido plateado" loading="lazy" decoding="async">
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="5" aria-label="Ampliar foto 6">
+        <img src="assets/cande-foto-6.avif" alt="Cande con filtro de orejitas y cuernitos" loading="lazy" decoding="async">
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="6" aria-label="Ampliar foto 7">
+        <img src="assets/cande-foto-7.avif" alt="Cande acariciando un conejo en el jardín" loading="lazy" decoding="async">
+      </button>
+      <button type="button" class="cande-memory-photo" data-memory-photo="7" aria-label="Ampliar foto 8">
+        <img src="assets/cande-foto-8.avif" alt="Cande sonriendo con el pulgar levantado" loading="lazy" decoding="async">
       </button>
     </div>
     <div class="cande-memory-video-card">
-      <div class="memory-video-title"><span>▶</span> UNA JOYITA EN VIDEO</div>
       <video class="memory-video" src="assets/recuerdo-video.mp4" poster="assets/recuerdo-video-poster.webp" controls playsinline preload="metadata" aria-label="Video de recuerdos de cumpleaños"></video>
-      <p class="memory-video-caption">Una prueba más de que no somos normales JAJAJA.</p>
     </div>
     <dialog class="memory-lightbox" aria-label="Foto ampliada del álbum">
       <button type="button" class="memory-lightbox-close" data-memory-close aria-label="Cerrar fotografía">×</button>
       <img class="memory-lightbox-image" alt="Foto ampliada">
-      <p class="memory-lightbox-caption"></p>
       <div class="memory-lightbox-controls">
         <button type="button" data-memory-switch="-1" aria-label="Foto anterior">←</button>
         <button type="button" data-memory-switch="1" aria-label="Foto siguiente">→</button>
@@ -1692,8 +1696,6 @@ function renderSurpriseLetter(){
     const image=dialog.querySelector(".memory-lightbox-image");
     image.src=src.src;
     image.alt=src.alt;
-    dialog.querySelector(".memory-lightbox-caption").textContent=
-      cards[openedMemoryIndex].querySelector("span")?.textContent||"Fotito";
     if(!dialog.open)dialog.showModal();
   }
 
