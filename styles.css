@@ -1798,7 +1798,7 @@ body {font-size:18px}
 }
 .lost-pup-photo-wrap{
  position:relative;
- width:min(100%,340px);
+ width:min(100%,280px);
  margin:0 auto 19px;
  padding:9px 9px 22px;
  border:1px solid #e6dac3;
@@ -1866,7 +1866,7 @@ body {font-size:18px}
  .lost-pup-tape.tape-left{left:-9px}
  .lost-pup-tape.tape-right{right:-9px}
  .lost-pup-photo-wrap{
-   width:min(100%,295px);
+   width:min(100%,270px);
    padding:7px 7px 16px;
  }
  .lost-pup-photo-sticker{width:37px;height:37px;font-size:23px;right:-8px}
