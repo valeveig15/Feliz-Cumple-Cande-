@@ -1,7 +1,7 @@
 /* Música contextual del cumpleaños de Cande.
    Los seis archivos de audio ya están guardados en assets/music/.
-   Cambia automáticamente con cada nivel; I Gotta Feeling sólo suena
-   después de desbloquear la carta. */
+   Cambia automáticamente con cada nivel; I Gotta Feeling comienza
+   al entrar a la sección de la carta, aun antes de desbloquearla. */
 (() => {
   "use strict";
 
@@ -120,10 +120,10 @@
   function setStage(level) {
     setTrack(Math.max(0, Math.min(4, Number(level) || 0)));
   }
-  function setSurpriseScene(scene, isLetterUnlocked) {
-    // La sexta canción está totalmente separada de la lista general:
-    // sólo comienza al abrir correctamente la carta.
-    setTrack(Number(scene) === 6 && isLetterUnlocked === true ? 5 : 4);
+  function setSurpriseScene(scene) {
+    // La sexta canción empieza al entrar a la sección de la carta,
+    // independientemente de que se haya introducido la contraseña.
+    setTrack(Number(scene) === 6 ? 5 : 4);
   }
   function enable() {
     enabled = true;
