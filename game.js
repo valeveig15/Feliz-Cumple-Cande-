@@ -48,6 +48,7 @@
     Object.values(levels).forEach((el) => el.classList.remove("active"));
     levels[level].classList.add("active");
     setProgress(level);
+    window.CandeMusic?.setStage(level);
     window.scrollTo({ top: 0, behavior: "smooth" });
     clearHorizontalHold(); // Evita que un botón quede "presionado" al cambiar de nivel.
     clearTetrisTouchGesture();
@@ -66,6 +67,8 @@
 
   document.getElementById("welcome-start").addEventListener("click", () => {
     if (currentLevel !== 0) return;
+    // Un gesto real de la persona activa el audio en móviles.
+    window.CandeMusic?.enable();
     showLevel(1);
   });
 
@@ -1567,6 +1570,8 @@ function renderSurpriseLetter(){
  const galleryDialog=invitationReveal.querySelector(".memory-lightbox");
  if(galleryDialog?.open&&surpriseScene===3&&n!==3)galleryDialog.close();
  surpriseScene=Math.max(0,Math.min(n,pages.length-1));
+ // I Gotta Feeling queda exclusiva para la carta, una vez desbloqueada.
+ window.CandeMusic?.setSurpriseScene(surpriseScene,letterUnlocked);
  pages.forEach((p,i)=>{p.hidden=i!==surpriseScene;});
  invitationReveal.querySelectorAll(".surprise-progress-dot").forEach((p,i)=>p.classList.toggle("selected",i===surpriseScene));
  const count=invitationReveal.querySelector(".surprise-progress-count");
@@ -1969,6 +1974,9 @@ function handleSurpriseLetterSubmit(event){
   return;
  }
  letterUnlocked=true;
+ // La contraseña correcta es el único disparador de la sexta canción.
+ window.CandeMusic?.setSurpriseScene(6,true);
+ window.CandeMusic?.enable();
  const locked=invitationReveal.querySelector(".surprise-letter-lock");
  const body=invitationReveal.querySelector(".surprise-letter-body");
  if(locked)locked.hidden=true;
@@ -2061,6 +2069,7 @@ function openCandeInvitation(){
     previewInput.value = "";
     invitationReveal.hidden = true;
     invitationReveal.replaceChildren();
+    window.CandeMusic?.setStage(4);
     updateBirthdayCountdown();
     invitationGate.scrollIntoView({behavior:"smooth",block:"start"});
   });
@@ -2083,6 +2092,7 @@ function openCandeInvitation(){
 
   initRubik();
   setProgress(0);
+  window.CandeMusic?.setStage(0);
   // Bienvenida: los fuegos se lanzan una vez al entrar a la página.
   setTimeout(()=>launchGreenFireworks("welcome"),350);
 })();
