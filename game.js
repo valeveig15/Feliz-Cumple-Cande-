@@ -1331,9 +1331,11 @@
     const repeat=()=>{
       if(!welcomeFireworksActive || currentLevel!==0)return;
       if(!document.hidden)launchGreenFireworks("welcome");
-      welcomeFireworksTimer=window.setTimeout(repeat,1500);
+      // Antes de que termine una explosión ya hay otra en marcha.
+      welcomeFireworksTimer=window.setTimeout(repeat,900);
     };
-    welcomeFireworksTimer=window.setTimeout(repeat,350);
+    // Iniciar apenas se abre la página, sin esperar al botón.
+    welcomeFireworksTimer=window.setTimeout(repeat,80);
   }
   function stopWelcomeFireworks(){
     welcomeFireworksActive=false;
