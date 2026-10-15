@@ -1627,10 +1627,26 @@ function renderSurpriseLetter(){
    <p class="surprise-eyebrow">CANDE EN CUATRO FOTITOS</p><h3>Las cosas que te hacen <em>tan vos</em></h3>
    <p>Tocá las notitas para leerlas ♡</p>
    <div class="surprise-polaroids">
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>☀️</span><strong>Tu buena onda</strong><small hidden>Posta que tenés una buena onda que contagia. Llegás a cualquier lado y ya se nota esa energía tuya que hace que todo sea un poquito más lindo y divertido.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>💬</span><strong>Tus ocurrencias</strong><small hidden>Las cosas que se te ocurren son un tema aparte JAJAJA. Tenés cada salida de la nada que no se puede ni explicar. Nunca sabés con qué vas a salir, y eso es demasiado vos.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>🌼</span><strong>Lo detallista que sos</strong><small hidden>Siempre estás pendiente de todos. Te das cuenta cuando alguien quedó medio afuera, cuando alguien está incómodo o necesita que lo incluyan, y hacés algo para que nadie se sienta dejado de lado. Es re lindo eso de vos.</small></button>
-    <button type="button" data-surprise-flip class="surprise-polaroid"><span>✨</span><strong>Lo cálida que sos</strong><small hidden>Tenés un calorcito humano que le llega a cualquiera que esté a diez metros a la redonda JAJAJA. Hacés sentir bien a las personas con algo tan simple como ser vos, y eso es una cosa hermosa.</small></button>
+    <button type="button" data-surprise-flip class="surprise-polaroid" aria-expanded="false">
+      <img class="surprise-polaroid-image" src="assets/cande-foto-5.avif" alt="Cande con un vestido plateado" loading="lazy" decoding="async" width="480" height="660">
+      <strong>Tu buena onda</strong>
+      <small hidden>Posta que tenés una buena onda que contagia. Llegás a cualquier lado y ya se nota esa energía tuya que hace que todo sea un poquito más lindo y divertido.</small>
+    </button>
+    <button type="button" data-surprise-flip class="surprise-polaroid" aria-expanded="false">
+      <img class="surprise-polaroid-image" src="assets/cande-foto-6.avif" alt="Cande con un filtro de orejitas y cuernitos" loading="lazy" decoding="async" width="480" height="660">
+      <strong>Tus ocurrencias</strong>
+      <small hidden>Las cosas que se te ocurren son un tema aparte JAJAJA. Tenés cada salida de la nada que no se puede ni explicar. Nunca sabés con qué vas a salir, y eso es demasiado vos.</small>
+    </button>
+    <button type="button" data-surprise-flip class="surprise-polaroid" aria-expanded="false">
+      <img class="surprise-polaroid-image" src="assets/cande-foto-7.avif" alt="Cande sentada con un conejo" loading="lazy" decoding="async" width="480" height="660">
+      <strong>Lo detallista que sos</strong>
+      <small hidden>Siempre estás pendiente de todos. Te das cuenta cuando alguien quedó medio afuera, cuando alguien está incómodo o necesita que lo incluyan, y hacés algo para que nadie se sienta dejado de lado. Es re lindo eso de vos.</small>
+    </button>
+    <button type="button" data-surprise-flip class="surprise-polaroid" aria-expanded="false">
+      <img class="surprise-polaroid-image" src="assets/cande-foto-8.avif" alt="Cande haciendo pulgar arriba con remera blanca" loading="lazy" decoding="async" width="480" height="660">
+      <strong>Lo cálida que sos</strong>
+      <small hidden>Tenés un calorcito humano que le llega a cualquiera que esté a diez metros a la redonda JAJAJA. Hacés sentir bien a las personas con algo tan simple como ser vos, y eso es una cosa hermosa.</small>
+    </button>
    </div>
   </article>
   <article class="surprise-page surprise-friends-page" hidden>
@@ -1878,8 +1894,13 @@ function renderSurpriseLetter(){
  if(btn.hasAttribute("data-surprise-next")){showSurpriseScene(surpriseScene+1);return}
  if(btn.hasAttribute("data-surprise-prev")){showSurpriseScene(surpriseScene-1);return}
  if(btn.hasAttribute("data-surprise-flip")){
-  const note=btn.querySelector("small");if(note)note.hidden=!note.hidden;
-  btn.classList.toggle("flipped",note&&!note.hidden);return;
+  const note=btn.querySelector("small");
+  if(note){
+    note.hidden=!note.hidden;
+    btn.setAttribute("aria-expanded",String(!note.hidden));
+    btn.classList.toggle("flipped",!note.hidden);
+  }
+  return;
  }
  if(btn.hasAttribute("data-open-friend-note")){
   const letter=invitationReveal.querySelector(".friend-letter");
