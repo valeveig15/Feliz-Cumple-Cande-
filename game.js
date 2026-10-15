@@ -14,6 +14,8 @@
   const flashIcon = document.getElementById("flash-icon");
 
   let currentLevel = 0;
+  let welcomeFireworksActive = false;
+  let welcomeFireworksTimer = null;
 
   function setProgress(level) {
     document.querySelectorAll(".step").forEach((step) => {
@@ -45,6 +47,8 @@
 
   function showLevel(level) {
     currentLevel = level;
+    if (level === 0) startWelcomeFireworks();
+    else stopWelcomeFireworks();
     Object.values(levels).forEach((el) => el.classList.remove("active"));
     levels[level].classList.add("active");
     setProgress(level);
@@ -1272,6 +1276,7 @@
     }
     const sequence=document.createElement("div");
     sequence.className="cande-fireworks-sequence";
+    sequence.dataset.moment=moment;
     layer.appendChild(sequence);
     const mobile=window.innerWidth<650;
     const amount=moment==="win"?7:moment==="final"?6:4;
@@ -1281,6 +1286,7 @@
     ];
     const step=moment==="welcome"?210:170;
     function burst(x,y){
+      if(moment==="welcome" && !welcomeFireworksActive)return;
       const count=mobile?22:31;
       const spread=mobile?Math.min(window.innerWidth*.21,76):118;
       const fragment=document.createDocumentFragment();
@@ -1315,6 +1321,26 @@
     // Sólo se eliminan los elementos de ESTA tanda. Los clics sucesivos
     // pueden lanzar otros fuegos artificiales sin cortar los anteriores.
     setTimeout(()=>sequence.remove(),amount*step+1600);
+  }
+
+  // Repetir las tandas sólo durante la bienvenida. Al empezar la aventura,
+  // detener tanto las próximas tandas como los fuegos aún visibles.
+  function startWelcomeFireworks(){
+    if(welcomeFireworksActive || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)return;
+    welcomeFireworksActive=true;
+    const repeat=()=>{
+      if(!welcomeFireworksActive || currentLevel!==0)return;
+      if(!document.hidden)launchGreenFireworks("welcome");
+      welcomeFireworksTimer=window.setTimeout(repeat,1500);
+    };
+    welcomeFireworksTimer=window.setTimeout(repeat,350);
+  }
+  function stopWelcomeFireworks(){
+    welcomeFireworksActive=false;
+    window.clearTimeout(welcomeFireworksTimer);
+    welcomeFireworksTimer=null;
+    document.querySelectorAll('#cande-fireworks .cande-fireworks-sequence[data-moment="welcome"]')
+      .forEach(sequence=>sequence.remove());
   }
 
   // =========================================================
@@ -1570,8 +1596,8 @@ function renderSurpriseLetter(){
  const galleryDialog=invitationReveal.querySelector(".memory-lightbox");
  if(galleryDialog?.open&&surpriseScene===3&&n!==3)galleryDialog.close();
  surpriseScene=Math.max(0,Math.min(n,pages.length-1));
- // I Gotta Feeling queda exclusiva para la carta, una vez desbloqueada.
- window.CandeMusic?.setSurpriseScene(surpriseScene,letterUnlocked);
+ // I Gotta Feeling empieza en cuanto se entra a la sección de la carta.
+ window.CandeMusic?.setSurpriseScene(surpriseScene);
  pages.forEach((p,i)=>{p.hidden=i!==surpriseScene;});
  invitationReveal.querySelectorAll(".surprise-progress-dot").forEach((p,i)=>p.classList.toggle("selected",i===surpriseScene));
  const count=invitationReveal.querySelector(".surprise-progress-count");
@@ -1974,9 +2000,7 @@ function handleSurpriseLetterSubmit(event){
   return;
  }
  letterUnlocked=true;
- // La contraseña correcta es el único disparador de la sexta canción.
- window.CandeMusic?.setSurpriseScene(6,true);
- window.CandeMusic?.enable();
+ // Desbloquear la carta revela el texto sin reiniciar la canción.
  const locked=invitationReveal.querySelector(".surprise-letter-lock");
  const body=invitationReveal.querySelector(".surprise-letter-body");
  if(locked)locked.hidden=true;
@@ -2093,6 +2117,6 @@ function openCandeInvitation(){
   initRubik();
   setProgress(0);
   window.CandeMusic?.setStage(0);
-  // Bienvenida: los fuegos se lanzan una vez al entrar a la página.
-  setTimeout(()=>launchGreenFireworks("welcome"),350);
+  // Bienvenida: tandas continuas hasta pulsar «Empezar la aventura».
+  startWelcomeFireworks();
 })();
