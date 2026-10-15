@@ -1552,7 +1552,7 @@ function renderSurpriseLetter(){
  const holder=invitationReveal.querySelector(".surprise-letter-copy");
  if(!holder)return;
  holder.replaceChildren();
- DEFAULT_INVITATION_TEXT.split(/\n\s*\n/).filter(Boolean).forEach(phrase=>{
+ DEFAULT_INVITATION_TEXT.split(/\n+/).filter(phrase=>phrase.trim().length>0).forEach(phrase=>{
   const p=document.createElement("p");p.textContent=phrase;holder.appendChild(p);
  });
 }
