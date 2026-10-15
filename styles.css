@@ -2097,3 +2097,76 @@ body {font-size:18px}
   #cande-fireworks{display:none!important}
   .cande-firework-spark,.cande-firework-core{animation:none!important}
 }
+
+
+/* CANDE V44 — las cuatro fotos reales en «Las cosas que te hacen tan vos» */
+.surprise-polaroids{
+  align-items:start;
+  gap:clamp(12px,2.7vw,23px);
+}
+.surprise-polaroid{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  padding:8px 8px 18px;
+  gap:12px;
+  border:5px solid #fff;
+  border-bottom-width:15px;
+  border-radius:5px;
+  background:#fff;
+  box-shadow:0 6px 18px #39664736;
+}
+.surprise-polaroid .surprise-polaroid-image{
+  display:block;
+  width:100%;
+  aspect-ratio:3/4;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  object-position:center;
+  border-radius:2px;
+  background:linear-gradient(160deg,#f3f8e9,#fceef1);
+}
+.surprise-polaroid>strong{
+  margin:2px auto 0;
+  font-size:clamp(15px,2.6vw,21px);
+  line-height:1.28;
+  color:#38754f;
+}
+.surprise-polaroid small:not([hidden]){
+  box-sizing:border-box;
+  width:100%;
+  padding:12px 10px;
+  background:#f5fbef;
+  border-radius:9px;
+  border:1px solid #d8ead6;
+  font-size:clamp(12px,1.85vw,15px);
+  line-height:1.55;
+  text-align:left;
+  color:#395b42;
+}
+.surprise-polaroid.flipped{
+  background:#fffefa;
+}
+.surprise-polaroid:focus-visible{
+  outline:3px solid #66bd82;
+  outline-offset:4px;
+}
+@media(max-width:500px){
+  .surprise-polaroids{gap:10px}
+  .surprise-polaroid{
+    padding:5px 5px 12px;
+    gap:7px;
+    border-width:4px;
+    border-bottom-width:12px;
+  }
+  .surprise-polaroid .surprise-polaroid-image{
+    aspect-ratio:3/4;
+  }
+  .surprise-polaroid small:not([hidden]){
+    padding:8px 7px;
+    font-size:12px;
+    line-height:1.48;
+  }
+}
