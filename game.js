@@ -1262,6 +1262,33 @@
     "#a3e0b8", "#c8f2d4", "#e3fbe8", "#f9fff1"
   ];
 
+  // La bienvenida reparte explosiones por TODA la pantalla, nunca en
+  // puntos fijos. Se recorren las 9 zonas en orden aleatorio, y dentro
+  // de cada zona la posición también varía; así no quedan regiones vacías.
+  let welcomeFireworkZones = [];
+  function randomWelcomeFireworkPosition(){
+    if(!welcomeFireworkZones.length){
+      welcomeFireworkZones=Array.from({length:9},(_,i)=>i);
+      for(let i=welcomeFireworkZones.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [welcomeFireworkZones[i],welcomeFireworkZones[j]]=
+          [welcomeFireworkZones[j],welcomeFireworkZones[i]];
+      }
+    }
+    const zone=welcomeFireworkZones.pop();
+    const column=zone%3;
+    const row=Math.floor(zone/3);
+    // Bordes de seguridad moderados: se ven explosiones también cerca
+    // de las esquinas sin que desaparezca casi todo fuera de pantalla.
+    const width=window.innerWidth;
+    const height=window.innerHeight;
+    const marginX=Math.min(width*.16,95);
+    const marginY=Math.min(height*.13,88);
+    const x=marginX+(width-2*marginX)*(column+.15+Math.random()*.7)/3;
+    const y=marginY+(height-2*marginY)*(row+.15+Math.random()*.7)/3;
+    return [Math.round(x),Math.round(y)];
+  }
+
   // Fuegos artificiales de partículas reales, independientes entre tandas.
   // Se montan fuera de los niveles para que se vean incluso sobre el cartel
   // final y nunca intercepten toques, ni tapen controles permanentemente.
@@ -1315,8 +1342,19 @@
       sequence.appendChild(fragment);
     }
     for(let k=0;k<amount;k++){
-      const [u,v]=positions[k];
-      setTimeout(()=>burst(Math.round(window.innerWidth*u),Math.round(window.innerHeight*v)),k*step);
+      setTimeout(()=>{
+        if(moment==="welcome"){
+          // Se decide al explotar, no al programar la tanda:
+          // cambia incluso si la persona gira su teléfono.
+          if(!welcomeFireworksActive || currentLevel!==0 || document.hidden)return;
+          const [x,y]=randomWelcomeFireworkPosition();
+          burst(x,y);
+        }else{
+          // La torta y el cierre mantienen sus posiciones originales.
+          const [u,v]=positions[k];
+          burst(Math.round(window.innerWidth*u),Math.round(window.innerHeight*v));
+        }
+      },k*step);
     }
     // Sólo se eliminan los elementos de ESTA tanda. Los clics sucesivos
     // pueden lanzar otros fuegos artificiales sin cortar los anteriores.
@@ -1328,6 +1366,7 @@
   function startWelcomeFireworks(){
     if(welcomeFireworksActive || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches)return;
     welcomeFireworksActive=true;
+    welcomeFireworkZones=[]; // Sorteo independiente al volver a la bienvenida.
     const repeat=()=>{
       if(!welcomeFireworksActive || currentLevel!==0)return;
       if(!document.hidden)launchGreenFireworks("welcome");
