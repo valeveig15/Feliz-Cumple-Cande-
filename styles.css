@@ -2170,3 +2170,83 @@ body {font-size:18px}
     line-height:1.48;
   }
 }
+
+
+/* Banda sonora contextual de Cande: discreta y usable en celular. */
+.cande-music-dock{
+  position:fixed;top:77px;right:clamp(9px,2vw,22px);
+  z-index:116;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#28513d;
+  pointer-events:none;
+  max-width:calc(100vw - 18px);
+}
+.cande-music-dock button,
+.cande-music-dock label,
+.cande-music-dock input,
+.cande-music-dock .cande-music-panel{pointer-events:auto}
+.cande-music-chip{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  min-height:40px;max-width:min(210px,57vw);
+  margin-left:auto;padding:9px 15px;
+  border-radius:999px;border:1px solid #9bcfb3;
+  background:#f2fff4;box-shadow:0 4px 16px #21483222;
+  color:#276644;font-weight:750;font-size:13px;
+  cursor:pointer;
+}
+.cande-music-chip-text{
+  display:block;min-width:0;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
+}
+.cande-music-dock.is-playing .cande-music-chip{
+  border-color:#4da976;
+  box-shadow:0 4px 15px #357e4b42;
+  background:#dbf6e2;
+}
+.cande-music-panel{
+  width:min(295px,calc(100vw - 24px));
+  box-sizing:border-box;
+  display:flex;flex-direction:column;gap:11px;
+  margin-top:8px;padding:19px 18px 17px;
+  border:2px solid #badfbd;border-radius:19px;
+  background:#fffff9;
+  box-shadow:0 12px 35px #254e3970;
+  text-align:left;
+}
+.cande-music-panel[hidden]{display:none!important}
+.cande-music-eyebrow{
+  font:800 11px/1.2 ui-monospace,monospace;
+  letter-spacing:.12em;color:#4e9368
+}
+.cande-music-title{font:800 20px/1.2 Georgia,serif;color:#286744}
+.cande-music-stage{font-size:12px;color:#698b72}
+.cande-music-actions{display:flex;align-items:center;gap:10px}
+.cande-music-play{
+  border:0;border-radius:12px;background:#2f8153;color:#fff;
+  font-size:13px;font-weight:800;cursor:pointer;
+  padding:12px;flex-shrink:0;
+}
+.cande-music-volume-label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:#416c4f;min-width:0;flex:1}
+.cande-music-volume{width:100%;accent-color:#3b9659}
+.cande-music-import{position:relative;display:block;cursor:pointer}
+.cande-music-import span{
+  display:block;border:1px dashed #6ea984;background:#e9f7e9;
+  color:#3c744f;border-radius:12px;text-align:center;
+  padding:10px 12px;font-size:12px;font-weight:800;
+}
+.cande-music-import input{
+  opacity:0;position:absolute;width:100%;height:100%;inset:0;cursor:pointer;
+}
+.cande-music-import:focus-within span{outline:3px solid #68ac7b;outline-offset:3px}
+.cande-music-help,.cande-music-status{
+  font-size:11px;line-height:1.48;color:#5a7d63;margin:0
+}
+.cande-music-status:empty{display:none}
+.cande-music-status{color:#7d583a}
+@media(max-width:600px){
+  .cande-music-dock{top:70px;right:9px}
+  .cande-music-chip{padding:8px 12px;min-height:34px}
+  .cande-music-panel{max-height:min(68dvh,430px);overflow-y:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .cande-music-chip{transition:none}
+}
