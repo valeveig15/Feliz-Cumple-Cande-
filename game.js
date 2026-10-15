@@ -1601,6 +1601,10 @@ function renderSurpriseLetter(){
   {
     "name": "Sopa",
     "text": "Feliz cumple a mi bro de la vida, te adoro, sos tremenda compañera para todo, siempre presente! Que seas muy feliz siempre y pases hermoso este día, espero sean muchos más los cumples juntas!💕🫶🏻😚"
+  },
+  {
+    "name": "Sofi",
+    "text": "Holuuuss Candus, muymuy feliz cumpleaños, espero que la pases hermoso, te quiero muchomuchomucho"
   }
 ];
 
@@ -1662,6 +1666,7 @@ function renderSurpriseLetter(){
      <button type="button" class="friend-envelope" data-open-friend-note="3" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🎀</span><span class="friend-envelope-address">De: <strong>Anto</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
      <button type="button" class="friend-envelope" data-open-friend-note="4" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🏡</span><span class="friend-envelope-address">De: <strong>Casavieja</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
      <button type="button" class="friend-envelope" data-open-friend-note="5" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🥣</span><span class="friend-envelope-address">De: <strong>Sopa</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
+     <button type="button" class="friend-envelope" data-open-friend-note="6" aria-expanded="false"><span class="friend-envelope-stamp" aria-hidden="true">🦋</span><span class="friend-envelope-address">De: <strong>Sofi</strong></span><span class="friend-envelope-open-label">Abrir mensajito ♡</span></button>
     </div>
     <div class="friend-letter" hidden aria-live="polite">
       <span class="friend-letter-header"></span>
