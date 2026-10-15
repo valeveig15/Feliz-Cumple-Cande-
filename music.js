@@ -121,9 +121,24 @@
     setTrack(Math.max(0, Math.min(4, Number(level) || 0)));
   }
   function setSurpriseScene(scene) {
-    // La sexta canción empieza al entrar a la sección de la carta,
-    // independientemente de que se haya introducido la contraseña.
-    setTrack(Number(scene) === 6 ? 5 : 4);
+    // La sección «Hay algo que quiero decirte» es la escena 6 (índice cero).
+    // I Gotta Feeling debe sonar desde que se entra a esta pantalla,
+    // incluso antes de introducir la contraseña de «Nuestra canción».
+    const enteringLetter = Number(scene) === 6;
+    setTrack(enteringLetter ? 5 : 4);
+    if (enteringLetter) {
+      // Al pasar desde videos o cintas, puede quedar una pausa temporal.
+      // Esa pausa no debe impedir la música de la carta.
+      const mediaStillPlaying = [...document.querySelectorAll("#invitation-reveal audio, #invitation-reveal video")]
+        .some(player => !player.paused && !player.ended);
+      if (!mediaStillPlaying) {
+        pausedForMedia = false;
+        resumeAfterMedia = false;
+        // La navegación fue iniciada por la persona: es un gesto válido
+        // para activar el audio también en navegadores móviles.
+        enable();
+      }
+    }
   }
   function enable() {
     enabled = true;
